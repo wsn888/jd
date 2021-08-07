@@ -54,7 +54,7 @@ message = ""
       return
     }
   }
-  $.shareUuid = '24f69db39f424a26b13708e0bdf56c76'
+  $.shareUuid = '84eae2608b294ca68aa4d511f7384ac6'
   // 232 23
   for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
