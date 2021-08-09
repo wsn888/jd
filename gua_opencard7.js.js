@@ -69,7 +69,7 @@ message = ""
   if (!process.env.guaopencard_addSku7 || process.env.guaopencard_addSku7 == "false") {
     console.log('如需加购请设置环境变量[guaopencard_addSku7]为"true"')
   }
-  $.shareUuid = '976abef915bf40ae9e6adc93c1693d9a'
+  $.shareUuid = 'cb7ca88a3e56485d8623d8b3743009fc'
   $.activityId = 'dz2108100001616201'
   console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/shop/league/activity/7277549?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
   for (let i = 0; i < cookiesArr.length; i++) {
