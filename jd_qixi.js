@@ -1,5 +1,5 @@
 /*
-入口：23.0复制整段话 http:/JZUpL5s2BpdFdT 美妆好礼，示爱七夕，快来和我一起收情书抽乐园门票！#yDrnMBbu7a%买买买，→亰咚
+入口：21.0复制整段话 Https:/JyjiIE8T6HYOlx 美妆好礼，示爱七夕，快来和我一起收情书抽乐园门票！￥j7iEu3fAia￥dakai鯨·=·岽A P/P
 入口：美妆馆- 右边- 抽取免费门票
 acttime 8.4-8.15瓜分京豆
 [task_local]
