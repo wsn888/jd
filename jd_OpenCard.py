@@ -4,8 +4,8 @@
 项目名称: JD_OpenCard
 Author: Curtin
 功能：JD入会开卡领取京豆
-CreateDate: 2021/5/4 下午1:47
-UpdateTime: 2021/6/19
+CreateDate: 2021/5/4
+UpdateTime: 2021/8/11
 '''
 version = 'v1.2.2'
 readmes = """
