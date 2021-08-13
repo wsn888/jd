@@ -13,7 +13,7 @@
 不抽奖请设置环境变量
 gua_xiaolong_luckydraw="false"
 ————————————————
-入口：[8.13-8.25 骁龙品牌日 (https://lzdz4-isv.isvjcloud.com/dingzhi/xiaolong/collectcard/activity/1441690?activityId=901080701&shareUuid=9535c849daec4eb0b006dc1ff8ab3b5c)]
+入口：[8.13-8.25 骁龙品牌日 (https://lzdz4-isv.isvjcloud.com/dingzhi/xiaolong/collectcard/activity/1441690?activityId=901080701&shareUuid=9680bf6a5530414b985eb07811a7a7c8)]
 ============Quantumultx===============
 [task_local]
 #8.13-8.25 骁龙品牌日
@@ -54,7 +54,7 @@ message = ""
     });
     return;
   }
-  $.shareUuid = '9535c849daec4eb0b006dc1ff8ab3b5c'
+  $.shareUuid = '9680bf6a5530414b985eb07811a7a7c8'
   $.activityId = '901080701'
   console.log(`入口:\nhttps://lzdz4-isv.isvjcloud.com/dingzhi/xiaolong/collectcard/activity/1441690?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
   for (let i = 0; i < cookiesArr.length; i++) {
