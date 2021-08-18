@@ -15,7 +15,7 @@
 如需执行脚本请设置环境变量
 guaopencard14="true"
 ————————————————
-入口：[8.18-8.31 冰爽来袭 玩撞一夏 (https://lzdz1-isv.isvjcloud.com/lzclient/dz/2021jan/eliminateGame/0816eliminate/?activityId=8461aaca3fd24c66a3674da99c5342eb&shareUuid=abcd4cabe50f48e6853acde2ebf7fd48)]
+入口：[8.18-8.31 冰爽来袭 玩撞一夏 (https://lzdz1-isv.isvjcloud.com/lzclient/dz/2021jan/eliminateGame/0816eliminate/?activityId=8461aaca3fd24c66a3674da99c5342eb&shareUuid=d4f5c0ab84124b489865acfb996098d5)]
 ============Quantumultx===============
 [task_local]
 #8.18-8.31 冰爽来袭 玩撞一夏
@@ -62,7 +62,7 @@ message = ""
       return
     }
   }
-  $.shareUuid = 'abcd4cabe50f48e6853acde2ebf7fd48'
+  $.shareUuid = 'd4f5c0ab84124b489865acfb996098d5'
   $.activityId = '8461aaca3fd24c66a3674da99c5342eb'
   console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/lzclient/dz/2021jan/eliminateGame/0816eliminate/?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
   for (let i = 0; i < cookiesArr.length; i++) {
