@@ -20,9 +20,9 @@ if ($.isNode()) {
 }
 !(async () => {
     let res = [];
-    try{res = await getAuthorShareCode('https://raw.githubusercontent.com/star261/jd/main/code/iqooCode.json');}catch (e) {}
+    try{res = await getAuthorShareCode('');}catch (e) {}
     if(!res){
-        try{res = await getAuthorShareCode('https://gitee.com/star267/share-code/raw/master/iqooCode.json');}catch (e) {}
+        try{res = await getAuthorShareCode('');}catch (e) {}
         if(!res){res = [{"id":"902082602","uid":""},{"id":"902082601","uid":""}];}
     }
     if(res.length === 0){console.log(`获取活动列表失败`)};
