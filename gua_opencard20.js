@@ -18,7 +18,7 @@ ck1满10人自动换ck2
 如需执行脚本请设置环境变量
 guaopencard20="true"
 ————————————————
-入口：[8.31-9.21 中秋酒水 (https://lzdz1-isv.isvjcloud.com/dingzhi/jddrinks/grandceremony/activity/1988328?activityId=dz2108100001566301&shareUuid=1644bc91f825400a856e4d2a15f311af)]
+入口：[8.31-9.21 中秋酒水 (https://lzdz1-isv.isvjcloud.com/dingzhi/jddrinks/grandceremony/activity/1988328?activityId=dz2108100001566301&shareUuid=a3a20b91b336400daeee8fdd73d5e4d6)]
 
 ============Quantumultx===============
 [task_local]
@@ -71,7 +71,7 @@ message = ""
     }
   }
   $.shareUuidArr = [];
-  $.shareUuid = '1644bc91f825400a856e4d2a15f311af'
+  $.shareUuid = 'a3a20b91b336400daeee8fdd73d5e4d6'
   $.activityId = 'dz2108100001566301'
   console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/jddrinks/grandceremony/activity/1988328?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
   for (let i = 0; i < cookiesArr.length; i++) {
