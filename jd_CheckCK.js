@@ -1,5 +1,5 @@
 //Check Ck Tools by ccwav
-//Update : 20210902
+//Update : 20210831 V4
 const $ = new Env('京东CK检测');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
@@ -11,7 +11,7 @@ const api = got.extend({
   responseType: 'json',
 });
 
-let allMessage='',ErrorMessage='',SuccessMessage='',DisableMessage='',EnableMessage='',OErrorMessage=''
+let allMessage='',ErrorMessage='',SuccessMessage='',DisableMessage='',EnableMessage=''
 
 
 !(async () => {  
@@ -27,57 +27,45 @@ let allMessage='',ErrorMessage='',SuccessMessage='',DisableMessage='',EnableMess
       $.UserName = (cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])	 
       $.index = i + 1;
       $.isLogin = true;
-	  $.error = '';
-      $.nickName = decodeURIComponent($.UserName); 
-	  $.Remark = envs[i].remarks.replace("remark=","");
-	  $.Remark = $.Remark.replace(";","");	  
-	  if($.Remark){
-		  $.Remark="("+$.Remark+")";
-	  }	  
-	  console.log(`开始检测【京东账号${$.index}】${$.nickName}${$.Remark}....\n`);
+      $.nickName = '';  
+	  console.log(`开始检测【京东账号${$.index}】${$.nickName || $.UserName}....\n`);
 	 
       await TotalBean();      
-	  if ($.error){
-		  OErrorMessage+=$.error;
-		  continue;
-	  }
+
       if (!$.isLogin) {	
 		if (envs[i].status==0)
 		{
 		  const DisableCkBody = await DisableCk(envs[i]._id);
 		  if (DisableCkBody.code == 200) {
-		    console.log(`京东账号${$.index} : ${$.nickName || $.UserName}${$.Remark} 已失效,自动禁用成功!\n`);
-		    DisableMessage += `京东账号${$.index} : ${$.nickName || $.UserName}${$.Remark} (自动禁用成功!)\n`;
+		    console.log(`京东账号${$.index} : ${$.nickName || $.UserName} 已失效,自动禁用成功!\n`);
+		    DisableMessage += `京东账号${$.index} : ${$.nickName || $.UserName} (自动禁用成功!)\n`;
 			} else {
-				console.log(`京东账号${$.index} : ${$.nickName || $.UserName}${$.Remark} 已失效,自动禁用失败!\n`);
-				DisableMessage += `京东账号${$.index} : ${$.nickName || $.UserName}${$.Remark} (自动禁用失败!)\n`;
+				console.log(`京东账号${$.index} : ${$.nickName || $.UserName} 已失效,自动禁用失败!\n`);
+				DisableMessage += `京东账号${$.index} : ${$.nickName || $.UserName} (自动禁用失败!)\n`;
 			}			
 		} else {
-			console.log(`京东账号${$.index} : ${$.nickName || $.UserName}${$.Remark} 已失效,已禁用!\n`);
-			ErrorMessage += `京东账号${$.index} : ${$.nickName || $.UserName}${$.Remark} 已失效,已禁用.\n`;
+			console.log(`京东账号${$.index} : ${$.nickName || $.UserName} 已失效,已禁用!\n`);
+			ErrorMessage += `京东账号${$.index} : ${$.nickName || $.UserName} 已失效,已禁用.\n`;
 		}
 	  } else {
 		  if (envs[i].status==1){
 			  const EnableCkBody = await EnableCk(envs[i]._id);
 			  if (EnableCkBody.code == 200) {
-				console.log(`京东账号${$.index} : ${$.nickName || $.UserName}${$.Remark} 已恢复,自动启用成功!\n`);
-				EnableMessage += `京东账号${$.index} : ${$.nickName || $.UserName}${$.Remark} (自动启用成功!)\n`;
+				console.log(`京东账号${$.index} : ${$.nickName || $.UserName} 已恢复,自动启用成功!\n`);
+				EnableMessage += `京东账号${$.index} : ${$.nickName || $.UserName} (自动启用成功!)\n`;
 				} else {
-					console.log(`京东账号${$.index} : ${$.nickName || $.UserName}${$.Remark} 已恢复,自动启用失败!\n`);
-					EnableMessage += `京东账号${$.index} : ${$.nickName || $.UserName}${$.Remark} (自动启用失败!)\n`;
+					console.log(`京东账号${$.index} : ${$.nickName || $.UserName} 已恢复,自动启用失败!\n`);
+					EnableMessage += `京东账号${$.index} : ${$.nickName || $.UserName} (自动启用失败!)\n`;
 				}
 		  } else { 
-			SuccessMessage += `京东账号${$.index} : ${$.nickName || $.UserName}${$.Remark}\n`;	
+			SuccessMessage += `京东账号${$.index} : ${$.nickName || $.UserName}\n`;	
 		  }
 		}
 	  }
       await $.wait(2*1000)
     }  
   
-  if ($.isNode()) {	  
-	  if (OErrorMessage){
-		  allMessage+=`👇👇👇👇👇检测出错账号👇👇👇👇👇\n`+OErrorMessage+`\n\n`;		  
-	  }
+  if ($.isNode()) {
 	  if (DisableMessage){
 		  allMessage+=`👇👇👇👇👇自动禁用账号👇👇👇👇👇\n`+DisableMessage+`\n\n`;		  
 	  }	  
@@ -96,7 +84,7 @@ let allMessage='',ErrorMessage='',SuccessMessage='',DisableMessage='',EnableMess
 	  //if (SuccessMessage){
 		  //allMessage+=`👇👇👇👇👇👇👇有效账号👇👇👇👇👇👇👇\n`+SuccessMessage+`\n`;		  
 	  //}
-	  if ($.isNode() && (EnableMessage || DisableMessage || OErrorMessage)) {
+	  if ($.isNode() && (EnableMessage || DisableMessage)) {
 		await notify.sendNotify(`${$.name}`, `${allMessage}`, { url: `https://bean.m.jd.com/beanDetail/index.action?resourceValue=bean` })
 	  }
    }
@@ -126,7 +114,6 @@ function TotalBean() {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
           console.log(`${$.name} API请求失败，请检查网路重试`)
-		  $.error=`${$.name} :`+`${JSON.stringify(err)}\n`;		 
         } else {
           if (data) {
             data = JSON.parse(data);
