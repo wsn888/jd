@@ -9,7 +9,7 @@
 加购没有豆只有游戏机会 (有可能是空气💨 默认不加购 如需加购请设置环境变量[guaopencard_addSku22]为"true"
 抽奖 (有可能是空气💨 默认不抽奖 如需抽奖请设置环境变量[guaopencard_draw22]为"true"
 100积分抽1次
-填写要抽奖的次数 不足已自身次数为准
+填写要抽奖的次数 抽奖次数不够 以自身次数为准
 guaopencard_draw22="3"
 
 第一个账号助力作者 其他依次助力CK1
@@ -19,7 +19,7 @@ guaopencard_draw22="3"
 如需执行脚本请设置环境变量
 guaopencard22="true"
 ————————————————
-入口：[9.3-9.13 奔跑吧 开学季 (https://lzdz-isv.isvjcloud.com/dingzhi/union/kxj/activity/2451572?activityId=902090301&shareUuid=a7b772e80ce64826b78da56f75be9700)]
+入口：[9.3-9.13 奔跑吧 开学季 (https://lzdz-isv.isvjcloud.com/dingzhi/union/kxj/activity/2451572?activityId=902090301&shareUuid=5ae438c65e424bba8f4d7ebb70245730)]
 
 ============Quantumultx===============
 [task_local]
@@ -74,7 +74,7 @@ message = ""
       return
     }
   }
-  $.shareUuid = 'a7b772e80ce64826b78da56f75be9700'
+  $.shareUuid = '5ae438c65e424bba8f4d7ebb70245730'
   $.activityId = '902090301'
   console.log(`入口:\nhttps://lzdz-isv.isvjcloud.com/dingzhi/union/kxj/activity/2451572?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
   for (let i = 0; i < cookiesArr.length && true; i++) {
