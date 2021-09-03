@@ -19,9 +19,7 @@ guaopencard21="true"
 ————————————————
 入口
 复制👇：
-27.0 9.1-9.6 联合开卡 ￥C5EiV3cGhjjuAG%/
-或者打开京东APP 扫描二维码👇：
-https://raw.githubusercontent.com/smiek2221/scripts/master/images/gua_opencard21.png
+9.1-9.6 联合开卡：28.0复制整段话 http:/JsPDXIm9DQul5q 来京东，更超值#t0HBsFfa8cqLRU%买买买，→亰咚
 ============Quantumultx===============
 [task_local]
 #9.1-9.6 联合开卡
@@ -74,7 +72,7 @@ message = ""
   $.appkey = '51B59BB805903DA4CE513D29EC448375'
   $.userId = '10299171'
   $.actId = 'a8fbe2b74b864b1_901'
-  $.inviteNick = '4A55C1C0869C75061D11CDDC9F19631A331A03F763BD4352E7FC99787B30FBD349336DE54E26AA8F2834B248E6398CB7A755DF4FDAE585EC3E1ABE26F3DD3CFFC956D12974FF00A045D8E31A84FE84C18A8357DE96A1F617B8AC4D64BC24B689'
+  $.inviteNick = 'D8539E4288F2E9BBB46CBDB09D563A1B15802946AE25ABCCCC4DD0012EBE825249336DE54E26AA8F2834B248E6398CB7A755DF4FDAE585EC3E1ABE26F3DD3CFFC956D12974FF00A045D8E31A84FE84C18A8357DE96A1F617B8AC4D64BC24B689'
   for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
     if (cookie) {
