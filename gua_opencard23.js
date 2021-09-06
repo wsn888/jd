@@ -19,7 +19,7 @@ guaopencard_draw23="3"
 如需执行脚本请设置环境变量
 guaopencard23="true"
 ————————————————
-入口：[9.6-9.17 福满中秋 (https://lzdz1-isv.isvjcloud.com/dingzhi/midautumn/jointactivity/activity/9367058?activityId=dz2109100000119501&shareUuid=814e2d8458c7402ba088c0efe0e4274d)]
+入口：[9.6-9.17 福满中秋 (https://lzdz1-isv.isvjcloud.com/dingzhi/midautumn/jointactivity/activity/9367058?activityId=dz2109100000119501&shareUuid=71a22adbd119439c9369be7efd986b58)]
 
 ============Quantumultx===============
 [task_local]
@@ -74,7 +74,7 @@ message = ""
       return
     }
   }
-  $.shareUuid = '814e2d8458c7402ba088c0efe0e4274d'
+  $.shareUuid = '71a22adbd119439c9369be7efd986b58'
   $.activityId = 'dz2109100000119501'
   console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/midautumn/jointactivity/activity/9367058?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
   for (let i = 0; i < cookiesArr.length && true; i++) {
