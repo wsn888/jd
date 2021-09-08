@@ -17,7 +17,7 @@ guaopencard25="true"
 
 All变量适用
 ————————————————
-入口：[ 9.8-9.30 成家有福 长长久久 (https://lzdz1-isv.isvjcloud.com/dingzhi/dz/openCard/activity?activityId=9ef833504aaf436ebd84a3b762c32ead&shareUuid=73536d0508b44689a6e0c2570158cae8)]
+入口：[ 9.8-9.30 成家有福 长长久久 (https://lzdz1-isv.isvjcloud.com/dingzhi/dz/openCard/activity?activityId=9ef833504aaf436ebd84a3b762c32ead&shareUuid=e47497b8ab424023a77d4b623d14dea7)]
 
 请求太频繁会被黑ip
 号多的会被限制ip
