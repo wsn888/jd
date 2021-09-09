@@ -1,7 +1,8 @@
 /*
 9.9大聚惠
 2021-9-9 ~ 2021-9-19
-https://lzdz1-isv.isvjcloud.com/dingzhi/dz/openCard/activity/45670?activityId=f7e4d75f22c84cdeba92bf594b02b910
+https://lzdz1-isv.isvjcloud.com/dingzhi/dz/openCard/activity/45670?activityId=8702819a59954402aae3d0d03bc8184a
+
 */
 const $ = new Env("9.9大聚惠");
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
@@ -54,7 +55,7 @@ if ($.isNode()) {
             $.authorCode = ownCode ? ownCode : authorCodeList[0]
             $.authorNum = `${random(1000000, 9999999)}`
             $.randomCode = random(1000000, 9999999)
-            $.activityId = 'f7e4d75f22c84cdeba92bf594b02b910'
+            $.activityId = '8702819a59954402aae3d0d03bc8184a'
             $.activityShopId = '1000376284'
             $.activityUrl = `https://lzdz1-isv.isvjcloud.com/dingzhi/dz/openCard/activity/${$.authorNum}?activityId=${$.activityId}&shareUuid=${encodeURIComponent($.authorCode)}&adsource=null&shareuserid4minipg=null&shopid=${$.activityShopId}&lng=00.000000&lat=00.000000&sid=&un_area=`
             await member();
