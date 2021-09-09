@@ -17,7 +17,7 @@ guaopencard27="true"
 
 All变量适用
 ————————————————
-入口：[ 9.9~9.16 大聚惠 (https://lzdz1-isv.isvjcloud.com/dingzhi/dz/openCard/activity?activityId=f7e4d75f22c84cdeba92bf594b02b910&shareUuid=c94ccc8e54c5497391e2e33824f25ae2)]
+入口：[ 9.9~9.16 大聚惠 (https://lzdz1-isv.isvjcloud.com/dingzhi/dz/openCard/activity?activityId=f7e4d75f22c84cdeba92bf594b02b910&shareUuid=8702819a59954402aae3d0d03bc8184a)]
 
 请求太频繁会被黑ip
 过10分钟再执行
