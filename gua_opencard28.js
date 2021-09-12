@@ -20,7 +20,7 @@ guaopencard28="true"
 
 All变量适用
 ————————————————
-入口：[ 9.11~9.13 母婴有机日 好物超值购 (https://lzdz1-isv.isvjcloud.com/dingzhi/dz/openCard/activity?activityId=e7fe51d43cd845cd85f8be756192c74c&shareUuid=d9a73da5bfb2476f917b004fc0ce833c)]
+入口：[ 9.11~9.13 母婴有机日 好物超值购 (https://lzdz1-isv.isvjcloud.com/dingzhi/dz/openCard/activity?activityId=e7fe51d43cd845cd85f8be756192c74c&shareUuid=45a01a4769d24707a83d232496c78c62)]
 
 请求太频繁会被黑ip
 过10分钟再执行
