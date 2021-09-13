@@ -21,7 +21,7 @@ ck1满5人自动换ck2
 如需执行脚本请设置环境变量
 guaopencard30="true"
 ————————————————
-入口：[9.13~9.27 京秋鲜礼季 (https://lzdz1-isv.isvjcloud.com/dingzhi/jdfresh/supercategory/activity?activityId=dz2109100010214101&shareUuid=6e9aaa56e925432f8e2847186be24f40)]
+入口：[9.13~9.27 京秋鲜礼季 (https://lzdz1-isv.isvjcloud.com/dingzhi/jdfresh/supercategory/activity?activityId=dz2109100010214101&shareUuid=5d858ba23bb942239b72db18aeed50bc)]
 
 ============Quantumultx===============
 [task_local]
