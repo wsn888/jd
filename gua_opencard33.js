@@ -16,7 +16,7 @@ guaopencard_draw33="3"
 
 默认脚本不执行
 如需执行脚本请设置环境变量
-guaopencard33="true" (https://lzdz1-isv.isvjcloud.com/dingzhi/shop/league/activity?activityId=dz2109100001616201&shareUuid=6f4c72733103462aacdcac7520e5fe03)]
+guaopencard33="true" (https://lzdz1-isv.isvjcloud.com/dingzhi/shop/league/activity?activityId=dz2109100001616201&shareUuid=d9415431572c4f2c9d12173535a4705b)]
 
 ============Quantumultx===============
 [task_local]
