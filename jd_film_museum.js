@@ -2,7 +2,8 @@
 动人影像馆
 抽奖貌似没水了，累计签到有豆子，5天25豆，10天50豆，14天100豆  应该能拿到
 注意*****************脚本会开一个会员卡，会加购，会助力作者********************
-cron 23 10,22 13-26 9 * https://raw.githubusercontent.com/star261/jd/main/scripts/jd_film_museum.js
+///cron 23 15 13-26 9 *
+///https://raw.githubusercontent.com/star261/jd/main/scripts/jd_film_museum.js
 * */
 const $ = new Env('影像馆');
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
