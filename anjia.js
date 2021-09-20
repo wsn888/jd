@@ -6,7 +6,7 @@
 入口复制到jd：
 26.0复制整段话 http:/JdATvFnV6L8rPy 集结战队，召唤好友免费赢京豆！￥77srT2TexBJwpK￥去【京東】吧※
 */
-let wait = 30000
+let wait = 3000
 const $ = new Env('9.1-9.30 组队瓜分京豆 (安佳)');
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 let UA = require('./USER_AGENTS.js').USER_AGENT;
