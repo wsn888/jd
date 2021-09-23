@@ -21,7 +21,7 @@ guaopenwait37="0"
 
 All变量适用
 ————————————————
-入口：[ 9.22~9.30 女神狂欢 大牌盛典 (https://lzdz1-isv.isvjcloud.com/dingzhi/dz/openCard/activity?activityId=fids98g8f798sd787f7gf0g9d8sd9f8s&shareUuid=b908e346ac6543b4aede18cc97a2d74e)]
+入口：[ 9.22~9.30 女神狂欢 大牌盛典 (https://lzdz1-isv.isvjcloud.com/dingzhi/dz/openCard/activity?activityId=fids98g8f798sd787f7gf0g9d8sd9f8s&shareUuid=e6a9f055c2644c33ab04a53a55331123)]
 
 请求太频繁会被黑ip
 过10分钟再执行
