@@ -20,7 +20,7 @@ guaopenwait39="0"
 
 All变量适用
 ————————————————
-入口：[ 5.18~12.31 大牌联合 瓜分京豆 (https://lzdz1-isv.isvjcloud.com/dingzhi/commonUse/openCard/activity?activityId=581a27b8458743069b802351cdbae6b2&shareUuid=e7e091977fd9460a96a6ad46bc80d51b)]
+入口：[ 5.18~12.31 大牌联合 瓜分京豆 (https://lzdz1-isv.isvjcloud.com/dingzhi/commonUse/openCard/activity?activityId=581a27b8458743069b802351cdbae6b2&shareUuid=c37ce8a5efd94f1ca9ace70bfc9fa865)]
 
 请求太频繁会被黑ip
 过10分钟再执行
