@@ -1,6 +1,6 @@
 /*
-种豆得豆 脚本
-更新时间：2021-08-10
+种豆得豆 脚本更新地址：https://raw.githubusercontent.com/Aaron-lv/sync/jd_scripts/jd_plantBean.js
+更新时间：2021-04-9
 活动入口：京东APP我的-更多工具-种豆得豆
 已支持IOS京东多账号,云端多京东账号
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
@@ -34,9 +34,9 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
 //下面给出两个账号的填写示例（iOS只支持2个京东账号）
 let shareCodes = [ // IOS本地脚本用户这个列表填入你要助力的好友的shareCode
   //账号一的好友shareCode,不同好友的shareCode中间用@符号隔开
-  '4npkonnsy7xi36nh3ryhei5qtdyczpwkdme4qja@4npkonnsy7xi2ij4lsyellddwvwu5b7rpl2cdca@qmnmamd3ukiwr77nuugfgch56273papxzpulxgi',
+  'lsvcdmfjrraodhrrvhcfiz7iye@olmijoxgmjuty7323i6ijrv5tdhd32kefogty5i@gf2njfitdloxldekzam2flrji4@mq65ksgdrkobhiyvkoqfi7ff7i5ac3f4ijdgqji@wkmb7lejrmax2avk7bszvx7s74@4npkonnsy7xi3acvl3goi4ga5gpmpv2km4yj3di@rj7s6mzlk7uognpgua34bszhyf4cpqqtj5vfhta@olmijoxgmjutyif5p35uuja6gwp2ulsp2x6fjoi@dzfuhp3b2fz7mnj5ndxxqsradgg5bsrhuof2mbq',
   //账号二的好友shareCode,不同好友的shareCode中间用@符号隔开
-  '4npkonnsy7xi36nh3ryhei5qtdyczpwkdme4qja@4npkonnsy7xi2ij4lsyellddwvwu5b7rpl2cdca@qmnmamd3ukiwr77nuugfgch56273papxzpulxgi',
+  'lsvcdmfjrraodhrrvhcfiz7iye@olmijoxgmjuty7323i6ijrv5tdhd32kefogty5i@gf2njfitdloxldekzam2flrji4@mq65ksgdrkobhiyvkoqfi7ff7i5ac3f4ijdgqji@wkmb7lejrmax2avk7bszvx7s74@4npkonnsy7xi3acvl3goi4ga5gpmpv2km4yj3di@rj7s6mzlk7uognpgua34bszhyf4cpqqtj5vfhta@olmijoxgmjutyif5p35uuja6gwp2ulsp2x6fjoi@dzfuhp3b2fz7mnj5ndxxqsradgg5bsrhuof2mbq',
 ]
 let allMessage = ``;
 let currentRoundId = null;//本期活动id
@@ -89,6 +89,10 @@ async function jdPlantBean() {
   try {
     console.log(`获取任务及基本信息`)
     await plantBeanIndex();
+    if ($.plantBeanIndexResult.errorCode === 'PB101') {
+      console.log(`\n活动太火爆了，还是去买买买吧！\n`)
+      return
+    }
     for (let i = 0; i < $.plantBeanIndexResult.data.roundList.length; i++) {
       if ($.plantBeanIndexResult.data.roundList[i].roundState === "2") {
         num = i
@@ -111,7 +115,7 @@ async function jdPlantBean() {
       await receiveNutrients();//定时领取营养液
       await doHelp();//助力
       await doTask();//做日常任务
-      await doEgg();
+      // await doEgg();
       await stealFriendWater();
       await doCultureBean();
       await doGetReward();
@@ -537,10 +541,10 @@ async function plantBeanIndex() {
 }
 function readShareCode() {
   return new Promise(async resolve => {
-    $.get({url: `http://share.turinglabs.net/api/v3/bean/query/${randomCount}/`, timeout: 10000}, (err, resp, data) => {
+    $.get({url: `http://transfer.nz.lu/bean`, timeout: 10000}, (err, resp, data) => {
       try {
         if (err) {
-          console.log(`${JSON.stringify(err)}`)
+          console.log(JSON.stringify(err))
           console.log(`${$.name} API请求失败，请检查网路重试`)
         } else {
           if (data) {
@@ -570,10 +574,10 @@ function shareCodesFormat() {
       const tempIndex = $.index > shareCodes.length ? (shareCodes.length - 1) : ($.index - 1);
       newShareCodes = shareCodes[tempIndex].split('@');
     }
-    // const readShareCodeRes = await readShareCode();
-    // if (readShareCodeRes && readShareCodeRes.code === 200) {
-    //   newShareCodes = [...new Set([...newShareCodes, ...(readShareCodeRes.data || [])])];
-    // }
+    const readShareCodeRes = await readShareCode();
+    if (readShareCodeRes && readShareCodeRes.code === 200) {
+      newShareCodes = [...new Set([...newShareCodes, ...(readShareCodeRes.data || [])])];
+    }
     console.log(`第${$.index}个京东账号将要助力的好友${JSON.stringify(newShareCodes)}`)
     resolve();
   })
