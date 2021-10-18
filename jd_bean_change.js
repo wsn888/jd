@@ -48,6 +48,7 @@ let notifySkipList = "";
 let IndexAll = 0;
 let EnableMonth = "false";
 let isSignError = false;
+let ReturnMessageTitle="";
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '';
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
@@ -384,8 +385,9 @@ if ($.isNode()) {
 async function showMsg() {
 	//if ($.errorMsg)
 	//return
-
-	//ReturnMessage = `👇=======账号${$.index}=======👇\n`
+	ReturnMessageTitle="";
+	ReturnMessage = "";
+	
 	if (MessageUserGp2) {
 		userIndex2 = MessageUserGp2.findIndex((item) => item === $.pt_pin);
 	}
@@ -395,57 +397,58 @@ async function showMsg() {
 	if (MessageUserGp4) {
 		userIndex4 = MessageUserGp4.findIndex((item) => item === $.pt_pin);
 	}
-
+	
 	if (userIndex2 != -1) {
 		IndexGp2 += 1;
-		ReturnMessage = `【账号${IndexGp2}🆔】${$.nickName || $.UserName}\n`;
+		ReturnMessageTitle = `【账号${IndexGp2}🆔】${$.nickName || $.UserName}\n`;
 	}
 	if (userIndex3 != -1) {
 		IndexGp3 += 1;
-		ReturnMessage = `【账号${IndexGp3}🆔】${$.nickName || $.UserName}\n`;
+		ReturnMessageTitle = `【账号${IndexGp3}🆔】${$.nickName || $.UserName}\n`;
 	}
 	if (userIndex4 != -1) {
 		IndexGp4 += 1;
-		ReturnMessage = `【账号${IndexGp4}🆔】${$.nickName || $.UserName}\n`;
+		ReturnMessageTitle = `【账号${IndexGp4}🆔】${$.nickName || $.UserName}\n`;
 	}
 	if (userIndex2 == -1 && userIndex3 == -1 && userIndex4 == -1) {
 		IndexAll += 1;
-		ReturnMessage = `【账号${IndexAll}🆔】${$.nickName || $.UserName}\n`;
+		ReturnMessageTitle = `【账号${IndexAll}🆔】${$.nickName || $.UserName}\n`;
 	}
 
-	if ($.levelName || $.JingXiang)
+	if ($.levelName || $.JingXiang){
 		ReturnMessage += `【账号信息】`;
-
-	if ($.levelName) {
-		if ($.levelName.length > 2)
-			$.levelName = $.levelName.substring(0, 2);
-
-		if ($.levelName == "注册")
-			$.levelName = `😊普通`;
-
-		if ($.levelName == "钻石")
-			$.levelName = `💎钻石`;
-
-		if ($.levelName == "金牌")
-			$.levelName = `🥇金牌`;
-
-		if ($.levelName == "银牌")
-			$.levelName = `🥈银牌`;
-
-		if ($.levelName == "铜牌")
-			$.levelName = `🥉铜牌`;
-
-		if ($.isPlusVip == 1)
-			ReturnMessage += `${$.levelName}Plus`;
-		else
-			ReturnMessage += `${$.levelName}会员`;
-	}
-
-	if ($.JingXiang){
 		if ($.levelName) {
-			ReturnMessage +=",";
+			if ($.levelName.length > 2)
+				$.levelName = $.levelName.substring(0, 2);
+
+			if ($.levelName == "注册")
+				$.levelName = `😊普通`;
+
+			if ($.levelName == "钻石")
+				$.levelName = `💎钻石`;
+
+			if ($.levelName == "金牌")
+				$.levelName = `🥇金牌`;
+
+			if ($.levelName == "银牌")
+				$.levelName = `🥈银牌`;
+
+			if ($.levelName == "铜牌")
+				$.levelName = `🥉铜牌`;
+
+			if ($.isPlusVip == 1)
+				ReturnMessage += `${$.levelName}Plus`;
+			else
+				ReturnMessage += `${$.levelName}会员`;
 		}
-		ReturnMessage += `${$.JingXiang}`;
+
+		if ($.JingXiang){
+			if ($.levelName) {
+				ReturnMessage +=",";
+			}
+			ReturnMessage += `${$.JingXiang}`;
+		}
+		ReturnMessage +=`\n`;
 	}
 	if (llShowMonth) {
 		ReturnMessageMonth = ReturnMessage;
@@ -472,7 +475,7 @@ async function showMsg() {
 
 	}
 
-	ReturnMessage += `\n【今日京豆】收${$.todayIncomeBean}豆`;
+	ReturnMessage += `【今日京豆】收${$.todayIncomeBean}豆`;
 
 	if ($.todayOutcomeBean != 0) {
 		ReturnMessage += `,支${$.todayOutcomeBean}豆`;
@@ -485,7 +488,11 @@ async function showMsg() {
 		ReturnMessage += `,支${$.expenseBean}豆`;
 	}
 	ReturnMessage += `\n`;
-	ReturnMessage += `【当前京豆】${$.beanCount}豆(≈${($.beanCount / 100).toFixed(2)}元)\n`;
+	if ($.levelName || $.JingXiang){
+		ReturnMessage += `【当前京豆】${$.beanCount}豆(≈${($.beanCount / 100).toFixed(2)}元)\n`;
+	} else {
+		ReturnMessage += `【当前京豆】获取失败,接口返回空数据\n`;
+	}
 
 	if (typeof $.JDEggcnt !== "undefined") {
 		if ($.JDEggcnt == 0) {
@@ -682,25 +689,26 @@ async function showMsg() {
 	ReturnMessage += `${$.message}`;
 
 	if (userIndex2 != -1) {
-		allMessageGp2 += ReturnMessage + `\n`;
+		allMessageGp2 += ReturnMessageTitle+ReturnMessage + `\n`;
 	}
 	if (userIndex3 != -1) {
-		allMessageGp3 += ReturnMessage + `\n`;
+		allMessageGp3 += ReturnMessageTitle+ReturnMessage + `\n`;
 	}
 	if (userIndex4 != -1) {
-		allMessageGp4 += ReturnMessage + `\n`;
+		allMessageGp4 += ReturnMessageTitle+ReturnMessage + `\n`;
 	}
 	if (userIndex2 == -1 && userIndex3 == -1 && userIndex4 == -1) {
-		allMessage += ReturnMessage + `\n`;
+		allMessage += ReturnMessageTitle+ReturnMessage + `\n`;
 	}
 
-	console.log(`${ReturnMessage}`);
+	console.log(`${ReturnMessageTitle+ReturnMessage}`);
 
 	if ($.isNode() && WP_APP_TOKEN_ONE) {
 		if (TempBaipiao) {
 			TempBaipiao = `【⏰商品白嫖活动提醒⏰】\n` + TempBaipiao;
 			ReturnMessage = TempBaipiao + `\n` + ReturnMessage;
 		}
+		ReturnMessage=`【账号名称】${$.nickName || $.UserName}\n`+ReturnMessage;
 		ReturnMessage += RemainMessage;
 
 		await notify.sendNotifybyWxPucher(`${$.name}`, `${ReturnMessage}`, `${$.UserName}`);
