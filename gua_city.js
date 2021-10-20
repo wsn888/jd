@@ -318,7 +318,7 @@ function city_lotteryAward() {
 function readShareCode() {
   console.log(`开始`)
   return new Promise(async resolve => {
-    $.get({url: `https://jd.smiek.tk/city`, 'timeout': 10000}, (err, resp, data) => {
+    $.get({url: `https://`, 'timeout': 10000}, (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
