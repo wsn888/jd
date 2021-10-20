@@ -102,6 +102,7 @@ async function main() {
     await takeGetRequest('get_exchange');
     for (let i = $.exChangeList.length -1; i >= 0 ; i--) {
         let oneExchange = $.exChangeList[i];
+        console.log(`奖励：${oneExchange.name}，库存：${oneExchange.stock}`);
         if(exchangeId !== '999' && Number(exchangeId) !== oneExchange.id){
             continue;
         }
@@ -137,11 +138,7 @@ async function doTask(){
     $.taskDetailList = []
     for (let i = 0; i < $.taskList.length; i++) {
         $.oneTask = $.taskList[i];
-        if($.oneTask.simpleRecordInfoVo){
-            $.taskDetailList.push($.oneTask.simpleRecordInfoVo);
-        }else{
-            $.taskDetailList =  $.oneTask.browseShopVo || $.oneTask.shoppingActivityVos || $.oneTask.productInfoVos ||$.oneTask.assistTaskDetailVo;
-        }
+        $.taskDetailList = $.oneTask.simpleRecordInfoVo || $.oneTask.browseShopVo || $.oneTask.shoppingActivityVos || $.oneTask.productInfoVos ||$.oneTask.assistTaskDetailVo;
         console.log(`任务：${$.oneTask.taskName},需要完成${$.oneTask.maxTimes}次，已完成${$.oneTask.times}次`);
         if($.oneTask.status === 2){
             continue;
@@ -156,7 +153,12 @@ async function doTask(){
             continue;
         }
         if($.oneTask.taskType === 12){
-            $.info = $.taskDetailList;
+            if(Array.isArray($.taskDetailList)){
+                $.info = $.taskDetailList[0];
+            }else{
+                $.info = $.taskDetailList;
+            }
+            console.log('111:'+JSON.stringify($.info ))
             console.log(`任务：${$.oneTask.taskName} 去执行`);
             await takePostRequest('do_task');
             await $.wait(1000);
