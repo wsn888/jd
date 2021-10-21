@@ -27,8 +27,8 @@ if ($.isNode()) {
 }
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 let inviteCodes = [
-  'RtGKz--iRQz1f9WcEIFi3r_CQN7yTNVN8tuJvwgHOk9GoUkogg@RtGKz-6gFQv2f4DLRNIwh_7x--zcZJfl2ZRgi_6y9jR_C5gVfg@RtGKsZ7TI2PkJMvrYLJwmvoZZYBeqAqWu6lKDR12AOOEG-LQ',
-  'RtGKz--iRQz1f9WcEIFi3r_CQN7yTNVN8tuJvwgHOk9GoUkogg@RtGKz-6gFQv2f4DLRNIwh_7x--zcZJfl2ZRgi_6y9jR_C5gVfg@RtGKsZ7TI2PkJMvrYLJwmvoZZYBeqAqWu6lKDR12AOOEG-LQ'
+  'RtGKzrihQw6hfYTPEtMy0A1vM1ibgTeCpYV6qYA0wNuelDPPLg',
+  'RtGKvYTEGVDkGsT6RK5bmqTc70BvSeKy4Dl4I-VmAg5ByvAS'
 ]
 $.shareCodesArr = [];
 
@@ -244,6 +244,7 @@ function getInfo(inviteId, flag = false) {
 function receiveCash(roundNum = '') {
   let body = {"cashType":2}
   if(roundNum) body = {"cashType":1,"roundNum":roundNum}
+  if(roundNum == -1) body = {"cashType":4}
   return new Promise((resolve) => {
     $.post(taskPostUrl("city_receiveCash",body), async (err, resp, data) => {
       try {
@@ -279,6 +280,10 @@ function getInviteInfo() {
           if (safeGet(data)) {
             // console.log(data)
             data = JSON.parse(data);
+            if(data.data.result.masterData.actStatus == 2){
+              console.log('领取赚赏金')
+              await receiveCash(-1)
+            }
           }
         }
       } catch (e) {
@@ -318,7 +323,7 @@ function city_lotteryAward() {
 function readShareCode() {
   console.log(`开始`)
   return new Promise(async resolve => {
-    $.get({url: `https://`, 'timeout': 10000}, (err, resp, data) => {
+    $.get({url: `https://jd.smiek.tk/city`, 'timeout': 10000}, (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
