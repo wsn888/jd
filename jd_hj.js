@@ -3,7 +3,7 @@
 
 https://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity/5063373?activityId=llk20211020&shareUuid=91245cc15b1847b1961c10c5412f2420
 */
-const $ = new Env("惠聚京东 好物连连");
+const $ = new Env("惠聚京东 好物连连【新】");
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
 let cookiesArr = [], cookie = '', message = '';
