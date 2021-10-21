@@ -1,5 +1,5 @@
 /*
-惠聚京东 好物连连
+惠聚京东 好物连连【新】
 
 https://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity/5063373?activityId=llk20211020&shareUuid=91245cc15b1847b1961c10c5412f2420
 */
@@ -31,7 +31,7 @@ if ($.isNode()) {
     authorCodeList = await getAuthorCodeList('https://gitee.com/fatelight/dongge/raw/master/dongge/lzdz1_huanju2.json')
     if(authorCodeList === '404: Not Found'){
         authorCodeList = [
-            'e4bf94e2bfb64e68aec75908af30a950',
+            '13c2b83c0f224a9ea77a7a46860f42ea',
         ]
     }
     // console.log(authorCodeList)
