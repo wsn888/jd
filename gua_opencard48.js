@@ -28,7 +28,7 @@ guaopenwait48="0"
 
 All变量适用
 ————————————————
-入口：[ 10.20~11.3 惠聚京东 好物连连 (https://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=llk20211020&shareUuid=3022dfd1f3eb440c956eb4e77f8c2b12)]
+入口：[ 10.20~11.3 惠聚京东 好物连连 (https://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=llk20211020&shareUuid=13c2b83c0f224a9ea77a7a46860f42ea)]
 
 请求太频繁会被黑ip
 过10分钟再执行
