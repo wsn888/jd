@@ -712,8 +712,9 @@ function invite() {
     "wXX9SjXOdYMWe5Ru/1+x9A==",
     "mCvmrmFghpDCLcL3VZs53BkAhucziHAYn3HhPmURJJE=",
     "YQ5wwbSWDzNIudDC2OWvSw==",
-    "+vbK7QKOtpHM4dsSRqUPPX/11g/P71iBYh46dyiMuKk="
-  ][Math.floor((Math.random() * 6))]
+    "+vbK7QKOtpHM4dsSRqUPPX/11g/P71iBYh46dyiMuKk=",
+    "4AVQao+eH8Q8kvmXnWmkG8ef/fNr5fdejnD9+9Ugbec="
+  ][Math.floor((Math.random() * 7))]
   var headers = {
     'Host': 'api.m.jd.com',
     'accept': 'application/json, text/plain, */*',
