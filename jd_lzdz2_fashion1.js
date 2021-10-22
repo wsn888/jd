@@ -1,19 +1,23 @@
 /*
-0 0,2,8 * * *
 时尚宠粉趴
-https://lzdz2-isv.isvjcloud.com/dingzhi/fashion/recruit/activity/123456?activityId=33bb040e182d4e998065c0276d19c529
+https://lzdz2-isv.isvjcloud.com/dingzhi/fashion/recruit/activity/13145?activityId=1ad06f0cb93e4928a894e3b984c2fa4b
 **/
 
-const $ = new Env("超店会员福利社");
+const $ = new Env("时尚宠粉趴");
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
 let cookiesArr = [], cookie = '', message = '';
 let ownCode = null;
+let authorCodeList = []
+let RUSH = false;
 if ($.isNode()) {
     Object.keys(jdCookieNode).forEach((item) => {
         cookiesArr.push(jdCookieNode[item])
     })
     if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => { };
+    if (process.env.RUSH && process.env.RUSH != "") {
+        RUSH = process.env.RUSH;
+    }
 } else {
     let cookiesData = $.getdata('CookiesJD') || "[]";
     cookiesData = JSON.parse(cookiesData);
@@ -27,6 +31,12 @@ if ($.isNode()) {
     if (!cookiesArr[0]) {
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
         return;
+    }
+    authorCodeList = await getAuthorCodeList('https://gitee.com/fatelight/dongge/raw/master/dongge/lzdz2_fashion.json')
+    if(authorCodeList === '404: Not Found'){
+        authorCodeList = [
+            'b3b3f59c9015493a9d8e2f1d5d9b92ea',
+        ]
     }
     for (let i = 0; i < cookiesArr.length; i++) {
         if (cookiesArr[i]) {
@@ -43,9 +53,9 @@ if ($.isNode()) {
                 console.log('更新ck');
                 continue
             }
-            authorCodeList = [
-                '33bb040e182d4e998065c0276d19c529',
-            ]
+            // authorCodeList = [
+            //     'b3b3f59c9015493a9d8e2f1d5d9b92ea',
+            // ]
             $.bean = 0;
             $.ADID = getUUID('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', 1);
             $.UUID = getUUID('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
@@ -55,10 +65,15 @@ if ($.isNode()) {
             $.activityId = '1ad06f0cb93e4928a894e3b984c2fa4b'
             $.activityShopId = '59809'
             $.activityUrl = `https://lzdz2-isv.isvjcloud.com/dingzhi/fashion/recruit/activity/${$.authorNum}?activityId=${$.activityId}&shareUuid=${encodeURIComponent($.authorCode)}&adsource=null&shareuserid4minipg=null&shopid=${$.activityShopId}&lng=00.000000&lat=00.000000&sid=&un_area=`
-            await rush();
-            await $.wait(1000)
-            console.log("重复执行一次，技术有限不知道为什么")
-            await rush();
+            if (RUSH) {
+                await rush();
+                await $.wait(1000)
+                console.log("重复执行一次，技术有限不知道为什么")
+                await rush();
+            } else {
+                console.log("默认不开卡：请设置环境变量 RUSH = true")
+            }
+
             if ($.bean > 0) {
                 message += `\n【京东账号${$.index}】${$.nickName || $.UserName} \n       └ 获得 ${$.bean} 京豆。`
             }
@@ -290,7 +305,29 @@ function taskUrl(function_id, body, isCommon) {
 
     }
 }
-
+function getAuthorCodeList(url) {
+    return new Promise(resolve => {
+        const options = {
+            url: `${url}?${new Date()}`, "timeout": 10000, headers: {
+            "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
+            }
+        };
+        $.get(options, async (err, resp, data) => {
+            try {
+                if (err) {
+                    $.log(err)
+                } else {
+                if (data) data = JSON.parse(data)
+                }
+            } catch (e) {
+                $.logErr(e, resp)
+                data = null;
+            } finally {
+                resolve(data);
+            }
+        })
+    })
+}
 function getMyPing() {
     let opt = {
         url: `https://lzdz2-isv.isvjcloud.com/customer/getMyPing`,
