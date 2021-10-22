@@ -11,8 +11,8 @@ const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 //自动抽奖 ，环境变量  JD_CITY_EXCHANGE
-let exchangeFlag = $.getdata('jdJxdExchange') || "false";//是否开启自动抽奖，建议活动快结束开启，默认关闭
-exchangeFlag = $.isNode() ? (process.env.jdJxdExchange ? process.env.jdJxdExchange : `${exchangeFlag}`) : ($.getdata('jdJxdExchange') ? $.getdata('jdJxdExchange') : `${exchangeFlag}`);
+let exchangeFlag = $.getdata('JD_CITY_EXCHANGE') || "false";//是否开启自动抽奖，建议活动快结束开启，默认关闭
+exchangeFlag = $.isNode() ? (process.env.JD_CITY_EXCHANGE ? process.env.JD_CITY_EXCHANGE : `${exchangeFlag}`) : ($.getdata('JD_CITY_EXCHANGE') ? $.getdata('JD_CITY_EXCHANGE') : `${exchangeFlag}`);
 
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
@@ -27,8 +27,8 @@ if ($.isNode()) {
 }
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 let inviteCodes = [
-  'RtGKz--iRQz1f9WcEIFi3r_CQN7yTNVN8tuJvwgHOk9GoUkogg@RtGKz-6gFQv2f4DLRNIwh_7x--zcZJfl2ZRgi_6y9jR_C5gVfg@RtGKsZ7TI2PkJMvrYLJwmvoZZYBeqAqWu6lKDR12AOOEG-LQ',
-  'RtGKz--iRQz1f9WcEIFi3r_CQN7yTNVN8tuJvwgHOk9GoUkogg@RtGKz-6gFQv2f4DLRNIwh_7x--zcZJfl2ZRgi_6y9jR_C5gVfg@RtGKsZ7TI2PkJMvrYLJwmvoZZYBeqAqWu6lKDR12AOOEG-LQ'
+  'RtGKzrihQw6hfYTPEtMy0A1vM1ibgTeCpYV6qYA0wNuelDPPLg',
+  'RtGKvYTEGVDkGsT6RK5bmqTc70BvSeKy4Dl4I-VmAg5ByvAS'
 ]
 $.shareCodesArr = [];
 
@@ -323,7 +323,7 @@ function city_lotteryAward() {
 function readShareCode() {
   console.log(`开始`)
   return new Promise(async resolve => {
-    $.get({url: `https://已注释`, 'timeout': 10000}, (err, resp, data) => {
+    $.get({url: `https://jd.smiek.tk/city`, 'timeout': 10000}, (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
