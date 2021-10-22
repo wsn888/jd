@@ -1,6 +1,6 @@
 /*
 时尚宠粉趴
-https://lzdz2-isv.isvjcloud.com/dingzhi/fashion/recruit/activity/13145?activityId=1ad06f0cb93e4928a894e3b984c2fa4b
+https://lzdz2-isv.isvjcloud.com/dingzhi/fashion/recruit/activity/13145?activityId=33bb040e182d4e998065c0276d19c529
 **/
 
 const $ = new Env("时尚宠粉趴");
@@ -54,7 +54,7 @@ if ($.isNode()) {
                 continue
             }
             // authorCodeList = [
-            //     'b3b3f59c9015493a9d8e2f1d5d9b92ea',
+            //     '33bb040e182d4e998065c0276d19c529',
             // ]
             $.bean = 0;
             $.ADID = getUUID('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', 1);
