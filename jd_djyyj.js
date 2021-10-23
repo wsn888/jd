@@ -5,6 +5,7 @@ boxjs：https://raw.githubusercontent.com/Ariszy/Private-Script/master/Ariszy.bo
 
 */
 const Ariszy = '电竞预言家'
+const $ = new Env("电竞预言家");
 const $ = Env(Ariszy)
 const notify = $.isNode() ?require('./sendNotify') : '';
 cookiesArr = []
