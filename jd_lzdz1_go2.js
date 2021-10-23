@@ -1,7 +1,7 @@
 /*
 大牌联合  狂欢抢先GO
 10-23 ~ 10~29
-https://lzdz1-isv.isvjcloud.com/dingzhi/dz/openCard/activity?activityId=dz20211023wkcn14cn5cnd0sdbs5sbx&shareUuid=e4af9e2576f742518d31de9d38c34b14
+https://lzdz1-isv.isvjcloud.com/dingzhi/dz/openCard/activity?activityId=dz20211023wkcn14cn5cnd0sdbs5sbx&shareUuid=76289ab0690046d9b41327ea492153e8
 
 默认执行脚本。如果需要不执行
 环境变量 NO_RUSH=false
@@ -38,7 +38,7 @@ if (process.env.NO_RUSH && process.env.NO_RUSH != "") {
     authorCodeList = await getAuthorCodeList('https://gitee.com/fatelight/dongge/raw/master/dongge/lzdz1_go2.json')
     if(authorCodeList === '404: Not Found'){
         authorCodeList = [
-            'e4af9e2576f742518d31de9d38c34b14',
+            '76289ab0690046d9b41327ea492153e8',
         ]
     }
 
