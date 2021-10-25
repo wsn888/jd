@@ -1,6 +1,6 @@
 /*
 时尚宠粉趴
-https://lzdz1-isv.isvjcloud.com/dingzhi/fashion/recruit/activity/13145?activityId=1ad06f0cb93e4928a894e3b984c2fa4b
+https://lzdz1-isv.isvjcloud.com/dingzhi/fashion/recruit/activity/13145?activityId=8868d0ea76114a7aa1d65e58e8727a10
 **/
 
 const $ = new Env("超店会员福利社");
@@ -31,7 +31,7 @@ if ($.isNode()) {
     // authorCodeList = await getAuthorCodeList('https://gitee.com/fatelight/dongge/raw/master/dongge/lzdz2_bw.json')
     // if(authorCodeList === '404: Not Found'){
     //     authorCodeList = [
-    //         '4c412298c8db40729fc1bd58ec7303a8',
+    //         '8868d0ea76114a7aa1d65e58e8727a10',
     //     ]
     // }
     for (let i = 0; i < cookiesArr.length; i++) {
@@ -50,13 +50,7 @@ if ($.isNode()) {
                 continue
             }
             authorCodeList = [
-                '4c412298c8db40729fc1bd58ec7303a8',
-                '2adedd04268248169ca84452baf8cc2f',
-                '232bd57a88244e639bc918932ef2d54a',
-                'd7b08eec1d644c61ab9d8d23b95cedaf',
-                'd74b0422c29343c08b47e2dbccd73664',
-                '8f69476d09be48a8a9e2ec773673048b',
-                'f1dedba4dce34b93aa5357358690669c',
+                '8868d0ea76114a7aa1d65e58e8727a10',
             ]
             $.bean = 0;
             $.ADID = getUUID('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', 1);
