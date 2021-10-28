@@ -6,29 +6,30 @@
 需要算法支持
 默认：不执行 如需要请添加环境变量
 gua_cleancart_Run="true"
-
+gua_cleancart_SignUrl="" # 算法url
 
 ——————————————
-@&@ 固定
-|-|账号之间隔开
-英文大小写请填清楚
-优先匹配账号
-定义不清空的[商品]名称支持模糊匹配
+1.@&@ 前面加数字 指定账号pin
+如果有中文请填写中文
+2.|-| 账号之间隔开
+3.英文大小写请填清楚
+4.优先匹配账号再匹配*
+5.定义不清空的[商品]名称支持模糊匹配
+6.pin@&@ 👉 指定账号(后面添加商品 前面账号[pin] *表示所有账号
+7.|-| 👉 账号之间隔开
 ——————————————
-2@&@ 👉 指定账号(后面添加商品 前面账号顺序[数字] *表示所有账号
+
+商品名称规则
+——————gua_cleancart_products————————
+pin2@&@商品1,商品2👉该pin这几个商品名不清空
+pin5@&@👉该pin全清
+pin3@&@不清空👉该pin不清空
+*@&@不清空👉所有账号不请客
+*@&@👉所有账号清空
+
+优先匹配账号再匹配*
 |-| 👉 账号之间隔开
-——————————————
-商品规则
-5@&@ 👉 表示账号5清空所有的商品
-4@&@不清空 👉 表示账号4不清空商品
-2@&@商品1,商品2,商品3 👉 表示账号2不清空商品1、商品2和商品3
-*@&@商品4,商品5,商品6 👉 表示所有账号不清空商品4、商品5和商品6
-*@&@不清空 👉 表示所有账号不清空购物车
-——————————————
-gua_cleancart_products="2@&@商品1,商品2|-|5@&@|-|*@&@不清空"
-gua_cleancart_products="2@&@商品1,商品2*@&@不清空"
-gua_cleancart_products="2@&@*@&@不清空"
-gua_cleancart_products="*@&@不清空"
+有填帐号pin则*不适配
 ——————————————
 如果有不清空的一定要加上"*@&@不清空"
 防止没指定的账号购物车全清空
@@ -90,19 +91,21 @@ for (let i in productsArr) {
     console.log('脚本停止\n请添加环境变量[gua_cleancart_products]\n清空商品\n内容规则看脚本文件')
     return
   }
+  $.out = false
   for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
     if (cookie) {
       $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
       $.index = i + 1;
       console.log(`\n\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
-      if(cleancartProductsAll[$.index]){
-        $.cleancartProductsArr = cleancartProductsAll[""+$.index]
+      if(cleancartProductsAll[$.UserName]){
+        $.cleancartProductsArr = cleancartProductsAll[$.UserName]
       }else if(cleancartProductsAll["*"]){
         $.cleancartProductsArr = cleancartProductsAll["*"]
-      }else $.cleancartProductsArr = []
-      console.log($.cleancartProductsArr)
+      }else $.cleancartProductsArr = false
+      if($.cleancartProductsArr) console.log($.cleancartProductsArr)
       await run();
+      if($.out) break
     }
   }
   if(message){
@@ -120,6 +123,7 @@ async function run(){
     let msg = ''
     let signBody = `{"homeWishListUserFlag":"1","userType":"0","updateTag":true,"showPlusEntry":"2","hitNewUIStatus":"1","cvhv":"049591","cartuuid":"hjudwgohxzVu96krv/T6Hg==","adid":""}`
     let body = await jdSign('cartClearQuery', signBody)
+    if($.out) return
     if(!body){
       console.log('获取不到算法')
       return
@@ -130,7 +134,7 @@ async function run(){
       if(res.resultCode == 0){
         if(!res.clearCartInfo || !res.subTitle){
           msg += `${res.mainTitle}\n`
-          console.log('未识别到购物车数据')
+          console.log(res.mainTitle)
         }else{
           let num = 0
           if(res.subTitle){
@@ -162,11 +166,12 @@ async function run(){
             }
             console.log(`准备清空${operNum}件商品`)
             if(operations.length == 0){
-              console.log('没有找到要清空的商品')
-              msg += '没有找到要清空的商品\n'
+              console.log(`清空${operNum}件商品|没有找到要清空的商品`)
+              msg += `清空${operNum}件商品|没有找到要清空的商品\n`
             }else{
               let clearBody = `{"homeWishListUserFlag":"1","userType":"0","updateTag":false,"showPlusEntry":"2","hitNewUIStatus":"1","cvhv":"049591","cartuuid":"hjudwgohxzVu96krv/T6Hg==","operations":${$.toStr(operations,operations)},"adid":"","coord_type":"0"}`
               clearBody = await jdSign('cartClearRemove', clearBody)
+              if($.out) return
               if(!clearBody){
                 console.log('获取不到算法')
               }else{
@@ -193,9 +198,10 @@ async function run(){
             }
           }else if(res.mainTitle){
             msg += `${res.mainTitle}\n`
+            console.log(res.mainTitle)
           }else{
-            console.log('未识别到购物车有商品')
             msg += `未识别到购物车有商品\n`
+            console.log(data)
           }
         }
       }else{
@@ -207,15 +213,16 @@ async function run(){
     if(msg){
       message += `【京东账号${$.index}】${$.nickName || $.UserName}\n${msg}\n`
     }
-    await $.wait(parseInt(Math.random() * 2000 + 1000, 10))
+    await $.wait(parseInt(Math.random() * 2000 + 2000, 10))
   }catch(e){
     console.log(e)
   }
 }
 function toSDS(name){
   let res = true
+  if($.cleancartProductsArr === false) return false
   for(let t of $.cleancartProductsArr || []){
-    if(name.indexOf(t) > -1 || t == '不清空'){
+    if(t && name.indexOf(t) > -1 || t == '不清空'){
       res = false
       break
     }
@@ -256,7 +263,7 @@ function jdSign(fn,body) {
     const fs = require('fs');
     if (fs.existsSync('./gua_encryption_sign.js')) {
       const encryptionSign = require('./gua_encryption_sign');
-      sign = encryptionSign.getSign("cartClearQuery", signBody)
+      sign = encryptionSign.getSign(fn, body)
     }else{
       flag = true
     }
@@ -265,7 +272,11 @@ function jdSign(fn,body) {
     flag = true
   }
   if(!flag) return sign
-  if(!jdSignUrl.match(/^https?:\/\//)) return ''
+  if(!jdSignUrl.match(/^https?:\/\//)){
+    console.log('请填写算法url')
+    $.out = true
+    return ''
+  }
   return new Promise((resolve) => {
     let url = {
       url: jdSignUrl,
