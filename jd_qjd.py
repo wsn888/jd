@@ -21,7 +21,7 @@ new Env('全民抢京豆 8.6-8.16');
 # exit(0)
 #ck 优先读取【JDCookies.txt】 文件内的ck  再到 ENV的 变量 JD_COOKIE='ck1&ck2' 最后才到脚本内 cookies=ck
 cookies = ''
-qjd_zlzh = ['Your JD_User', '买买买']
+qjd_zlzh = ['jd_73646f1f67ea8', 'jd_724d1e13ac63a', 'jd_IBGRYwjxAGVs']
 
 # Env环境设置 通知服务
 # export BARK=''                   # bark服务,苹果商店自行搜索;
