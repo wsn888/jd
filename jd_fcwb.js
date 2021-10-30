@@ -7,7 +7,7 @@ const JD_API_HOST = 'https://api.m.jd.com';
 let cookiesArr = [], cookie = '', message;
 let fcwbinviteCode=''
 let fcwbinviter=''
-let fcwbroud='1' 挖宝场次1初级2中级3高级
+let fcwbroud=''
 let fcwbinviteCodeArr = []
 let fcwbinviterArr= []
 let fcwbinviteCodes=''
