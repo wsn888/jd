@@ -1,4 +1,31 @@
-const $ = new Env('搞基大神-发财挖宝help');
+/*
+发财挖宝
+更新时间：2021-10-30
+活动入口：极速版-发财挖宝
+变量格式  多账号邀请码用@隔开
+export fcwbinviteCode=''
+export fcwbinviter=''
+export fcwbroud=1  ##挖宝场次 1初级2中级3高级
+运行一次即可看到助力码 直接输出的变量格式 直接复制在配置里
+如果没有自动挖那就是写错了 自己手挖吧
+入口：极速版 挖财寻宝
+脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
+============Quantumultx===============
+[task_local]
+#发财挖宝
+20 1,9,16 * * * https://raw.githubusercontent.com/KingRan/JDJB/main/jd_fcwb.js, tag=发财挖宝, img-url=https://github.com/58xinian/icon/raw/master/jdgc.png, enabled=true
+
+================Loon==============
+[Script]
+cron "20 1,9,16 * * *" script-path=https://raw.githubusercontent.com/KingRan/JDJB/main/jd_fcwb.js,tag=发财挖宝
+
+===============Surge=================
+发财挖宝 = type=cron,cronexp="20 1,9,16 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/KingRan/JDJB/main/jd_fcwb.js
+
+============小火箭=========
+发财挖宝 = type=cron,script-path=https://raw.githubusercontent.com/KingRan/JDJB/main/jd_fcwb.js, cronexpr="20 1,9,16 * * *", timeout=3600, enable=true
+ */
+const $ = new Env('极速版-发财挖宝');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
@@ -31,6 +58,10 @@ if ($.isNode()) {
 }
 
 !(async () => {
+  console.log('运行一次即可看到助力码 直接输出的变量格式 直接复制在配置文件里')
+  console.log('环境变量：export fcwbroud=1  ##挖宝场次 1初级2中级3高级')
+  console.log('多账号邀请码用@隔开')
+  
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
     return;
@@ -169,10 +200,11 @@ function wb(round,rowIdx,colIdx) {
              if(data.success==true){
                  curRound = data.data.curRound
                  console.log('第'+curRound+'关')}
+				console.log(`请前往环境变量添加下方变量：'`) 
                console.log(`export fcwbinviteCode='${data.data.inviteCode}'`)  
                console.log(`export fcwbinviter='${data.data.markedPin}'`)  
              }else if(data.success==false){
-             console.log('黑号 快去买吧 叼毛')
+             console.log('你可能是黑号，快去买买买吧')
           }
         }
       } catch (e) {
@@ -225,9 +257,7 @@ function wb(round,rowIdx,colIdx) {
 
     }
   }  
-     
-     
-  
+
   $.get(nm, async (err, resp, data) => {
        
       try {
@@ -251,15 +281,7 @@ function wb(round,rowIdx,colIdx) {
     })
   })
 }
-  
-  
-  
-  
-  
-  
-  
-  
-  
+
   function TotalBean() {
   return new Promise(async resolve => {
     const options = {
