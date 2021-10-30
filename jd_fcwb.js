@@ -1,3 +1,10 @@
+变量格式：
+export fcwbinviteCode=''
+export fcwbinviter=''
+export fcwbroud=1 #挖宝场次 1初级2中级3高级 自己修改
+运行一次即可看到助力码 直接输出的变量格式 直接复制在配置里
+如果没有自动挖那就是写错了 自己手挖吧~
+入口：极速版 挖财寻宝
 const $ = new Env('搞基大神-发财挖宝help');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
