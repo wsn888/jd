@@ -28,7 +28,7 @@ if ($.isNode()) {
     authorCodeList = await getAuthorCodeList('https://gitee.com/fatelight/dongge/raw/master/dongge/jinggengjcq_dapainew.json')
     if(authorCodeList === '404: Not Found'){
         authorCodeList = [
-            'fuMB6t0LHdtq7Dc8pm+TwF4tLNYA4seuA67MOIYQxEk3Vl9+AVo4NF+tgyeIc6A6kdK3rLBQpEQH9V4tdrrh0w==',
+            'QC6MjIz9kcaCtoRUgFAh1V4tLNYA4seuA67MOIYQxEk3Vl9+AVo4NF+tgyeIc6A6kdK3rLBQpEQH9V4tdrrh0w==',
         ]
     }
     for (let i = 0; i < cookiesArr.length; i++) {
