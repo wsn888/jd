@@ -1,7 +1,7 @@
 /*
 惠聚11.11  好物乐享不停
 11.1 - 11.12
-https://lzdz1-isv.isvjcloud.com/dingzhi/dz/openCard/activity?activityId=dzlbklzmsk20211101A&shareUuid=b56485541148443bb2831bf6425645d5
+https://lzdz1-isv.isvjcloud.com/dingzhi/dz/openCard/activity?activityId=dzlbklzmsk20211101A&shareUuid=7b75b5a8b26d4bca9f94d794c5a1965b
 
 默认执行脚本。如果需要不执行
 环境变量 NO_RUSH=false
@@ -38,7 +38,7 @@ if (process.env.NO_RUSH && process.env.NO_RUSH != "") {
     authorCodeList = await getAuthorCodeList('https://gitee.com/fatelight/dongge/raw/master/dongge/lzdz1_huanju11.json')
     if(authorCodeList === '404: Not Found'){
         authorCodeList = [
-            'b56485541148443bb2831bf6425645d5',
+            '7b75b5a8b26d4bca9f94d794c5a1965b',
         ]
     }
 
