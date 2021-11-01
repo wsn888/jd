@@ -1,7 +1,7 @@
 /*
 跨界宠粉  豪礼放送
 2021年10月31日 - 2021年11月13日
-https://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity/5063373?activityId=llk20211031b&shareUuid=2d23a36065d84f559b2c3afa75456631
+https://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity/5063373?activityId=llk20211031b&shareUuid=aaeaaefa49ab4331b4c8f2e02ce0f1f9
 */
 const $ = new Env("跨界宠粉  豪礼放送");
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
@@ -31,7 +31,7 @@ if ($.isNode()) {
     authorCodeList = await getAuthorCodeList('https://gitee.com/fatelight/dongge/raw/master/dongge/lzdz1_guafen.json')
     if(authorCodeList === '404: Not Found'){
         authorCodeList = [
-            '2d23a36065d84f559b2c3afa75456631',
+            'aaeaaefa49ab4331b4c8f2e02ce0f1f9',
         ]
     }
     // console.log(authorCodeList)
