@@ -38,6 +38,9 @@ $.keywordsNum = 0;
         return;
     }
     activityIdList = await getActivityIdList('https://raw.githubusercontent.com/FKPYW/dongge/master/code/wxCollectionActivity.json')
+    if(!activityIdList){
+        activityIdList = await getActivityIdList('https://ghproxy.com/https://raw.githubusercontent.com/FKPYW/dongge/master/code/wxCollectionActivity.json')
+    }
     for(let a in activityIdList){
         activityId = activityIdList[a];
         console.log("开起第 "+ a +" 个活动，活动id："+activityId)
