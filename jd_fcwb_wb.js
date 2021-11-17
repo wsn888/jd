@@ -1,4 +1,4 @@
-const $ = new Env('Faker群友改的发财挖宝');
+const $ = new Env('群友改的发财挖宝');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
