@@ -1,7 +1,7 @@
 /*
 奢宠会员  瓜分万元大奖
 11.23 - 11.30
-https://lzdz1-isv.isvjcloud.com/dingzhi/dz/openCard/activity/8743676?activityId=dzkmladn20211123A&shareUuid=9ab24fa3e2ba4f4aa15ff4f18afa1b51
+https://lzdz1-isv.isvjcloud.com/dingzhi/dz/openCard/activity/8743676?activityId=dzkmladn20211123A&shareUuid=4200a8a4fc844f86ad82a606b947ef15
 
 默认执行脚本。如果需要不执行
 环境变量 NO_RUSH=false
@@ -39,7 +39,7 @@ if (process.env.NO_RUSH && process.env.NO_RUSH != "") {
     authorCodeList = await getAuthorCodeList('https://gitee.com/fatelight/code/raw/master/lzdz1_dapai.json')
     if($.getAuthorCodeListerr === false){
         authorCodeList = [
-            '9ab24fa3e2ba4f4aa15ff4f18afa1b51',
+            '4200a8a4fc844f86ad82a606b947ef15',
         ]
     }
 
