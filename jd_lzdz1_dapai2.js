@@ -1,7 +1,7 @@
 /*
 全球大牌盛典   黑五狂欢购
 11.25 - 12.1
-https://lzdz1-isv.isvjcloud.com/dingzhi/dz/openCard/activity/2858314?activityId=dzkwdlt20211125A&shareUuid=fe7c806ba1ce4bf09d52bf50df511f98
+https://lzdz1-isv.isvjcloud.com/dingzhi/dz/openCard/activity/2858314?activityId=dzkwdlt20211125A&shareUuid=4b9ef5e04bb4476ea5bb0da434291508
 
 默认执行脚本。如果需要不执行
 环境变量 NO_RUSH=false
@@ -39,7 +39,7 @@ if (process.env.NO_RUSH && process.env.NO_RUSH != "") {
     authorCodeList = await getAuthorCodeList('https://gitee.com/fatelight/code/raw/master/lzdz1_dapai2.json')
     if($.getAuthorCodeListerr === false){
         authorCodeList = [
-            'fe7c806ba1ce4bf09d52bf50df511f98',
+            '4b9ef5e04bb4476ea5bb0da434291508',
         ]
     }
 
