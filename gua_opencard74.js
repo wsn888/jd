@@ -23,7 +23,7 @@ guaopenwait74="0"
 
 All变量适用
 ————————————————
-入口：[ 12.1~12.12 大牌联合 赢大额京豆 (https://lzdz1-isv.isvjcloud.com/dingzhi/shop/league/activity?activityId=dz211122100001616201shop&shareUuid=766dbec0857144f184566228672672b7)]
+入口：[ 12.1~12.12 大牌联合 赢大额京豆 (https://lzdz1-isv.isvjcloud.com/dingzhi/shop/league/activity?activityId=dz211122100001616201shop&shareUuid=2021118b0f5540729735826f373b5a67)]
 
 请求太频繁会被黑ip
 过10分钟再执行
@@ -95,7 +95,7 @@ let activityCookie =''
     return;
   }
   $.activityId = "dz211122100001616201shop"
-  $.shareUuid = "766dbec0857144f184566228672672b7"
+  $.shareUuid = "2021118b0f5540729735826f373b5a67"
   console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/shop/league/activity?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
   for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
