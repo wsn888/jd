@@ -19,7 +19,7 @@ cron "13 0,6,22 * * *" script-path=jd_health.js, tag=东东健康社区
 ============小火箭=========
 东东健康社区 = type=cron,script-path=jd_health.js, cronexpr="13 0,6,22 * * *", timeout=3600, enable=true
  */
-const $ = new Env("东东健康社区_内部互助");
+const $ = new Env("东东健康社区互助版");
 const jdCookieNode = $.isNode() ? require("./jdCookie.js") : "";
 const notify = $.isNode() ? require('./sendNotify') : "";
 let cookiesArr = [], cookie = "", allMessage = "", message;
@@ -47,6 +47,19 @@ if ($.isNode()) {
 	cookiesArr = [$.getdata("CookieJD"), $.getdata("CookieJD2"), ...$.toObj($.getdata("CookiesJD") || "[]").map((item) => item.cookie)].filter((item) => !!item);
 }
 const JD_API_HOST = "https://api.m.jd.com/";
+
+let NowHour = new Date().getHours();
+let llhelp=true;
+if ($.isNode() && process.env.CC_NOHELPAFTER8) {
+	console.log(NowHour);
+	if (process.env.CC_NOHELPAFTER8=="true"){
+		if (NowHour>8){
+			llhelp=false;
+			console.log(`现在是9点后时段，不启用互助....`);
+		}			
+	}	
+}
+
 !(async() => {
 	if (!cookiesArr[0]) {
 		$.msg($.name, "【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取", "https://bean.m.jd.com/", {
@@ -54,13 +67,15 @@ const JD_API_HOST = "https://api.m.jd.com/";
 		});
 		return;
 	}
-	console.log(`开始获取助力码....\n`);
-	for (let i = 0; i < cookiesArr.length; i++) {
-		if (cookiesArr[i]) {
-			cookie = cookiesArr[i];
-			$.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
-			$.index = i + 1;
-			await GetShareCode();
+	if (llhelp){
+		console.log(`开始获取助力码....\n`);
+		for (let i = 0; i < cookiesArr.length; i++) {
+			if (cookiesArr[i]) {
+				cookie = cookiesArr[i];
+				$.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
+				$.index = i + 1;
+				await GetShareCode();
+			}
 		}
 	}
 	console.log(`开始执行任务....\n`);
@@ -102,7 +117,9 @@ async function main() {
 			await $.wait(1000);
 		}
 		await collectScore();
-		await helpFriends();
+		if (llhelp){
+			await helpFriends();
+		}
 		await getTaskDetail(22);
 		await getTaskDetail(-1);
 
