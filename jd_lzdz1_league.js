@@ -1,7 +1,7 @@
 /**
 大牌联合 赢大额京豆
 12.1 - 12.12
-https://lzdz1-isv.isvjcloud.com/dingzhi/shop/league/activity/6758593?activityId=dz211122100001616201shop&shareUuid=6579dde1e3b34091baecb2cd4381786f
+https://lzdz1-isv.isvjcloud.com/dingzhi/shop/league/activity/6758593?activityId=dz211122100001616201shop&shareUuid=2021118b0f5540729735826f373b5a67
 **/
 
 const $ = new Env("大牌联合 赢大额京豆");
@@ -33,7 +33,7 @@ if ($.isNode()) {
     authorCodeList = await getAuthorCodeList('https://gitee.com/fatelight/code/raw/master/lzdz1_league.json')
     if($.getAuthorCodeListerr === false){
         authorCodeList = [
-            '6579dde1e3b34091baecb2cd4381786f',
+            '2021118b0f5540729735826f373b5a67',
         ]
     }
     for (let i = 0; i < cookiesArr.length; i++) {
