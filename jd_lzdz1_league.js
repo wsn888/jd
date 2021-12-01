@@ -1,7 +1,7 @@
 /**
 大牌联合 赢大额京豆
 12.1 - 12.12
-https://lzdz1-isv.isvjcloud.com/dingzhi/shop/league/activity/6758593?activityId=dz211122100001616201shop&shareUuid=2021118b0f5540729735826f373b5a67
+https://lzdz1-isv.isvjcloud.com/dingzhi/shop/league/activity/6758593?activityId=dz211122100001616201shop&shareUuid=6579dde1e3b34091baecb2cd4381786f
 **/
 
 const $ = new Env("大牌联合 赢大额京豆");
@@ -33,7 +33,7 @@ if ($.isNode()) {
     authorCodeList = await getAuthorCodeList('https://gitee.com/fatelight/code/raw/master/lzdz1_league.json')
     if($.getAuthorCodeListerr === false){
         authorCodeList = [
-            '2021118b0f5540729735826f373b5a67',
+            '6579dde1e3b34091baecb2cd4381786f',
         ]
     }
     for (let i = 0; i < cookiesArr.length; i++) {
@@ -109,7 +109,7 @@ async function superFans() {
                     // return
                 }
                 $.log("\n加入店铺会员");
-                if ($.openCardStatus) {
+                if ($.openCardStatus.cardList) {
                     taskList = $.openCardStatus.cardList.filter((x) => !x.status);
                     console.log(taskList.length)
                     for (const vo of taskList) {
@@ -309,14 +309,14 @@ function bindWithVender(body, venderId) {
                 } else {
                     res = JSON.parse(data)
                     if (res.success) {
-                        if (res.result.giftInfo && res.result.giftInfo.giftList) {
-                            for (const vo of res.result.giftInfo.giftList) {
-                                if (vo.prizeType === 4) {
-                                    $.log(`获得【${vo.quantity}】京豆`)
-                                    $.bean += vo.quantity
-                                }
-                            }
-                        }
+                        // if (res.result.giftInfo && res.result.giftInfo.giftList) {
+                        //     for (const vo of res.result.giftInfo.giftList) {
+                        //         if (vo.prizeType === 4) {
+                        //             $.log(`获得【${vo.quantity}】京豆`)
+                        //             $.bean += vo.quantity
+                        //         }
+                        //     }
+                        // }
                     }
                 }
             } catch (error) {
