@@ -26,7 +26,7 @@ guaopenwait76="0"
 
 All变量适用
 ————————————————
-入口：[ 12.3~12.12 12.12 好物狂欢盛典 (https://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=dzlhkkffoo1203&shareUuid=c795af87a1424a65a1a1e69938cdc775)]
+入口：[ 12.3~12.12 12.12 好物狂欢盛典 (https://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=dzlhkkffoo1203&shareUuid=6b8afcb3c82748739ac9089628917559)]
 
 请求太频繁会被黑ip
 过10分钟再执行
@@ -101,7 +101,7 @@ let activityCookie =''
     return;
   }
   $.activityId = "dzlhkkffoo1203"
-  $.shareUuid = "c795af87a1424a65a1a1e69938cdc775"
+  $.shareUuid = "6b8afcb3c82748739ac9089628917559"
   console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
 
 
