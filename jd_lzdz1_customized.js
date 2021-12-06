@@ -1,7 +1,7 @@
 /*
 12.12品牌礼遇 天降惊喜
 10 0 * * * jd_lzdz1_customized
-https://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=dd202112054tv7ur9e458rmdh&shareUuid=9df288c6b072416984e60e5f62ab8459
+https://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=dd202112054tv7ur9e458rmdh&shareUuid=0e7b055e6e41402dbd1890c6e419ad88
 */
 const $ = new Env("12.12品牌礼遇 天降惊喜");
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
@@ -32,7 +32,7 @@ if ($.isNode()) {
     authorCodeList = await getAuthorCodeList('https://gitee.com/fatelight/code/raw/master/lzdz1_customized.json')
     if($.getAuthorCodeListerr === false){
         authorCodeList = [
-            '9df288c6b072416984e60e5f62ab8459',
+            '0e7b055e6e41402dbd1890c6e419ad88',
         ]
     }
     // console.log(authorCodeList)
