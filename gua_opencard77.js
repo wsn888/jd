@@ -107,7 +107,7 @@ let activityCookie =''
   $.userId = '10299171'
   $.actId = '4fed35939fc348969bff_120103'
   $.MixNicks = ''
-  $.inviteNick = 'jJngxInVOgsjftAvjP1dgF4tLNYA4seuA67MOIYQxEk3Vl9+AVo4NF+tgyeIc6A6kdK3rLBQpEQH9V4tdrrh0w=='
+  $.inviteNick = 'QC6MjIz9kcaCtoRUgFAh1V4tLNYA4seuA67MOIYQxEk3Vl9+AVo4NF+tgyeIc6A6kdK3rLBQpEQH9V4tdrrh0w=='
   console.log(`活动地址:https://jinggengjcq-isv.isvjcloud.com/fronth5/#/pages/unitedCardNew2021120103/unitedCardNew2021120103?actId=4fed35939fc348969bff_120103`)
   for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
