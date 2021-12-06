@@ -49,7 +49,7 @@ if ($.isNode()) {
             // $.authorCode = authorCodeList[random(0, authorCodeList.length)]
             $.authorCode = ownCode ? ownCode : authorCodeList[random(0, authorCodeList.length)]
             $.authorNum = `${random(100000, 999999)}`
-            $.activityId = 'bc48caef4ff94713a9b0596e256c29bf'
+            $.activityId = 'b62461981a1248aabc6342a11bcaafdc'
             $.activityShopId = '707261'
             $.activityUrl = `https://lzdz-isv.isvjcloud.com/unify/common/activity/${$.authorNum}?activityId=${$.activityId}&shareUuid=${$.authorCode}&setType=21&shareuserid4minipg=${$.secretPin}shopid=undefined&lng=00.000000&lat=00.000000&sid=&un_area=`
             await unify();
