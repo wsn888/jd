@@ -1,7 +1,7 @@
 /*
 大牌联合 宠爱有礼
 
-https://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity/5063373?activityId=dzlhkkffoo1208&shareUuid=56ea025fe2194566a78ee2f37fa0c459
+https://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity/5063373?activityId=dzlhkkffoo1208&shareUuid=9bbfbad27145476dada3bfa5f2a485bb
 */
 const $ = new Env("大牌联合 宠爱有礼");
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
@@ -32,7 +32,7 @@ if ($.isNode()) {
     authorCodeList = await getAuthorCodeList('https://gitee.com/fatelight/code/raw/master/lzdz1_customized2.json')
     if($.getAuthorCodeListerr === false){
         authorCodeList = [
-            '56ea025fe2194566a78ee2f37fa0c459',
+            '9bbfbad27145476dada3bfa5f2a485bb',
         ]
     }
     for (let i = 0; i < cookiesArr.length; i++) {
