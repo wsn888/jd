@@ -1,7 +1,7 @@
 /*
 汤臣倍健PLUS会员狂欢日联合盛典
 
-https://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=dd20211210xgdby3zem7vp5y&shareUuid=9df288c6b072416984e60e5f62ab8459
+https://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=dd20211210xgdby3zem7vp5y&shareUuid=d96254f5f5794bbb9638e45b96471e9c
 */
 const $ = new Env("汤臣倍健PLUS会员狂欢日联合盛典");
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
@@ -32,7 +32,7 @@ if ($.isNode()) {
     authorCodeList = await getAuthorCodeList('https://gitee.com/fatelight/code/raw/master/lzdz1_customized3.json')
     if($.getAuthorCodeListerr === false){
         authorCodeList = [
-            'd8625d636ef44b768f425783965fdd69',
+            'd96254f5f5794bbb9638e45b96471e9c',
         ]
     }
     // console.log(authorCodeList)
