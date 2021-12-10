@@ -1,7 +1,7 @@
 /*
 京选大牌 超会宠你
 
-https://lzdz1-isv.isvjcloud.com/dingzhi/dz/openCard/activity?activityId=5870cf9ea76046b4bfc5493f82784eef&shareUuid=e27630f3b3c045959140bc61a4dcfb49
+https://lzdz1-isv.isvjcloud.com/dingzhi/dz/openCard/activity?activityId=5870cf9ea76046b4bfc5493f82784eef&shareUuid=245bbb59bad3496a84de4aacb19142fc
 
 默认执行脚本。如果需要不执行
 环境变量 NO_RUSH=false
@@ -39,7 +39,7 @@ if (process.env.NO_RUSH && process.env.NO_RUSH != "") {
     authorCodeList = await getAuthorCodeList('https://gitee.com/fatelight/code/raw/master/lzdz1_jx.json')
     if($.getAuthorCodeListerr === false){
         authorCodeList = [
-            'e27630f3b3c045959140bc61a4dcfb49',
+            '245bbb59bad3496a84de4aacb19142fc',
         ]
     }
 
