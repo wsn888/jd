@@ -1,10 +1,10 @@
 /*
 [task_local]
 双十二红包领取
-0 0 0,4,8,12,16,19 * * * jd_1212red.js, tag=双十二红包领取, enabled=true
+0 0 1,4,8,12,16,19 * * * jd_1212red.js, tag=双十二红包领取, enabled=true
 ================Loon==============
 [Script]
-cron "0 0 0,4,8,12,16,19 * * * " script-path=jd_1212red.js,tag=双十二红包领取
+cron "0 0 1,4,8,12,16,19 * * * " script-path=jd_1212red.js,tag=双十二红包领取
 */
 const $ = new Env('双十二红包领取');
 const notify = $.isNode() ? require('./sendNotify') : '';
