@@ -1,7 +1,7 @@
 /*
 [task_local]
-双十二红包领取
-0 0 1,4,8,12,16,19 * * * jd_1212red.js, tag=双十二红包领取, enabled=true
+【内部】双十二红包
+0 0 1,4,8,12,16,19 * * * jd_1212hongbao.js, tag=双十二红包领取, enabled=true
 ================Loon==============
 [Script]
 cron "0 0 1,4,8,12,16,19 * * * " script-path=jd_1212red.js,tag=双十二红包领取
