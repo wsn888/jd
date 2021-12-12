@@ -1,7 +1,7 @@
 #!/bin/env python3
 # -*- coding: utf-8 -*
 '''
-项目名称: JD_OpenCard
+项目名称: 入会开卡
 Author: Curtin
 功能：JD入会开卡领取京豆
 CreateDate: 2021/5/4
