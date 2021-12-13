@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 """
-cron: 0
+cron: 20 10 */7 * *
 new Env('禁用重复任务');
 """
 
@@ -20,7 +20,14 @@ logger.addHandler(logging.StreamHandler())  # 添加控制台日志
 # logger.addHandler(logging.FileHandler(filename="text.log", mode="w"))  # 添加文件日志
 
 
-ip = "localhost"
+ipport = os.getenv("IPPORT")
+if not ipport:
+    logger.info(
+        "如果报错请在环境变量中添加你的真实 IP:端口\n名称：IPPORT\t值：127.0.0.1:5700\n或在 config.sh 中添加 export IPPORT='127.0.0.1:5700'"
+    )
+    ipport = "localhost:5700"
+else:
+    ipport = ipport.lstrip("http://").rstrip("/")
 sub_str = os.getenv("RES_SUB", "shufflewzc_faker2")
 sub_list = sub_str.split("&")
 res_only = os.getenv("RES_ONLY", True)
@@ -47,7 +54,7 @@ def load_send() -> None:
 def get_tasklist() -> list:
     tasklist = []
     t = round(time.time() * 1000)
-    url = f"http://{ip}:5700/api/crons?searchValue=&t={t}"
+    url = f"http://{ipport}/api/crons?searchValue=&t={t}"
     response = requests.get(url=url, headers=headers)
     datas = json.loads(response.content.decode("utf-8"))
     if datas.get("code") == 200:
@@ -135,7 +142,7 @@ def reserve_task_only(
 
 def disable_duplicate_tasks(ids: list) -> None:
     t = round(time.time() * 1000)
-    url = f"http://{ip}:5700/api/crons/disable?t={t}"
+    url = f"http://{ipport}/api/crons/disable?t={t}"
     data = json.dumps(ids)
     headers["Content-Type"] = "application/json;charset=UTF-8"
     response = requests.put(url=url, headers=headers, data=data)
