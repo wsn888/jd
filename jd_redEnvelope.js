@@ -51,7 +51,7 @@ async function main() {
   $.UA = `jdapp;iPhone;10.2.0;13.1.2;${randomString(40)};M/5.0;network/wifi;ADID/;model/iPhone8,1;addressid/2308460622;appBuild/167853;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 13_1_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1;`;
   $.max = false;
   $.hotFlag = false;
-  let codeLsit = ['nt5zCmM','nLhu1LP','ndhM07k']
+  let codeLsit = ['vw6u2JQ']
   $.code = codeLsit[random(0, codeLsit.length)];
   for (let i = 0; i < 1 && !$.max; i++) {
     $.newCookie = "";
@@ -102,7 +102,7 @@ function getcouponUrl() {
           console.log(`${$.name} getcouponUrl API请求失败，请检查网路重试`);
         } else {
           if (data) {
-            if ($.code === "nt5zCmM" || $.code === "nLhu1LP" || $.code === "ndhM07k") {
+            if ($.code === "vw6u2JQ") {
               $.couponUrl = (data.match(/"value":"(.*)"\}'/) && data.match(/"value":"(.*)"\}'/)[1]) || ''
             } else {
               $.couponUrl = ''
