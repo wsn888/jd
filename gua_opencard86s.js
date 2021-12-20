@@ -22,7 +22,7 @@ guaopenwait86="0"
 
 All变量适用
 ————————————————
-入口：[ 12.20~1.5 双旦寻宝 玩转大富翁 (https://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=dfw2021121701vrb6n1c0ilo0uw&shareUuid=760908fcc57d4bd1ad5a0d23b4b40948)]
+入口：[ 12.20~1.5 双旦寻宝 玩转大富翁 (https://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=dfw2021121701vrb6n1c0ilo0uw&shareUuid=d0d94d9faaef450db00382e0fea237bb)]
 
 请求太频繁会被黑ip
 过10分钟再执行
@@ -97,7 +97,7 @@ let activityCookie =''
     return;
   }
   $.activityId = "dfw2021121701vrb6n1c0ilo0uw"
-  $.shareUuid = "760908fcc57d4bd1ad5a0d23b4b40948"
+  $.shareUuid = "d0d94d9faaef450db00382e0fea237bb"
   console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
 
   for (let i = 0; i < cookiesArr.length; i++) {
