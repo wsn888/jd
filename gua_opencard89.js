@@ -23,7 +23,7 @@ guaopenwait89="0"
 
 All变量适用
 ————————————————
-入口：[ 12.18~12.30 京选大牌 超会宠你 (https://lzdz1-isv.isvjcloud.com/dingzhi/dz/openCard/activity?activityId=4c1162ed00874ba5ac0447c30cc45f8a&shareUuid=33ede6e971bb47f9a4df84cfc4ef9102)]
+入口：[ 12.18~12.30 京选大牌 超会宠你 (https://lzdz1-isv.isvjcloud.com/dingzhi/dz/openCard/activity?activityId=4c1162ed00874ba5ac0447c30cc45f8a&shareUuid=bbbe3337206f408cb576d5dcadf3b7d5)]
 
 请求太频繁会被黑ip
 过10分钟再执行
@@ -95,7 +95,7 @@ let activityCookie =''
     return;
   }
   $.activityId = "4c1162ed00874ba5ac0447c30cc45f8a"
-  $.shareUuid = "33ede6e971bb47f9a4df84cfc4ef9102"
+  $.shareUuid = "bbbe3337206f408cb576d5dcadf3b7d5"
   console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/dz/openCard/activity?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
   for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
