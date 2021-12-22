@@ -62,7 +62,7 @@ if (process.env.NO_RUSH && process.env.NO_RUSH != "") {
             $.ADID = getUUID('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', 1);
             $.UUID = getUUID('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
             // authorCodeList = [
-            //     '2a950a42a8d146a38efb24654a7c1390',
+            //     'bbbe3337206f408cb576d5dcadf3b7d5',
             // ]
             // $.authorCode = authorCodeList[random(0, authorCodeList.length)]
             $.authorCode = ownCode ? ownCode : authorCodeList[random(0, authorCodeList.length)]
