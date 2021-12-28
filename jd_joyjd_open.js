@@ -43,7 +43,6 @@ message = ""
     });
     return;
   }
-  console.log(`入口:\nhttps://prodev.m.jd.com/mall/active/3q7yrbh3qCJvHsu3LhojdgxNuWQT/index.html`)
   for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
     if (cookie) {
@@ -78,7 +77,7 @@ async function run() {
     }
     let config = [
       {configCode:'eba16f94628547cdb20170920b813164',configName:'我爱520-1'},
-          {configCode:'761d289b16d74713bf6cee8462ca0e76',configName:'我爱520-2'},
+       //   {configCode:'761d289b16d74713bf6cee8462ca0e76',configName:'我爱520-2'},
       //      {configCode:'b3cc4f6e5e924c3d82b10404f91740ce',configName:'我爱520-3'},
       //{configCode:'ce04c87546ea40cc8f601e85f2dda2a9',configName:'秋新资任务组件 组1'},
     ]
