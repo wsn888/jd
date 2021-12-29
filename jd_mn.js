@@ -1,139 +1,14 @@
 /*
-https://lzkj-isv.isvjcloud.com/wxgame/activity/8530275?activityId=
-
-推送设置 DoPush 推送模式, 设置为 false 每次推送, true 跑完了推送
-
-JD_CART_REMOVESIZE || 20; // 运行一次取消多全部已关注的商品。数字0表示不取关任何商品
-JD_CART_REMOVEALL || true;    //是否清空，如果为false，则上面设置了多少就只删除多少条
-
-
+默认执行脚本。如果需要不执行
+环境变量 NO_RUSH=false
+瓜分脚本单独跑
 */
-const $ = new Env('加购物车抽奖');
+const $ = new Env("蒙牛");
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
-let cookiesArr = [], cookie = '', message = '' ,isPush = false;
-let activityIdList = [
-    "b8713653b084497590c7a333f3a21237",
-    "f23127e2dc9946139737302dc36fe43b",
-    "6f96aa1ce3a74bd1bff3068aaf295b59",
-    "be78234b03294ef4a56df820bb88a554",
-    "a5844f9f81f74a1fbc2806eb69bb8b70",
-    "922ebd6681cf4caa920f540fd44bd18b",
-    "f5f00be720a14c488b808083948f4d75",
-    "52323d7ea631447b9f9d5c062683b5ce",
-    "7f4404e1904245f5b0de3f4d624e46ed",
-    "e17704051f464befabfe05223a889462",
-    "56953039ac8d4956809f4ae9ed2e0e3d",
-    "87956efe2d2e4566b0dd25ae2058934b",
-    "381f47e49c484868868bb72bfff6800c",
-    "17b5932a65e44b5da9cb1357fe2fb6cb",
-    "b9b878a6a7a64a61a7bc5bed2211f9b7",
-    "fdbcb1c895c249ae9f4d0cb08d8b2bd5",
-    "5008afaea01047debe96970cd137d495",
-    "d9cf10c951d344db8e4ee299f7762e18",
-    "01530a1ae8df4bafa28a3f0a68c2bf36",
-    "c8ae3304db0e4277901933c5fe92fb06",
-    "35e50a1c2d674d9c80c8f713be5e623e",
-    "727afeb988a64b11839c156d1a2a0b5a",
-    "c2258c87346e49f0bd3ca8e342ade243",
-    "dae39c0131de4cbf9e3200f0c52d5dfd",
-    "c222914c87ee4315b6d9c6eb243e359d",
-    "0b55bc2b0b8940288ff2da43c3be5be9",
-    "8f8228bedac644e59cc52a69423c2847",
-    "e1cc4be637be4ef0b03c03fe29efd57c",
-    "3d7880e57b7b4c5cb6d12124c1735024",
-    "e3cf7037393a47df9419acd7050da7d2",
-    "8b7c1810ebd24250b85865ccd3bf1431",
-    "7c9d7e38893f437f9850c9203d0f0484",
-    "ed44b113f5a842adaf7941e6279c7f41",
-    "9eeb5c77be6b4432a15e37d1a9eb30cd",
-    "30f51dad041b457baebde0c84fdc0aaf",
-    "937c8b1dc92d491aa38f78976d556a45",
-    "1900f76d7d37467ca2eaf17992e67e57",
-    "f30f3686e32645489311ac985a5b8325",
-    "fb5c7aa50f6a4287b865056792ee7bef",
-    "bdacfcba95964d04b3e1cf0cb0e186dd",
-    "d29bc5b018fa4e23a5272e78373da6f7",
-    "234cd415691c4886a1102faece92f134",
-    "1a46df31011b45a4a4d30814e39bf9b9",
-    "51a8f763495242d185a5161d686c4604",
-    "7371d90caf964a46a3de05ce692a828c",
-    "47edff69a42143afa2921be8e323a53c",
-    "c22f4dd40946446d96fb8a935c40a2ae",
-    "50b5872923cc47a0a3e71666b6e34f4d",
-    "8962b16d49284a699435cf53628c4d8f",
-    "2597c4482b194f7e8b866f21b79df0b7",
-    "678d692e1ea143b89dd042fbde199179",
-    "fe4440d17bbc432ba1a607efec9bf3f5",
-    "75acb94bd50544749860a494f509777b",
-    "7b2b5aa6dd844e7487036c0ca7fdac22",
-    "98be8d71e54f4b27958d807f6fe103dc",
-    "db161413b09045778f08b6d552854666",
-    "a1e30c6579964d72ba81e1b4a2ad52e8",
-    "0baf64adb8684d8ca3450f574c3cba55",
-    "fa6a0c1efddc4715ba297036bf2d20e2",
-    "4b83932e9860452f8d102c3dae21a8ea",
-    "aee657ba89e84cdabee5ccbe86667147",
-    "45b760dfa64c4cedade2755469739588",
-    "5c56a3b4f2d94c2f91a34a4c22942e13",
-    "79611650ab384b6fb4c3a14f4955c992",
-    "2f3c55901805489ab47b7cb657ce7a7f",
-    "0ec872a66bee4b2f8782fc90d4edbd46",
-    "0e50dd42c4bd4419969c7c4e3dbdcbba",
-    "2ba9f8db763842b990f220a0875c989d",
-    "d4daed21a6fd47edb466cc674027b97a",
-    "823d62d5423a437a9800b6bea5c9c2ca",
-    "f182d87db82b4ee786e8549306fd536c",
-    "49bdc3bfff4841fd8873296d83708788",
-    "0a945f5b5c264d85a3b4978d88e1b67e",
-    "0654e19864024a6fba22f3bce119263e",
-    "5c4646e1dfdf4b0d9b02ba499529c518",
-    "7df4a950b8ce47c9a47975fea79fb554",
-    "481ea88bc6d94dfbac9263bef67f729f",
-    "8b5cff69a23f423cb704d3d71b2de4c8",
-    "66f87d0f04f04138a6e64425852e70cd",
-    "ce4f4cea125b41468f71803e73063278",
-    "6712f3eb230846e885bd1fa5ebb45cbd",
-    "d1c7fc3d2cd14317927bd0d2a6dc1a45",
-    "975c9a215af94157bc0cafc8dec02ba1",
-    "7fdbe9979785400f80575f89df58371b",
-    "95a036d4a5d64af8aa25bce946ae8aec",
-    "3a541178cda644849987889842892ddf",
-    "070afdfdabd1465ba006c3d743c4d180",
-    "c40105ba403e4b2cbde742ab11fc38c3",
-    "f9fa10e1eae94174863ca4d37b0b15f6",
-    "e508b2b045c54eb6a53a26d31c0eee77",
-    "f7a697297e2e49ef9f13f82612eb3ad4",
-    "365379d2daab4a26a62e69bddccc2688",
-    "b0fbfdca43f84daa8dd486e34f011cd9",
-    "a696d8f706e84631b5c8d1646e9315f9",
-    "0e0b3c76aa054878ac95a630a7f57ac4",
-    "89558c3f03e84cb8b0fa8adbc14fc5dc",
-    "13f243159f6f46a0858d056f5d35c4c2",
-    "cddba69152894bc586daadaa1c76da49",
-    "5dc741fb8a574d94abf2ed067ecd2bb8",
-    "ea5a8960d99c4a64afb78553b3b0aa29",
-    "bbb8b60281cc491c968e33bebdbfae4b",
-    "499bb8167fec462eb7c48a68c7b309fb",
-    "d11163cf367c42cea5390ba7b0212cd4",
-    "a4785e9854184c5d814488ac06fde84e",
-    "38f5a8c392054817859f8d2266e7310b",
-    "e7ef6d5e49504a039a90db89b7b06064",
-    "dcb260bd492b40319fd85688f3b835ea",
-    "7f10804686de42c2b765cda8badd8381",
-    "ecf679fd851443a88763ea8aed7fc0b8",
-    "cca7cc264a2b496d84414e4101f217a1",
-    "951663e6d7b747b7b002675b08d6e016",
-    "706e0c00f29a4621916b391958537dee",
-    "e8bd56bbc71c4b92a5f945c467492a77",
-    "0641469c786c4b529595a84567b3f892",    
-]
-let lz_cookie = {}
-
-if (process.env.ACTIVITY_ID && process.env.ACTIVITY_ID != "") {
-    activityId = process.env.ACTIVITY_ID;
-}
-
+let cookiesArr = [], cookie = '', message = '';
+let ownCode = null;
+let isRush = true;
 if ($.isNode()) {
     Object.keys(jdCookieNode).forEach((item) => {
         cookiesArr.push(jdCookieNode[item])
@@ -148,76 +23,60 @@ if ($.isNode()) {
     cookiesArr.reverse();
     cookiesArr = cookiesArr.filter(item => !!item);
 }
-let doPush = process.env.DoPush || false; // 设置为 false 每次推送, true 跑完了推送
-let removeSize = process.env.JD_CART_REMOVESIZE || 20; // 运行一次取消多全部已关注的商品。数字0表示不取关任何商品
-let isRemoveAll = process.env.JD_CART_REMOVEALL || true;    //是否清空，如果为false，则上面设置了多少就只删除多少条
-$.keywords = process.env.JD_CART_KEYWORDS || []
-$.keywordsNum = 0;
+if (process.env.NO_RUSH && process.env.NO_RUSH != "") {
+    isRush = process.env.NO_RUSH;
+}
 !(async () => {
     if (!cookiesArr[0]) {
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
         return;
     }
-    // activityIdList = await getActivityIdList('https://raw.githubusercontent.com/FKPYW/dongge/master/code/wxCollectionActivity.json')
-    for(let a in activityIdList){
-        activityId = activityIdList[a];
-        console.log("开起第 "+ a +" 个活动，活动id："+activityId)
-        for (let i = 0; i < cookiesArr.length; i++) {
-            if (cookiesArr[i]) {
-                cookie = cookiesArr[i]
-                originCookie = cookiesArr[i]
-                newCookie = ''
-                $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
-                $.index = i + 1;
-                $.isLogin = true;
-                $.nickName = '';
-                await checkCookie();
-                console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
-                if (!$.isLogin) {
-                    $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
-                    if ($.isNode()) {
-                        await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
-                    }
-                    continue
+    for (let i = 0; i < cookiesArr.length; i++) {
+        if (cookiesArr[i]) {
+            cookie = cookiesArr[i]
+            originCookie = cookiesArr[i]
+            newCookie = ''
+            $.UserName = decodeURIComponent(cookie.match(/pt_pin=(.+?);/) && cookie.match(/pt_pin=(.+?);/)[1])
+            $.index = i + 1;
+            $.isLogin = true;
+            $.nickName = '';
+            await checkCookie();
+            console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
+            if (!$.isLogin) {
+                $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
+                if ($.isNode()) {
+                    await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
                 }
-                authorCodeList = [
-                    '',
-                ]
-                $.bean = 0;
-                $.ADID = getUUID('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', 1);
-                $.UUID = getUUID('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
-                $.authorCode = authorCodeList[random(0, authorCodeList.length)]
-                $.authorNum = `${random(1000000, 9999999)}`
-                $.activityId = activityId
-                $.activityUrl = `https://lzkj-isv.isvjcloud.com/wxCollectionActivity/activity2/${$.authorNum}?activityId=${$.activityId}&shareUuid=${encodeURIComponent($.authorCode)}&adsource=null&sid=&un_area=`
-                $.drawInfoName = false
-                $.getPrize = null;
-                await addCart();
-                // if($.drawInfoName === false || $.getPrize === null){
-                //     break
-                // } else if($.getPrize != null && !$.getPrize.includes("京豆")){
-                //     break
-                // }
-                await $.wait(3000)
-                await requireConfig();
-                do {
-                    await getCart_xh();
-                    $.keywordsNum = 0
-                    if($.beforeRemove !== "0"){
-                        await cartFilter_xh(venderCart);
-                        if(parseInt($.beforeRemove) !== $.keywordsNum) await removeCart();
-                        else {
-                            console.log('由于购物车内的商品均包含关键字，本次执行将不删除购物车数据')
-                            break;
-                        }
-                    } else break;
-                } while(isRemoveAll && $.keywordsNum !== $.beforeRemove)
-                if ($.bean > 0) {
-                    message += `\n【京东账号${$.index}】${$.nickName || $.UserName} \n       └ 获得 ${$.bean} 京豆。`
-                }
+                continue
+            }
+            
+            authorCodeList = [
+                '79049b1783134e4d8f0730eee2311369',
+                // 'a25c65caa19e480093256c2be4347c10',
+                // '413dcfbcc0414bd3a10a4402bc984deb',
+                // '37f4602c3ada4ef9873a4f84b5495a0c'
+            ]
+            $.bean = 0;
+            $.ADID = getUUID('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', 1);
+            $.UUID = getUUID('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
+            $.authorCode = authorCodeList[random(0, authorCodeList.length)]
+            // $.authorCode = ownCode ? ownCode : authorCodeList[random(0, authorCodeList.length)]
+            $.authorNum = `${random(1000000, 9999999)}`
+            $.activityId = '4e3b9b6233104c199c0c44ff6edbc85d'
+            $.activityShopId = '1000014803'
+            $.activityUrl = `https://lzkjdz-isv.isvjcloud.com/pool/captain/${$.authorNum}?activityId=${$.activityId}&signUuid=${encodeURIComponent($.authorCode)}&shareuserid4minipg=null&shopid=${$.activityShopId}`
+            if (isRush) {
+                console.log("未检测到不执行环境变量，执行任务")
+                await rush();
+            } else {
+                console.log("检测到不执行环境变量，退出任务，环境变量 NO_RUSH")
+                break
+            }
+            await $.wait(3500)
+            if ($.bean > 0) {
+                message += `\n【京东账号${$.index}】${$.nickName || $.UserName} \n       └ 获得 ${$.bean} 京豆。`
             }
         }
-        await $.wait(3000)
     }
     if (message !== '') {
         if ($.isNode()) {
@@ -235,28 +94,50 @@ $.keywordsNum = 0;
     })
 
 
-async function addCart() {
+async function rush() {
     $.token = null;
     $.secretPin = null;
-    $.venderId = null;
+    $.openCardActivityId = null
     await getFirstLZCK()
     await getToken();
     await task('customer/getSimpleActInfoVo', `activityId=${$.activityId}`, 1)
     if ($.token) {
         await getMyPing();
         if ($.secretPin) {
-            await task('common/accessLogWithAD', `venderId=${$.venderId}&code=6&pin=${encodeURIComponent($.secretPin)}&activityId=${$.activityId}&pageUrl=${$.activityUrl}&subType=app&adSource=tg_xuanFuTuBiao`, 1);
-            // await task('wxActionCommon/getUserInfo', `pin=${encodeURIComponent($.secretPin)}`, 1)
-            await task('activityContent', `activityId=${$.activityId}&pin=${encodeURIComponent($.secretPin)}`)
-            if ($.activityContent.drawInfo.name.includes("京豆")) {
-                $.log("-> 加入购物车")
-                for(let i in $.activityContent.cpvos){
-                    await $.wait(3000)
-                    await task('addCart', `activityId=${$.activityId}&pin=${encodeURIComponent($.secretPin)}&productId=${$.activityContent.cpvos[i].skuId}`)
+            await task('common/accessLogWithAD', `venderId=${$.activityShopId}&code=99&pin=${encodeURIComponent($.secretPin)}&activityId=${$.activityId}&pageUrl=${$.activityUrl}&subType=app&adSource=null`, 1);
+            await task('activityContent', `activityId=${$.activityId}&pin=${encodeURIComponent($.secretPin)}&signUuid=${encodeURIComponent($.authorCode)}`)
+            if ($.activityContent) {
+                console.log($.activityContent.canJoin)
+                if ($.activityContent.canJoin) {
+                    $.log("加入队伍成功，请等待队长瓜分京豆")
+                    await task('saveCandidate', `activityId=${$.activityId}&pin=${encodeURIComponent($.secretPin)}&signUuid=${encodeURIComponent($.authorCode)}&pinImg=${encodeURIComponent(`https://img10.360buyimg.com/imgzone/jfs/t1/21383/2/6633/3879/5c5138d8E0967ccf2/91da57c5e2166005.jpg`)}`)
+                    if (!$.activityContent.openCard) {
+                        await $.wait(2000)
+                        await getShopOpenCardInfo({ "venderId": "1000014803", "channel": 401 }, 1000014803)
+                        await bindWithVender({ "venderId": "1000014803", "shopId": "1000014803", "bindByVerifyCodeFlag": 1, "registerExtend": {}, "writeChildFlag": 0, "activityId": 3282318, "channel": 401 }, 100000000000085)
+                    }
+                    await task('activityContent', `activityId=${$.activityId}&pin=${encodeURIComponent($.secretPin)}&signUuid=${encodeURIComponent($.authorCode)}`, 0, 1)
+                    await $.wait(2000)
+                    if ($.index === 1) {
+                        if ($.activityContent.canCreate) {
+                            $.log("创建队伍")
+                            await task('saveCaptain', `activityId=${$.activityId}&pin=${encodeURIComponent($.secretPin)}&pinImg=${encodeURIComponent(`https://img10.360buyimg.com/imgzone/jfs/t1/21383/2/6633/3879/5c5138d8E0967ccf2/91da57c5e2166005.jpg`)}`)
+                        }
+                    }
+                } else {
+                    if ($.index === 1) {
+                        $.log("创建队伍")
+                        if ($.activityContent.canCreate) {
+                            await task('saveCaptain', `activityId=${$.activityId}&pin=${encodeURIComponent($.secretPin)}&pinImg=${encodeURIComponent(`https://img10.360buyimg.com/imgzone/jfs/t1/21383/2/6633/3879/5c5138d8E0967ccf2/91da57c5e2166005.jpg`)}`)
+                        } else {
+                            $.log("你已经是队长了")
+                            ownCode = $.activityContent.signUuid
+                            console.log(ownCode)
+                        }
+                    } else {
+                        $.log("无法加入队伍")
+                    }
                 }
-                $.log("-> 抽奖")
-                await $.wait(3000)
-                await task('getPrize', `activityId=${$.activityId}&pin=${encodeURIComponent($.secretPin)}`)
             } else {
                 $.log("未能成功获取到活动信息")
             }
@@ -278,44 +159,55 @@ function task(function_id, body, isCommon = 0) {
 
                     if (data) {
                         data = JSON.parse(data);
-                        if (resp['headers']['set-cookie']) {
-                            cookie = `${originCookie};`
-                            for (let sk of resp['headers']['set-cookie']) {
-                                lz_cookie[sk.split(";")[0].substr(0, sk.split(";")[0].indexOf("="))] = sk.split(";")[0].substr(sk.split(";")[0].indexOf("=") + 1)
-                            }
-                            for (const vo of Object.keys(lz_cookie)) {
-                                cookie += vo + '=' + lz_cookie[vo] + ';'
-                            }
-                        }
                         if (data.result) {
                             switch (function_id) {
-                                case 'customer/getSimpleActInfoVo':
+                                case 'saveCaptain':
+                                    if (data.data.signUuid) {
+                                        $.log("创建队伍成功")
+                                        ownCode = data.data.signUuid
+                                    }
+                                    break;
+                                case 'dz/common/getSimpleActInfoVo':
                                     $.jdActivityId = data.data.jdActivityId;
                                     $.venderId = data.data.venderId;
-                                    $.activityShopId = data.data.venderId;
+                                    break;
+                                case 'wxActionCommon/getUserInfo':
+                                    if (data.data.yunMidImageUrl) {
+                                        if ($.index === 1) {
+                                            ownCode['pinImg'] = data.data.yunMidImageUrl
+                                            ownCode['nickname'] = data.data.nickname
+                                        }
+                                        $.pinImg = data.data.yunMidImageUrl
+                                    } else {
+                                        if ($.index === 1) {
+                                            ownCode['pinImg'] = 'https://img10.360buyimg.com/imgzone/jfs/t1/7020/27/13511/6142/5c5138d8E4df2e764/5a1216a3a5043c5d.png'
+                                            ownCode['nickname'] = data.data.nickname
+                                        }
+                                        $.pinImg = 'https://img10.360buyimg.com/imgzone/jfs/t1/7020/27/13511/6142/5c5138d8E4df2e764/5a1216a3a5043c5d.png'
+                                    }
                                     break;
                                 case 'activityContent':
+                                    // console.log(data.data)
                                     $.activityContent = data.data;
-                                    $.drawInfoName = $.activityContent.drawInfo.name.includes("京豆")
+                                    $.actorUuid = data.data.actorUuid;
+                                    // for (const vo of data.data.successRetList) {
+                                    //     if (!vo.sendStatus && vo.canSend) {
+                                    //         console.log(vo)
+                                    //         await task('updateCaptain', `uuid=${vo.memberList[0].captainId}`)
+                                    //         await $.wait(1000)
+                                    //     }
+                                    // }
                                     break;
-                                case 'addCart':
+                                case 'updateCaptain':
                                     console.log(data.data)
-                                    break
-                                case 'getPrize':
-                                    console.log(data.data.name)
-                                    $.getPrize = data.data.name;
-                                    if (doPush === true) {
-                                        if (data.data.name) {
-                                            message += data.data.name + " "
-                                        }
-                                    } else {
-                                        await notify.sendNotify($.name, data.data.name, '', `\n`);
-                                    }
+
                                     break
                                 default:
-                                    $.log(JSON.stringify(data))
+                                    // $.log(JSON.stringify(data))
                                     break;
                             }
+                        } else {
+                            $.log(JSON.stringify(data))
                         }
                     } else {
                         // $.log("京东没有返回数据")
@@ -329,17 +221,94 @@ function task(function_id, body, isCommon = 0) {
         })
     })
 }
+function getShopOpenCardInfo(body, venderId) {
+    let opt = {
+        url: `https://api.m.jd.com/client.action?appid=jd_shop_member&functionId=getShopOpenCardInfo&body=${encodeURIComponent(JSON.stringify(body))}&client=H5&clientVersion=9.2.0&uuid=88888`,
+        headers: {
+            Host: 'api.m.jd.com',
+            Accept: '*/*',
+            Connection: 'keep-alive',
+            Cookie: cookie,
+            'User-Agent': `jdapp;iPhone;9.5.4;13.6;${$.UUID};network/wifi;ADID/${$.ADID};model/iPhone10,3;addressid/0;appBuild/167668;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 13_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1`,
+            'Accept-Language': 'zh-cn',
+            Referer: `https://shopmember.m.jd.com/shopcard/?venderId=${venderId}}&channel=7014&returnUrl=${encodeURIComponent($.activityUrl)}`,
+            'Accept-Encoding': 'gzip, deflate, br'
+        }
+    }
+    return new Promise(resolve => {
+        $.get(opt, (err, resp, data) => {
+            try {
+                if (err) {
+                    console.log(err)
+                } else {
+                    res = JSON.parse(data)
+                    if (res.success) {
+                        if (res.result.interestsRuleList) {
+                            $.openCardActivityId = res.result.interestsRuleList[0].interestsInfo.activityId;
+                        }
+                    }
+                }
+            } catch (error) {
+                console.log(error)
+            } finally {
+                resolve();
+            }
+        })
+
+    })
+}
+function bindWithVender(body, venderId) {
+    let opt = {
+        url: `https://api.m.jd.com/client.action?appid=jd_shop_member&functionId=bindWithVender&body=${encodeURIComponent(JSON.stringify(body))}&client=H5&clientVersion=9.2.0&uuid=88888`,
+        headers: {
+            Host: 'api.m.jd.com',
+            Accept: '*/*',
+            Connection: 'keep-alive',
+            Cookie: cookie,
+            'User-Agent': `jdapp;iPhone;9.5.4;13.6;${$.UUID};network/wifi;ADID/${$.ADID};model/iPhone10,3;addressid/0;appBuild/167668;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 13_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1`,
+            'Accept-Language': 'zh-cn',
+            Referer: `https://shopmember.m.jd.com/shopcard/?venderId=${venderId}}&channel=7014&returnUrl=${encodeURIComponent($.activityUrl)}`,
+            'Accept-Encoding': 'gzip, deflate, br'
+        }
+    }
+    return new Promise(resolve => {
+        $.get(opt, (err, resp, data) => {
+            try {
+                if (err) {
+                    console.log(err)
+                } else {
+                    res = JSON.parse(data)
+                    // if (res.success) {
+                    //     if (res.result.giftInfo && res.result.giftInfo.giftList) {
+                    //         for (const vo of res.result.giftInfo.giftList) {
+                    //             if (vo.prizeType === 4) {
+                    //                 $.log(`==>获得【${vo.quantity}】京豆`)
+                    //                 $.bean += vo.quantity
+                    //             }
+                    //         }
+                    //     }
+                    // }
+                }
+            } catch (error) {
+                console.log(error)
+            } finally {
+                resolve();
+            }
+        })
+
+    })
+}
 function taskUrl(function_id, body, isCommon) {
     return {
-        url: isCommon ? `https://lzkj-isv.isvjcloud.com/${function_id}` : `https://lzkj-isv.isvjcloud.com/wxCollectionActivity/${function_id}`,
+        url: isCommon ? `https://lzkjdz-isv.isvjcloud.com/${function_id}` : `https://lzkjdz-isv.isvjcloud.com/pool/${function_id}`,
         headers: {
-            Host: 'lzkj-isv.isvjcloud.com',
+            Host: 'lzkjdz-isv.isvjcloud.com',
             Accept: 'application/json',
             'X-Requested-With': 'XMLHttpRequest',
             'Accept-Language': 'zh-cn',
             'Accept-Encoding': 'gzip, deflate, br',
             'Content-Type': 'application/x-www-form-urlencoded',
-            Origin: 'https://lzkj-isv.isvjcloud.comm',
+            Origin: 'https://lzkjdz-isv.isvjcloud.comm',
             'User-Agent': `jdapp;iPhone;9.5.4;13.6;${$.UUID};network/wifi;ADID/${$.ADID};model/iPhone10,3;addressid/0;appBuild/167668;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 13_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1`,
             Connection: 'keep-alive',
             Referer: $.activityUrl,
@@ -352,15 +321,15 @@ function taskUrl(function_id, body, isCommon) {
 
 function getMyPing() {
     let opt = {
-        url: `https://lzkj-isv.isvjcloud.com/customer/getMyPing`,
+        url: `https://lzkjdz-isv.isvjcloud.com/customer/getMyPing`,
         headers: {
-            Host: 'lzkj-isv.isvjcloud.com',
+            Host: 'lzkjdz-isv.isvjcloud.com',
             Accept: 'application/json',
             'X-Requested-With': 'XMLHttpRequest',
             'Accept-Language': 'zh-cn',
             'Accept-Encoding': 'gzip, deflate, br',
             'Content-Type': 'application/x-www-form-urlencoded',
-            Origin: 'https://lzkj-isv.isvjcloud.com',
+            Origin: 'https://lzkjdz-isv.isvjcloud.com',
             'User-Agent': `jdapp;iPhone;9.5.4;13.6;${$.UUID};network/wifi;ADID/${$.ADID};model/iPhone10,3;addressid/0;appBuild/167668;jdSupportDarkMode/0;Mozilla/5.0 (iPhone; CPU iPhone OS 13_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1`,
             Connection: 'keep-alive',
             Referer: $.activityUrl,
@@ -375,12 +344,27 @@ function getMyPing() {
                     $.log(err)
                 } else {
                     if (resp['headers']['set-cookie']) {
-                        cookie = `${originCookie};`
-                        for (let sk of resp['headers']['set-cookie']) {
-                            lz_cookie[sk.split(";")[0].substr(0, sk.split(";")[0].indexOf("="))] = sk.split(";")[0].substr(sk.split(";")[0].indexOf("=") + 1)
+                        cookie = `${originCookie}`
+                        if ($.isNode()) {
+                            for (let sk of resp['headers']['set-cookie']) {
+                                cookie = `${cookie}${sk.split(";")[0]};`
+                            }
+                        } else {
+                            for (let ck of resp['headers']['Set-Cookie'].split(',')) {
+                                cookie = `${cookie}${ck.split(";")[0]};`
+                            }
                         }
-                        for (const vo of Object.keys(lz_cookie)) {
-                            cookie += vo + '=' + lz_cookie[vo] + ';'
+                    }
+                    if (resp['headers']['Set-Cookie']) {
+                        cookie = `${originCookie}`
+                        if ($.isNode()) {
+                            for (let sk of resp['headers']['set-cookie']) {
+                                cookie = `${cookie}${sk.split(";")[0]};`
+                            }
+                        } else {
+                            for (let ck of resp['headers']['Set-Cookie'].split(',')) {
+                                cookie = `${cookie}${ck.split(";")[0]};`
+                            }
                         }
                     }
                     if (data) {
@@ -389,6 +373,7 @@ function getMyPing() {
                             $.log(`你好：${data.data.nickname}`)
                             $.pin = data.data.nickname;
                             $.secretPin = data.data.secretPin;
+                            cookie = `${cookie};AUTH_C_USER=${data.data.secretPin}`
                         } else {
                             $.log(data.errorMessage)
                         }
@@ -413,12 +398,27 @@ function getFirstLZCK() {
                     console.log(err)
                 } else {
                     if (resp['headers']['set-cookie']) {
-                        cookie = `${originCookie};`
-                        for (let sk of resp['headers']['set-cookie']) {
-                            lz_cookie[sk.split(";")[0].substr(0, sk.split(";")[0].indexOf("="))] = sk.split(";")[0].substr(sk.split(";")[0].indexOf("=") + 1)
+                        cookie = `${originCookie}`
+                        if ($.isNode()) {
+                            for (let sk of resp['headers']['set-cookie']) {
+                                cookie = `${cookie}${sk.split(";")[0]};`
+                            }
+                        } else {
+                            for (let ck of resp['headers']['Set-Cookie'].split(',')) {
+                                cookie = `${cookie}${ck.split(";")[0]};`
+                            }
                         }
-                        for (const vo of Object.keys(lz_cookie)) {
-                            cookie += vo + '=' + lz_cookie[vo] + ';'
+                    }
+                    if (resp['headers']['Set-Cookie']) {
+                        cookie = `${originCookie}`
+                        if ($.isNode()) {
+                            for (let sk of resp['headers']['set-cookie']) {
+                                cookie = `${cookie}${sk.split(";")[0]};`
+                            }
+                        } else {
+                            for (let ck of resp['headers']['Set-Cookie'].split(',')) {
+                                cookie = `${cookie}${ck.split(";")[0]};`
+                            }
                         }
                     }
                 }
@@ -472,142 +472,6 @@ function random(min, max) {
 
     return Math.floor(Math.random() * (max - min)) + min;
 
-}
-function requireConfig(){
-    return new Promise(resolve => {
-        if($.isNode() && process.env.JD_CART){
-            if(process.env.JD_CART_KEYWORDS){
-                $.keywords = process.env.JD_CART_KEYWORDS.split('@')
-            }
-        }
-        resolve()
-    })
-}
-function getCart_xh(){
-    console.log('正在获取购物车数据...')
-    return new Promise((resolve) => {
-        const option = {
-            url: 'https://p.m.jd.com/cart/cart.action?fromnav=1&sceneval=2',
-            headers: {
-                "Cookie": cookie,
-                "User-Agent": "jdapp;JD4iPhone/167724 (iPhone; iOS 15.0; Scale/3.00)",
-            },
-        }
-        $.get(option, async(err, resp, data) => {
-            try{
-                data = JSON.parse(getSubstr(data, "window.cartData = ", "window._PFM_TIMING"));
-                $.areaId = data.areaId;   // locationId的传值
-                $.traceId = data.traceId; // traceid的传值
-                venderCart = data.cart.venderCart;
-                postBody = 'pingouchannel=0&commlist=';
-                $.beforeRemove = data.cartJson.num
-                console.log(`获取到购物车数据 ${$.beforeRemove} 条`)
-            } catch(e){
-                $.logErr(e, resp);
-            } finally{
-                resolve(data);
-            }
-        });
-    })
-}
-function cartFilter_xh(cartData){
-    console.log("正在整理数据...")
-    let pid;
-    $.pushed = 0
-    for(let cartJson of cartData){
-        if($.pushed === removeSize) break;
-        for(let sortedItem of cartJson.sortedItems){
-            if($.pushed === removeSize) break;
-            pid = typeof (sortedItem.polyItem.promotion) !== "undefined" ? sortedItem.polyItem.promotion.pid : ""
-            for(let product of sortedItem.polyItem.products){
-                if($.pushed === removeSize) break;
-                let mainSkuName = product.mainSku.name
-                $.isKeyword = false
-                $.isPush = true
-                for(let keyword of $.keywords){
-                    if(mainSkuName.indexOf(keyword) !== -1){
-                        $.keywordsNum += 1
-                        $.isPush = false
-                        $.keyword = keyword;
-                        break;
-                    } else $.isPush = true
-                }
-                if($.isPush){
-                    let skuUuid = product.skuUuid;
-                    let mainSkuId = product.mainSku.id
-                    if(pid === "") postBody += `${mainSkuId},,1,${mainSkuId},1,,0,skuUuid:${skuUuid}@@useUuid:0$`
-                    else postBody += `${mainSkuId},,1,${mainSkuId},11,${pid},0,skuUuid:${skuUuid}@@useUuid:0$`
-                    $.pushed += 1;
-                } else {
-                    console.log(`\n${mainSkuName}`)
-                    console.log(`商品已被过滤，原因：包含关键字 ${$.keyword}`)
-                    $.isKeyword = true
-                }
-            }
-        }
-    }
-    postBody += `&type=0&checked=0&locationid=${$.areaId}&templete=1&reg=1&scene=0&version=20190418&traceid=${$.traceId}&tabMenuType=1&sceneval=2`
-}
-function removeCart(){
-    console.log('正在删除购物车数据...')
-    return new Promise((resolve) => {
-        const option = {
-            url: 'https://wq.jd.com/deal/mshopcart/rmvCmdy?sceneval=2&g_login_type=1&g_ty=ajax',
-            body: postBody,
-            headers: {
-                "Cookie": cookie,
-                "User-Agent": "jdapp;JD4iPhone/167724 (iPhone; iOS 15.0; Scale/3.00)",
-                "referer": "https://p.m.jd.com/",
-                "origin": "https://p.m.jd.com/"
-            },
-        }
-        $.post(option, async(err, resp, data) => {
-            try{
-                data = JSON.parse(data);
-                $.afterRemove = data.cartJson.num
-                if($.afterRemove < $.beforeRemove){
-                    console.log(`删除成功，当前购物车剩余数据 ${$.afterRemove} 条\n`)
-                    $.beforeRemove = $.afterRemove
-                } else {
-                    console.log('删除失败')
-                    console.log(data.errMsg)
-                    isRemoveAll = false;
-                }
-            } catch(e){
-                $.logErr(e, resp);
-            } finally{
-                resolve(data);
-            }
-        });
-    })
-}
-function getSubstr(str, leftStr, rightStr){
-    let left = str.indexOf(leftStr);
-    let right = str.indexOf(rightStr, left);
-    if(left < 0 || right < left) return '';
-    return str.substring(left + leftStr.length, right);
-}
-function getActivityIdList(url) {
-    return new Promise(resolve => {
-        const options = {
-            url: `${url}?${new Date()}`, "timeout": 10000, headers: {
-            "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
-            }
-        };
-        $.get(options, async (err, resp, data) => {
-            try {
-                if (err) {
-                    $.log(err)
-                } else {
-                if (data) data = JSON.parse(data)
-                }
-            } catch (e) {
-                $.logErr(e, resp)
-            } finally {
-                resolve(data);
-            }
-        })
-    })
 }
 function getUUID(format = 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx', UpperCase = 0) {
     return format.replace(/[xy]/g, function (c) {

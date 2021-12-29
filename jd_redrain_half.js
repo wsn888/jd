@@ -2,21 +2,17 @@
 半点京豆雨
 更新时间：2021-12-8
 脚本兼容: Quantumult X, Surge, Loon, JSBox, Node.js
-by：msechen
-github:https://github.com/msechen/jdrain
-频道:https://t.me/jdredrain
-交流群组：https://t.me/+xfWwiMAFonwzZDFl
 ==============Quantumult X==============
 [task_local]
 #半点京豆雨
-31 20-23/1 * * * https://raw.githubusercontent.com/msechen/jdrain/main/jd_live_redrain.js, tag=半点京豆雨, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
+31 18-23/1 * * * https://raw.githubusercontent.com/KingRan/JDJB/main/jd_live_redrain.js, tag=半点京豆雨, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
 ==============Loon==============
 [Script]
-cron "31 20-23/1 * * *" script-path=https://raw.githubusercontent.com/msechen/jdrain/main/jd_redrain_half.js,tag=半点京豆雨
+cron "31 18-23/1 * * *" script-path=https://raw.githubusercontent.com/KingRan/JDJB/main/jd_redrain_half.js,tag=半点京豆雨
 ================Surge===============
-半点京豆雨 = type=cron,cronexp="31 20-23/1 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/msechen/jdrain/main/jd_redrain_half.js
+半点京豆雨 = type=cron,cronexp="31 18-23/1 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/KingRan/JDJB/main/jd_redrain_half.js
 ===============小火箭==========
-半点京豆雨 = type=cron,script-path=https://raw.githubusercontent.com/msechen/jdrain/main/jd_redrain_half.js, cronexpr="31 20-23/1 * * *", timeout=3600, enable=true
+半点京豆雨 = type=cron,script-path=https://raw.githubusercontent.com/KingRan/JDJB/main/jd_redrain_half.js, cronexpr="31 18-23/1 * * *", timeout=3600, enable=true
 */
 const $ = new Env('半点京豆雨');
 let allMessage = '', id = '';
@@ -25,10 +21,12 @@ const notify = $.isNode() ? require('./sendNotify') : '';
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
+let jd_redrain_half_url =  '';
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
     cookiesArr.push(jdCookieNode[item])
   })
+  if (process.env.jd_redrain_half_url) jd_redrain_half_url = process.env.jd_redrain_half_url
   if (process.env.JD_DEBUG && process.env.JD_DEBUG === 'false') console.log = () => { };
   if (JSON.stringify(process.env).indexOf('GITHUB') > -1) process.exit(0)
 } else {
@@ -41,11 +39,15 @@ const JD_API_HOST = 'https://api.m.jd.com/api';
     return;
   }
   let hour = (new Date().getUTCHours() + 8) % 24;
-  $.log(`\n甘露殿【https://t.me/jdredrain】提醒你:正在远程获取${hour}点30分京豆雨ID\n`);
+  $.log(`\n正在远程获取${hour}点30分京豆雨ID\n`);
   await $.wait(1000);
-  let redIds = await getRedRainIds();
+  let redIds = await getRedRainIds(jd_redrain_half_url);
+  if (!redIds) {
+    await $.wait(1000)
+    redIds = await getRedRainIds('https://gitee.com/KingRan521/JD-Scripts/raw/master/shareCodes/redrain_half.json')
+  }
   if (!redIds.length) {
-    $.log(`\n甘露殿【https://t.me/jdredrain】提醒你:今日龙王🐲出差，天气晴朗☀️，改日再来～\n`);
+    $.log(`\n今日龙王🐲出差，天气晴朗☀️，改日再来～\n`);
     return;
   }
   for (let id of redIds) {
@@ -53,7 +55,7 @@ const JD_API_HOST = 'https://api.m.jd.com/api';
       console.log(`\nRRA: "${id}"不符合规则\n`);
       continue;
     }
-    console.log(`\n甘露殿【https://t.me/jdredrain】提醒你:龙王就位:${id}，正在领取${hour}点30分京豆雨\n`);
+    console.log(`\n龙王就位:${id}，正在领取${hour}点30分京豆雨\n`);
     for (let i = 0; i < cookiesArr.length; i++) {
       if (cookiesArr[i]) {
         cookie = cookiesArr[i];
@@ -138,7 +140,7 @@ function taskUrl(function_id, body = {}) {
   }
 }
 
-function getRedRainIds(url = "https://gitee.com/msewb/jdrain/raw/master/redrain_half.json") {
+function getRedRainIds(url) {
   return new Promise(async resolve => {
     const options = {
       url: `${url}?${new Date()}`, "timeout": 10000, headers: {
