@@ -1,12 +1,23 @@
 /*
-TG https://t.me/duckjobs
-github https://github.com/mmnvnmm/omo
-
+超级无线店铺签到
+更新时间：2021-12-8
 说明: 超级无线店铺签到
 不能并发,超级无线黑号不能跑,建议别跑太多号
 环境变量:
 SEVENDAY_LIST,SEVENDAY_LIST2,SEVENDAY_LIST3
-0 0 * * * jd_sevenDay.js
+by：omo小埋
+==============Quantumult X==============
+[task_local]
+#超级无线店铺签到
+31 1 * * * https://raw.githubusercontent.com/KingRan/JDJB/main/jd_sevenDay.js, tag=超级无线店铺签到, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
+==============Loon==============
+[Script]
+cron "31 1 * * *" script-path=https://raw.githubusercontent.com/KingRan/JDJB/main/jd_sevenDay.js,tag=超级无线店铺签到
+================Surge===============
+超级无线店铺签到 = type=cron,cronexp="31 1 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/KingRan/JDJB/main/jd_sevenDay.js
+===============小火箭==========
+超级无线店铺签到 = type=cron,script-path=https://raw.githubusercontent.com/KingRan/JDJB/main/jd_sevenDay.js, cronexpr="31 1 * * *", timeout=3600, enable=true
+
 */
 const $ = new Env('超级无线店铺签到');
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
