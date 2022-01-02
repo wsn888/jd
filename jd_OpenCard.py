@@ -1,13 +1,15 @@
 #!/bin/env python3
 # -*- coding: utf-8 -*
 '''
-项目名称: 入会开卡
+项目名称: JD_OpenCard
 Author: Curtin
 功能：JD入会开卡领取京豆
-CreateDate: 2021/5/4
-UpdateTime: 2021/8/11
+CreateDate: 2021/5/4 下午1:47
+UpdateTime: 2022/1/1
+建议cron: 2 8,15 * * *  python3 jd_OpenCard.py
+new Env('开卡有礼');
 '''
-version = 'v1.2.2'
+version = 'v1.3.1'
 readmes = """
 # JD入会领豆小程序
 ![JD入会领豆小程序](https://raw.githubusercontent.com/curtinlv/JD-Script/main/OpenCrad/resultCount.png)
@@ -56,6 +58,9 @@ readmes = """
        2 8 * * * sh /home/curtin/JD-Script/OpenCard/start_2.sh
 
 ## `【更新记录】`
+    2022.1.1: (v1.3.1)
+        * 修复cookie检测接口
+        * 增加cookie检测开关
     2021.6.19: (v1.2.2)
         * 修复多线程报错
     2021.6.14: (v1.2.1)
@@ -201,6 +206,7 @@ TG_API_HOST = ''
 QYWX_AM = ''
 BARK = ''
 DoubleThread = True
+JD_COOKIE_CHECK = "true"
 
 # 获取账号参数
 try:
@@ -234,6 +240,7 @@ try:
     Concurrent = configinfo.getboolean('main', 'Concurrent')
     DoubleThread = configinfo.getboolean('main', 'DoubleThread')
     BARK = configinfo.get('main', 'BARK')
+    JD_COOKIE_CHECK = configinfo.get('main', 'JD_COOKIE_CHECK')
 except Exception as e:
     OpenCardConfigLabel = 1
     print("参数配置有误，请检查OpenCardConfig.ini\nError:", e)
@@ -358,6 +365,13 @@ if "BARK" in os.environ:
     if len(os.environ["BARK"]) > 1:
         BARK = os.environ["BARK"]
         print("已获取并使用Env环境 BARK")
+
+if "JD_COOKIE_CHECK" in os.environ:
+    if len(os.environ["JD_COOKIE_CHECK"]) > 1:
+        JD_COOKIE_CHECK = os.environ["JD_COOKIE_CHECK"]
+else:
+    JD_COOKIE_CHECK = "true"
+
 # 判断参数是否存在
 try:
     cookies
@@ -444,7 +458,10 @@ def telegram_bot(title, content):
             return
         print("tg服务启动")
         if TG_API_HOST:
-            url = f"{TG_API_HOST}/bot{TG_BOT_TOKEN}/sendMessage"
+            if 'http' in TG_API_HOST:
+                url = f"{TG_API_HOST}/bot{TG_BOT_TOKEN}/sendMessage"
+            else:
+                url = f"https://{TG_API_HOST}/bot{TG_BOT_TOKEN}/sendMessage"
         else:
             url = f"https://api.telegram.org/bot{TG_BOT_TOKEN}/sendMessage"
 
@@ -649,14 +666,19 @@ def iscookie():
                 pinName = r.findall(i)
                 pinName = unquote(pinName[0])
                 # 获取账号名
-                ck, nickname = getUserInfo(i, pinName, u)
-                if nickname != False:
-                    cookiesList.append(ck)
-                    userNameList.append(nickname)
-                    pinNameList.append(pinName)
+                if JD_COOKIE_CHECK == "true":
+                    ck, nickname = getUserInfo(i, pinName, u)
+                    if nickname != False:
+                        cookiesList.append(ck)
+                        userNameList.append(nickname)
+                        pinNameList.append(pinName)
+                    else:
+                        u += 1
+                        continue
                 else:
-                    u += 1
-                    continue
+                    cookiesList.append(i)
+                    userNameList.append(pinName)
+                    pinNameList.append(pinName)
                 u += 1
             if len(cookiesList) > 0 and len(userNameList) > 0:
                 return cookiesList, userNameList, pinNameList
@@ -714,30 +736,60 @@ def isUpdate():
         message("请检查您的环境/版本是否正常！")
         time.sleep(10)
         exit(666)
-
+#
+# def getUserInfo(ck, pinName, userNum):
+#     url = 'https://me-api.jd.com/user_new/info/GetJDUserInfoUnion?orgFlag=JD_PinGou_New&callSource=mainorder&channel=4&isHomewhite=0&sceneval=2&sceneval=2&callback=GetJDUserInfoUnion'
+#     headers = {
+#         'Cookie': ck,
+#         'Accept': '*/*',
+#         'Connection': 'close',
+#         'Referer': 'https://home.m.jd.com/myJd/home.action',
+#         'Accept-Encoding': 'gzip, deflate, br',
+#         'Host': 'me-api.jd.com',
+#         'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.2 Mobile/15E148 Safari/604.1',
+#         'Accept-Language': 'zh-cn'
+#     }
+#     try:
+#         resp = requests.get(url=url, verify=False, headers=headers, timeout=60).text
+#         r = re.compile(r'GetJDUserInfoUnion.*?\((.*?)\)')
+#         result = r.findall(resp)
+#         userInfo = json.loads(result[0])
+#         nickname = userInfo['data']['userInfo']['baseInfo']['nickname']
+#         return ck, nickname
+#     except Exception:
+#         context = f"账号{userNum}【{pinName}】Cookie 已失效！请重新获取。"
+#         message(context)
+#         send("【JD入会领豆】Cookie 已失效！", context)
+#         return ck, False
 def getUserInfo(ck, pinName, userNum):
-    url = 'https://me-api.jd.com/user_new/info/GetJDUserInfoUnion?orgFlag=JD_PinGou_New&callSource=mainorder&channel=4&isHomewhite=0&sceneval=2&sceneval=2&callback=GetJDUserInfoUnion'
+    url = 'https://me-api.jd.com/user_new/info/GetJDUserInfoUnion?orgFlag=JD_PinGou_New&callSource=mainorder&channel=4&isHomewhite=0&sceneval=2&_=&sceneval=2&g_login_type=1'
     headers = {
-        'Cookie': ck,
-        'Accept': '*/*',
-        'Connection': 'close',
-        'Referer': 'https://home.m.jd.com/myJd/home.action',
-        'Accept-Encoding': 'gzip, deflate, br',
-        'Host': 'me-api.jd.com',
-        'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0.2 Mobile/15E148 Safari/604.1',
-        'Accept-Language': 'zh-cn'
+        'Cookie' : ck,
+        'Accept' : '*/*',
+        'Connection' : 'keep-alive',
+        'Referer' : 'https://home.m.jd.com/',
+        'Accept-Encoding' : 'gzip, deflate, br',
+        'Host' : 'me-api.jd.com',
+        'User-Agent' : 'Mozilla/5.0 (iPhone; CPU iPhone OS 15_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/14.0 Mobile/15E148 Safari/604.1',
+        'Accept-Language' : 'zh-CN,zh-Hans;q=0.9'
     }
     try:
-        resp = requests.get(url=url, verify=False, headers=headers, timeout=60).text
-        r = re.compile(r'GetJDUserInfoUnion.*?\((.*?)\)')
-        result = r.findall(resp)
-        userInfo = json.loads(result[0])
-        nickname = userInfo['data']['userInfo']['baseInfo']['nickname']
-        return ck, nickname
+        if sys.platform == 'ios':
+            requests.packages.urllib3.disable_warnings()
+            resp = requests.get(url=url, verify=False, headers=headers, timeout=60).json()
+        else:
+            resp = requests.get(url=url, headers=headers, timeout=60).json()
+        # print(json.dumps(resp, indent=4 , ensure_ascii=False))
+        if resp['retcode'] == "0":
+            nickname = resp['data']['userInfo']['baseInfo']['nickname']
+            return ck, nickname
+        else:
+            context = f"账号{userNum}【{pinName}】Cookie 已失效！请重新获取。"
+            print(context)
+            return ck, False
     except Exception:
         context = f"账号{userNum}【{pinName}】Cookie 已失效！请重新获取。"
-        message(context)
-        send("【JD入会领豆】Cookie 已失效！", context)
+        print(context)
         return ck, False
 
 # 设置Headers
@@ -1145,7 +1197,8 @@ def sss(ii, ck, userName, pinName, endNum, user_num, shopids, threadNum):
             pass
     except Exception as e:
         if user_num == 1:
-            print(f"【Error】：多账号并发报错，请求过快建议适当调整 sleepNum 参数限制速度 \n{e}")
+            # print(f"【Error】：多账号并发报错，请求过快建议适当调整 sleepNum 参数限制速度 \n{e}")
+            pass
 
 # 为多线程准备
 def OpenVipCard(startNum: int, endNum: int, shopids, cookies, userNames, pinNameList, threadNum):
@@ -1288,9 +1341,9 @@ def start():
             n += 1
         message(f"\n本次总累计获得：{all_get_bean} 京豆")
     time.sleep(1)
-    message("\n------- 入会总耗时 : %.03f 秒 By：网商念 -------" % (endtime - starttime))
+    message("\n------- 入会总耗时 : %.03f 秒 seconds -------" % (endtime - starttime))
     print("{0}\n{1}\n{2}".format("*" * 30, scriptHeader, remarks))
-    send("【JD入会领豆推送】", message_info)
+    send("【JD入会领豆】", message_info)
     exitCodeFun(0)
 if __name__ == '__main__':
     start()
