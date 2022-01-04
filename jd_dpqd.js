@@ -84,7 +84,6 @@ if ($.isNode()) {
         }
         continue
       }
-      getUA()
       await dpqd()
       await showMsg()
       await $.wait(1500)
@@ -106,6 +105,7 @@ async function dpqd(){
   for (var j = 0; j < token.length; j++) {
     num=j+1
     if (token[j]=='') {continue}
+    getUA()
     await getvenderId(token[j])
     if (vender=='') {continue}
     await getvenderName(vender)
