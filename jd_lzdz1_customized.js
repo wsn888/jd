@@ -10,7 +10,7 @@
 6.大于1张福卡时 26号会通知瓜分
 
 ————————————————
-入口：[ 1.5~1.25 集“年味卡”，享年货盛宴 (https://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=cd2022n4ci22tlj1s2w3245u1mk&shareUuid=01f9ed66c62d4c418822efa47134ba6c)]
+入口：[ 1.5~1.25 集“年味卡”，享年货盛宴 (https://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=cd2022n4ci22tlj1s2w3245u1mk&shareUuid=a52986544d0c4130b41928a9f61de464)]
 
 
 cron:30 0,14 5-26 1 *
@@ -54,7 +54,7 @@ let nowTime = new Date().getTime() + new Date().getTimezoneOffset()*60*1000 + 8*
     return;
   }
   $.activityId = "cd2022n4ci22tlj1s2w3245u1mk"
-  $.shareUuid = "01f9ed66c62d4c418822efa47134ba6c"
+  $.shareUuid = "a52986544d0c4130b41928a9f61de464"
   console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
 
   for (let i = 0; i < cookiesArr.length; i++) {
