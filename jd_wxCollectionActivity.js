@@ -1,8 +1,13 @@
+if (!["true"].includes(process.env.JD_JGWCCJ)) {
+    console.log("避免自动运行请设置加购环境变量JD_JGWCCJ为\"true\"来运行本脚本")
+    return
+}
 /*
 https://lzkj-isv.isvjcloud.com/wxgame/activity/8530275?activityId=
 
 JD_CART_REMOVESIZE || 20; // 运行一次取消多全部已关注的商品。数字0表示不取关任何商品
 JD_CART_REMOVEALL || true;    //是否清空，如果为false，则上面设置了多少就只删除多少条
+
 
 */
 const $ = new Env('加购物车抽奖');
@@ -30,7 +35,7 @@ if ($.isNode()) {
     cookiesArr.reverse();
     cookiesArr = cookiesArr.filter(item => !!item);
 }
-let doPush = process.env.DoPush || false; // 设置为 false 每次推送, true 跑完了推送
+let doPush = process.env.DoPush || true; // 设置为 false 每次推送, true 跑完了推送
 let removeSize = process.env.JD_CART_REMOVESIZE || 20; // 运行一次取消多全部已关注的商品。数字0表示不取关任何商品
 let isRemoveAll = process.env.JD_CART_REMOVEALL || true;    //是否清空，如果为false，则上面设置了多少就只删除多少条
 $.keywords = process.env.JD_CART_KEYWORDS || []
@@ -191,7 +196,7 @@ function task(function_id, body, isCommon = 0) {
                                             message += data.data.name + " "
                                         }
                                     } else {
-                                        // await notify.sendNotify($.name, data.data.name, '', `\n`);
+                                        //await notify.sendNotify($.name, data.data.name, '', `\n`);
                                     }
                                     break
                                 default:
