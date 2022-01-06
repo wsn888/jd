@@ -1,7 +1,7 @@
 /*
 集“年味卡”，享年货盛宴
 
-https://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=cd2022n4ci22tlj1s2w3245u1mk&shareUuid=31e5b0ffe4554307a9c5edf87a29ee7d
+https://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=cd2022n4ci22tlj1s2w3245u1mk&shareUuid=a52986544d0c4130b41928a9f61de464
 */
 const $ = new Env("集“年味卡”，享年货盛宴");
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
@@ -32,7 +32,7 @@ if ($.isNode()) {
     // authorCodeList = await getAuthorCodeList('https://gitee.com/fatelight/code/raw/master/lzdz1_customized.json')
     // if($.getAuthorCodeListerr === false){
     //     authorCodeList = [
-    //         '9df288c6b072416984e60e5f62ab8459',
+    //         'a52986544d0c4130b41928a9f61de464',
     //     ]
     // }
     // console.log(authorCodeList)
@@ -58,8 +58,7 @@ if ($.isNode()) {
             $.ADID = getUUID('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', 1);
             $.UUID = getUUID('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
             authorCodeList = [
-                'db06b96609d54ce5ab2b57437f8c0154',
-                '31e5b0ffe4554307a9c5edf87a29ee7d',
+                'a52986544d0c4130b41928a9f61de464',
             ]
             // $.authorCode = authorCodeList[random(0, authorCodeList.length)]
             $.authorCode = ownCode ? ownCode : authorCodeList[random(0, authorCodeList.length)]
