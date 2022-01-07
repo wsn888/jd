@@ -1,7 +1,7 @@
 /*
 年货盛宴 春节集福攻略
 
-https://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=cd20220105fff606x19uj4vijetkg&shareUuid=a98348e17928460fb2e40a29a08eabcf
+https://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=cd20220105fff606x19uj4vijetkg&shareUuid=a1447f7499f74923ba855167a9ae2de4
 */
 const $ = new Env("年货盛宴 春节集福攻略");
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
@@ -32,7 +32,7 @@ if ($.isNode()) {
     authorCodeList = await getAuthorCodeList('https://gitee.com/fatelight/code/raw/master/lzdz1.json')
     if($.getAuthorCodeListerr === false){
         authorCodeList = [
-            'a98348e17928460fb2e40a29a08eabcf',
+            'a1447f7499f74923ba855167a9ae2de4',
         ]
     }
     // console.log(authorCodeList)
@@ -58,8 +58,7 @@ if ($.isNode()) {
             $.ADID = getUUID('xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx', 1);
             $.UUID = getUUID('xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx');
             // authorCodeList = [
-            //     'fa3a636d994046b2af3e2bb14eb6cce6',
-            //     'a98348e17928460fb2e40a29a08eabcf',
+            //     'a1447f7499f74923ba855167a9ae2de4',
             // ]
             // $.authorCode = authorCodeList[random(0, authorCodeList.length)]
             $.authorCode = ownCode ? ownCode : authorCodeList[random(0, authorCodeList.length)]
