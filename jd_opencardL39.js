@@ -10,7 +10,7 @@
 6.大于1张福卡时 31号会通知瓜分
 
 ————————————————
-入口：[ 1.5~1.31 年货盛宴，春节集福攻略 (https://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity/9810692?activityId=cd20220105fff606x19uj4vijetkg&shareUuid=a1447f7499f74923ba855167a9ae2de4)]
+入口：[ 1.5~1.31 年货盛宴，春节集福攻略 (https://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity/9810692?activityId=cd20220105fff606x19uj4vijetkg&shareUuid=1ade9f197b6d4966846d69f26e533717)]
 
 
 cron:5 0,17 5-31 1 *
@@ -54,7 +54,7 @@ let nowTime = new Date().getTime() + new Date().getTimezoneOffset()*60*1000 + 8*
     return;
   }
   $.activityId = "cd20220105fff606x19uj4vijetkg"
-  $.shareUuid = "a1447f7499f74923ba855167a9ae2de4"
+  $.shareUuid = "1ade9f197b6d4966846d69f26e533717"
   console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
 
   for (let i = 0; i < cookiesArr.length; i++) {
@@ -156,7 +156,7 @@ async function run() {
     }else{
       console.log('已全部开卡')
     }
-    
+    await takePostRequest('addSku');
     $.log("关注: " + $.followShop)
     if(!$.followShop && !$.outFlag){
       flag = true
@@ -331,7 +331,7 @@ async function takePostRequest(type) {
       case 'visitSku':
       case 'toShop':
       case 'addSku':
-        url = `${domain}/dingzhi/dz/openCard/saveTask`;
+        url = `${domain}/play/monopoly/doTasks`;
         let taskType = ''
         let taskValue = ''
         if(type == 'viewVideo'){
@@ -344,8 +344,8 @@ async function takePostRequest(type) {
           taskType = 14
           taskValue = $.toShopValue || 14
         }else if(type == 'addSku'){
-          taskType = 2
-          taskValue = $.addSkuValue || 2
+          taskType = 21
+          taskValue = $.addSkuValue || 21
         }
         body = `activityId=${$.activityId}&pin=${encodeURIComponent($.Pin)}&actorUuid=${$.actorUuid}&taskType=${taskType}&taskValue=${taskValue}`
         break;
