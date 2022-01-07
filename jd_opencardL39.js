@@ -10,7 +10,7 @@
 6.大于1张福卡时 31号会通知瓜分
 
 ————————————————
-入口：[ 1.5~1.31 年货盛宴，春节集福攻略 (https://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity/9810692?activityId=cd20220105fff606x19uj4vijetkg&shareUuid=1ade9f197b6d4966846d69f26e533717)]
+入口：[ 1.5~1.31 年货盛宴，春节集福攻略 (https://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity/9810692?activityId=cd20220105fff606x19uj4vijetkg&shareUuid=a1447f7499f74923ba855167a9ae2de4)]
 
 
 cron:5 0,17 5-31 1 *
@@ -54,7 +54,7 @@ let nowTime = new Date().getTime() + new Date().getTimezoneOffset()*60*1000 + 8*
     return;
   }
   $.activityId = "cd20220105fff606x19uj4vijetkg"
-  $.shareUuid = "1ade9f197b6d4966846d69f26e533717"
+  $.shareUuid = "a1447f7499f74923ba855167a9ae2de4"
   console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
 
   for (let i = 0; i < cookiesArr.length; i++) {
