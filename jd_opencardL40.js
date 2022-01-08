@@ -7,7 +7,7 @@
 第一个CK失效会退出脚本
 
 ————————————————
-入口：https://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=dzlhkklblzms20220108&shareUuid=f2276a8dcdb947b5b449f245c81bbb06
+入口：https://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=dzlhkklblzms20220108&shareUuid=a22ceb7c63bb460180820d57a477353b
 
 请求太频繁会被黑ip
 过10分钟再执行
@@ -50,7 +50,7 @@ let activityCookie =''
     return;
   }
   $.activityId = "dzlhkklblzms20220108"
-  $.shareUuid = "f2276a8dcdb947b5b449f245c81bbb06"
+  $.shareUuid = "a22ceb7c63bb460180820d57a477353b"
   console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
   for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
