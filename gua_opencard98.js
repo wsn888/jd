@@ -25,7 +25,7 @@ guaopenwait98="0"
 
 All变量适用
 ————————————————
-入口：[ 1.7~1.26 集“年味卡”，享年货盛宴 (https://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=cd20220107vcowv119979tm7p&shareUuid=8ac227e5ca3540c5a0b79b878e18773b)]
+入口：[ 1.7~1.26 集“年味卡”，享年货盛宴 (https://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=cd20220107vcowv119979tm7p&shareUuid=546c2612ae0c4dca9ed74c35b727f26f)]
 
 请求太频繁会被黑ip
 过10分钟再执行
@@ -105,7 +105,7 @@ let nowTime = new Date().getTime() + new Date().getTimezoneOffset()*60*1000 + 8*
     return;
   }
   $.activityId = "cd20220107vcowv119979tm7p"
-  $.shareUuid = "8ac227e5ca3540c5a0b79b878e18773b"
+  $.shareUuid = "546c2612ae0c4dca9ed74c35b727f26f"
   console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
 
   for (let i = 0; i < cookiesArr.length; i++) {
