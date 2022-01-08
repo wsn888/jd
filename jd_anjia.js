@@ -50,7 +50,7 @@ if ($.isNode()) {
                 }
                 continue
             }
-            authorCodeList = ['f653a4464fb040fb801994284753a983','0b234d5900094ccaad1ee2f4a78c3e9c']
+            authorCodeList = ['f653a4464fb040fb801994284753a983','06743944ef0f43a68eafe9a154173a4f','0b234d5900094ccaad1ee2f4a78c3e9c']
             $.bean = 0;
             $.authorCode = ownCode ? ownCode : authorCodeList[random(0, authorCodeList.length)]
             $.activityId = 'ecaf4a23237e403896efdc9507a31ea2'
