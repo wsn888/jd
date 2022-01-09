@@ -3,15 +3,15 @@
 cron 0 0,8,20,22 * * *  https://raw.githubusercontent.com/smiek2121/scripts/master/gua_nhjRed.js
 整点跑 红包几率大点
 
-https://u.jd.com/SCLyQi4
+https://u.jd.com/SdiaKDy
 跳转到app 可查看助力情况
 
 返利变量：gua_nhjRed_rebateCode，若需要返利给自己，请自己修改环境变量[gua_nhjRed_rebateCode]
-SCLyQi4换成自己的返利
-export gua_nhjRed_rebateCode="SCLyQi4"
+SdiaKDy换成自己的返利
+export gua_nhjRed_rebateCode="SdiaKDy"
 */
 
-let rebateCodes = 'SCLyQi4'
+let rebateCodes = 'SdiaKDy'
 
 const $ = new Env('年货节红包');
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
