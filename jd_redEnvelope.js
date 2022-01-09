@@ -22,7 +22,7 @@ cron "0 0,12,20,21 * * *" script-path=https://raw.githubusercontent.com/KingRan/
 
 const $ = new Env('京东领红包');
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
-let flCode = ["SKib2Yf", "SwIzrUi", "SdIbtXo"]
+let flCode = ["SdiaKDy"]
 flCode = flCode[Math.floor((Math.random() * flCode.length))]
 if ($.isNode() && process.env.FLCODE3) {
     flCode = process.env.FLCODE3
