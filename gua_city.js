@@ -29,7 +29,9 @@ if ($.isNode()) {
   cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
 }
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
-let inviteCodes = ['ryUXq8KYmIVYkTCTY6U__ZgFWeg_zep','ryUXq4IMmUWYhGVGd3GphC28YaxLKj5','ryUIN57BA0EOVq1Pb2Gu_AacmG0M9c']
+let inviteCodes = [
+  'ryUXq8KYmIVYkTCTY6U__ZgFWeg_zep','ryUXq4IMmUWYhGVGd3GphC28YaxLKj5','ryUIN57BA0EOVq1Pb2Gu_AacmG0M9c'
+]
 $.shareCodesArr = [];
 
 !(async () => {
@@ -107,6 +109,10 @@ $.shareCodesArr = [];
         const res = await city_lotteryAward();//抽奖
         if (res && res > 0) {
           for (let i = 0; i < new Array(res).fill('').length; i++) {
+            if(i >= 10){
+              console.log('抽奖次数达10次，退出抽奖')
+              break
+            }
             await $.wait(1000)
             await city_lotteryAward();//抽奖
           }
