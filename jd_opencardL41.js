@@ -13,7 +13,7 @@
 第一个CK失效会退出脚本
 
 ————————————————
-入口：[ 1.8~1.27 集年味卡 享年味盛典 (https://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=cd20220108iu890dmnhimj01ied&shareUuid=2d0fcc860b1f4e32acfcb3d275c4fb73)]
+入口：[ 1.8~1.27 集年味卡 享年味盛典 (https://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=cd20220108iu890dmnhimj01ied&shareUuid=de2a76f1d8b74d41a0c105c7b0290e8f)]
 
 请求太频繁会被黑ip
 过10分钟再执行
@@ -59,7 +59,7 @@ let nowTime = new Date().getTime() + new Date().getTimezoneOffset()*60*1000 + 8*
     return;
   }
   $.activityId = "cd20220108tpovk25f5b40s07t7"
-  $.shareUuid = "2d0fcc860b1f4e32acfcb3d275c4fb73"
+  $.shareUuid = "de2a76f1d8b74d41a0c105c7b0290e8f"
   console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
 
   for (let i = 0; i < cookiesArr.length; i++) {
