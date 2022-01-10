@@ -299,11 +299,7 @@ function shareCodesFormat() {
                }
                if (process.env.CITY_SHARECODES) {
                     console.log('检测到助力码,优先. 内部互助0.01了吧,删了吧.')
-                    if (process.env.CITY_SHARECODES.indexOf('\n') > -1) {
-                         $.newShareCodes = process.env.CITY_SHARECODES.split('\n');
-                    } else {
-                         $.newShareCodes = process.env.CITY_SHARECODES.split('&');
-                    }
+                    $.newShareCodes = $.shareCodesArr[$.index - 1].split('@');
                }
           }
           // if ($.index - 1 == 0) {
