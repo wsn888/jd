@@ -1,3 +1,8 @@
+if (!["true"].includes(process.env.JD_ZNS)) {
+    console.log("可能黑号,运行前最少手动进去过一次，避免自动运行请设置环境变量JD_ZNS为\"true\"来运行本脚本")
+    return
+}
+
 /*
 
 脚本有问题，凑活用
@@ -8,10 +13,6 @@
 
 
  */
-if (process.env.ZNS != 'true') {
-    console.log('脚本默认不运行,请设置环境变量ZNS为true运行,可能黑号,运行前最少手动进去过一次')
-    return
-}
 const $ = new Env('炸年兽');
 
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
@@ -52,6 +53,7 @@ $.shareCodesArr = [];
             await getUA()
         }
     }
+    $.newShareCodes = []
     for (let i = 0; i < cookiesArr.length; i++) {
         if (cookiesArr[i]) {
             cookie = cookiesArr[i];
@@ -62,24 +64,23 @@ $.shareCodesArr = [];
             message = '';
             console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
             //   await shareCodesFormat()
-            $.newShareCodes = []
-            for (let i = 0; i < $.newShareCodes.length && true; ++i) {
-                console.log(`\n开始助力 【${$.newShareCodes[i]}】`)
-                let res = await getInfo($.newShareCodes[i])
-                if (res && res['data'] && res['data']['bizCode'] === 0) {
-                    if (res['data']['result']['toasts'] && res['data']['result']['toasts'][0] && res['data']['result']['toasts'][0]['status'] === '3') {
-                        console.log(`助力次数已耗尽，跳出`)
-                        break
-                    }
-                    if (res['data']['result']['toasts'] && res['data']['result']['toasts'][0]) {
-                        console.log(`助力 【${$.newShareCodes[i]}】:${res.data.result.toasts[0].msg}`)
-                    }
-                }
-                if ((res && res['status'] && res['status'] === '3') || (res && res.data && res.data.bizCode === -11)) {
-                    // 助力次数耗尽 || 黑号
-                    break
-                }
-            }
+            // for (let i = 0; i < $.newShareCodes.length && true; ++i) {
+            //     console.log(`\n开始助力 【${$.newShareCodes[i]}】`)
+            //     let res = $.newShareCodes[i]
+            //     if (res && res['data'] && res['data']['bizCode'] === 0) {
+            //         if (res['data']['result']['toasts'] && res['data']['result']['toasts'][0] && res['data']['result']['toasts'][0]['status'] === '3') {
+            //             console.log(`助力次数已耗尽，跳出`)
+            //             break
+            //         }
+            //         if (res['data']['result']['toasts'] && res['data']['result']['toasts'][0]) {
+            //             console.log(`助力 【${$.newShareCodes[i]}】:${res.data.result.toasts[0].msg}`)
+            //         }
+            //     }
+            //     if ((res && res['status'] && res['status'] === '3') || (res && res.data && res.data.bizCode === -11)) {
+            //         // 助力次数耗尽 || 黑号
+            //         break
+            //     }
+            // }
             try {
                 await get_secretp()
 
@@ -201,8 +202,8 @@ function transform(str) {
     var REQUEST = new Object,
         data = str.slice(str.indexOf("?") + 1, str.length - 1),
         aParams = data.substr(1).split("&");
-    for (i = 0; i < aParams.length; i++) {　　
-        var aParam = aParams[i].split("=");　　
+    for (i = 0; i < aParams.length; i++) {
+        var aParam = aParams[i].split("=");
         REQUEST[aParam[0]] = aParam[1]
     }
     return REQUEST
