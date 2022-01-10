@@ -61,7 +61,7 @@ const JD_API_HOST = `https://api.m.jd.com/client.action`;
       await main()
     }
     };
-    $.shareCoseList = [...new Set([...$.shareCoseList,'SeT5cz7JQIJNnv7xJ2IQKQ','gh1GN_ZhPLZ91YAlEKbQC-4N-VMeBv36iNnSKPaf8SE'])]
+    $.shareCoseList = [...new Set([...$.shareCoseList,'xtzz1jk6MxChmvYmYXo87diwqZTPcHv50jPSC122Qso','Afsy7ddM-wVUiUMf6iYjHpPfJ3u6F8Lyc5-jShdl8vc','TTPNZt-_tXC7PbW6jl5KhA'])]
     //去助力与开箱
     for (let i = 0; i < cookiesArr.length; i++) {
         cookie = cookiesArr[i];
@@ -83,7 +83,7 @@ const JD_API_HOST = `https://api.m.jd.com/client.action`;
       }
 	  
             //如果有多余机会给我助力
-            let authorCode = 'SeT5cz7JQIJNnv7xJ2IQKQ';
+            let authorCode = 'xtzz1jk6MxChmvYmYXo87diwqZTPcHv50jPSC122Qso';
             for (let y = 0; y < $.shareCoseList.length; y++){
                 console.log(`京东账号${$.index} ${$.UserName || $.UserName}去助力${authorCode}`)
                 await helpShare({"taskId":$.helpId,"linkId":"DQFdr1ttvWWzn0wsQ7JDZQ","encryptPin":$.authorCode});
