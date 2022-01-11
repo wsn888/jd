@@ -157,12 +157,6 @@ async function run() {
       await takePostRequest('followShop');
       await $.wait(parseInt(Math.random() * 2000 + 2000, 10))
     }
-    $.log("逛会场: " + $.toMainActive)
-    if(!$.toMainActive && !$.outFlag){
-      flag = true
-      await takePostRequest('toMainActive');
-      await $.wait(parseInt(Math.random() * 2000 + 2000, 10))
-    }
     if(flag){
       await takePostRequest('activityContent');
     }
