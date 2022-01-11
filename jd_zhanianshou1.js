@@ -1,6 +1,6 @@
 /*
 TG https://t.me/aaron_scriptsG
-被内鬼偷给柠檬了,大家一起玩吧
+被内鬼偷了,大家一起玩吧。
 33 0,6-23/2 * * * jd_travel.js
 */
 const $ = new Env('炸年兽');
