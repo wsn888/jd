@@ -29,7 +29,7 @@ if ($.isNode()) {
   cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
 }
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
-let inviteCodes = ['-ryUIOlIHz8pFW-aNYmbu25LXdjYhUQ','-ryUHNZWDj0XHnSeAr6au6OI-QOjSyY','-ryUXf5YM2dFZ0PNSdOWoX0yOa5Pm_-w','-ryUX6ReZmdLNhOXTonC_uKcEzo0GDs2']
+let inviteCodes = ['ryUXq8KYmIVYkTCTY6U__ZgFWeg_zep','ryUXq4IMmUWYhGVGd3GphC28YaxLKj5','ryUIN57BA0EOVq1Pb2Gu_AacmG0M9c']
 $.shareCodesArr = [];
 
 !(async () => {
