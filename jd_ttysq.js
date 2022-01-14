@@ -31,7 +31,7 @@ const JD_API_HOST = `https://m.jingxi.com`;
     cookiesArr = cookiesArr.map(ck => ck + `joyytoken=50084${joyToken};`)
     $.CryptoJS = $.isNode() ? require('crypto-js') : CryptoJS
     //做任务
-    console.log(`\n优先内部，剩余助力作者！！\n`)
+    console.log(`\n只有部助力！\n`)
     for (let i = 0; i < cookiesArr.length; i++) {
         cookie = cookiesArr[i];
         if (cookie) {
