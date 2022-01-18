@@ -6,7 +6,7 @@
 第一个CK失效会退出脚本
 
 ————————————————
-入口：[ 1.15～1.22 飞鹤大牌秒杀日 (https://lzdz1-isv.isvjcloud.com/dingzhi/flyCrane/collect/activity?activityId=dz2112100001448501&shareUuid=7c19ea8bacf74fbf83a87b6897a0002d)]
+入口：[ 1.15～1.22 飞鹤大牌秒杀日 (https://lzdz1-isv.isvjcloud.com/dingzhi/flyCrane/collect/activity?activityId=dz2112100001448501&shareUuid=91c85ace06f340c0a33208f6e70f5e4d)]
 
 请求太频繁会被黑ip
 过10分钟再执行
@@ -51,7 +51,7 @@ let activityCookie =''
     return;
   }
   $.activityId = "dz2201100000356801"
-  $.shareUuid = "7c19ea8bacf74fbf83a87b6897a0002d"
+  $.shareUuid = "91c85ace06f340c0a33208f6e70f5e4d"
   console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/flyCrane/collect/activity?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
   let shareUuidArr = [$.shareUuid,"82609696607c46878da51772cecb7a21","450e6b0af93541c39b489a0a7c920e5d"]
   let s = Math.floor((Math.random()*10))
