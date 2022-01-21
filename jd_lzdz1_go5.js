@@ -32,9 +32,9 @@ if (process.env.NO_RUSH && process.env.NO_RUSH != "") {
         return;
     }
 
-    console.log("地址：https://lzdz1-isv.isvjcloud.com/dingzhi/dz/openCard/activity?activityId=14e6bdc3ee7a496f87b89eee902a370e&shareUuid=0bcade493dde47c795c2fd256a2de184")
+    console.log("地址：https://lzdz1-isv.isvjcloud.com/dingzhi/dz/openCard/activity?activityId=14e6bdc3ee7a496f87b89eee902a370e&shareUuid=9fc71af46d99429594205a194a5f2ff8")
     authorCodeList = [
-        '0bcade493dde47c795c2fd256a2de184'
+        '9fc71af46d99429594205a194a5f2ff8'
     ]
 
     for (let i = 0; i < cookiesArr.length; i++) {
