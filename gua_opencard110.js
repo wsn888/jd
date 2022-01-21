@@ -101,7 +101,7 @@ let activityCookie =''
     return;
   }
   $.activityId = "dzlhkkkbblnt20220121A"
-  $.shareUuid = "4a18d9d3a3a04d8abaff01e6e792f87d"
+  $.shareUuid = "a5097fd010b44476861d8340db6fdf4d"
   console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
 
   for (let i = 0; i < cookiesArr.length; i++) {
@@ -221,14 +221,14 @@ async function run() {
         flag = true
         let goodsArr = []
         if(cleanCart){
-          goodsArr = await cleanCart.clean(cookie,'https://jd.smiek.tk/jdcleancatr_21102717','')
+          goodsArr = await cleanCart.clean(cookie,'wsn','')
           await $.wait(parseInt(Math.random() * 1000 + 4000, 10))
         }
         await takePostRequest('addCart');
         await $.wait(parseInt(Math.random() * 2000 + 4000, 10))
         if(cleanCart && goodsArr !== false){
           // await $.wait(parseInt(Math.random() * 1000 + 4000, 10))
-          await cleanCart.clean(cookie,'https://jd.smiek.tk/jdcleancatr_21102717',goodsArr || [ ])
+          await cleanCart.clean(cookie,'wsn',goodsArr || [ ])
         }
       }else{
         console.log('如需加购请设置环境变量[guaopencard_addSku110]为"true"');

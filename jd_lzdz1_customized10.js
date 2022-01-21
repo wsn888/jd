@@ -2,7 +2,7 @@
 大牌好礼带回家
 TG https://t.me/duckjobs
 
-https://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity/5063373?activityId=dzlhkkkbblnt20220121&shareUuid=e7c54de96c3b45a398c05ad66ec6c743
+https://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity/5063373?activityId=dzlhkkkbblnt20220121&shareUuid=33494accdfd64d90ba7435acec8f0a65
 */
 const $ = new Env("大牌好礼带回家");
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
@@ -30,10 +30,10 @@ if ($.isNode()) {
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
         return;
     }
-    authorCodeList = await getAuthorCodeList('https://gitee.com/fatelight/code/raw/master/lzdz110.json')
+    authorCodeList = await getAuthorCodeList('wsn')
     if($.getAuthorCodeListerr === false){
         authorCodeList = [
-            'e7c54de96c3b45a398c05ad66ec6c743',
+            '33494accdfd64d90ba7435acec8f0a65',
         ]
     }
     for (let i = 0; i < cookiesArr.length; i++) {

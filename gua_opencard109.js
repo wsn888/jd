@@ -26,7 +26,7 @@ guaopenwait109="0"
 
 All变量适用
 ————————————————
-入口：[ 1.21~1.29 大牌好礼带回家 (https://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=dzlhkkkbblnt20220121&shareUuid=7a18eb22e085472eabc7b783cbcbe4d5)]
+入口：[ 1.21~1.29 大牌好礼带回家 (https://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=dzlhkkkbblnt20220121&shareUuid=33494accdfd64d90ba7435acec8f0a65)]
 
 请求太频繁会被黑ip
 过10分钟再执行
@@ -101,7 +101,7 @@ let activityCookie =''
     return;
   }
   $.activityId = "dzlhkkkbblnt20220121"
-  $.shareUuid = "7a18eb22e085472eabc7b783cbcbe4d5"
+  $.shareUuid = "33494accdfd64d90ba7435acec8f0a65"
   console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
 
   for (let i = 0; i < cookiesArr.length; i++) {
@@ -221,14 +221,14 @@ async function run() {
         flag = true
         let goodsArr = []
         if(cleanCart){
-          goodsArr = await cleanCart.clean(cookie,'https://jd.smiek.tk/jdcleancatr_21102717','')
+          goodsArr = await cleanCart.clean(cookie,'wsn','')
           await $.wait(parseInt(Math.random() * 1000 + 4000, 10))
         }
         await takePostRequest('addCart');
         await $.wait(parseInt(Math.random() * 2000 + 4000, 10))
         if(cleanCart && goodsArr !== false){
           // await $.wait(parseInt(Math.random() * 1000 + 4000, 10))
-          await cleanCart.clean(cookie,'https://jd.smiek.tk/jdcleancatr_21102717',goodsArr || [ ])
+          await cleanCart.clean(cookie,'wsn',goodsArr || [ ])
         }
       }else{
         console.log('如需加购请设置环境变量[guaopencard_addSku109]为"true"');
