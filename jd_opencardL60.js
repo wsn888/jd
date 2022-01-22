@@ -7,7 +7,7 @@
 第一个CK失效会退出脚本
 
 ————————————————
-入口：[ 1.17~2.15 大牌服饰盛典 (https://lzdz1-isv.isvjcloud.com/dingzhi/dz/openCard/activity?activityId=67ba2ad44b8041c9925bf0e72febbdb2&shareUuid=29d4e8a845b641caa2ee83bf1fdc96d2)]
+入口：[ 1.17~2.15 大牌服饰盛典 (https://lzdz1-isv.isvjcloud.com/dingzhi/dz/openCard/activity?activityId=67ba2ad44b8041c9925bf0e72febbdb2&shareUuid=5155eb9dc6924cabb09c0a04aab112ff)]
 
 请求太频繁会被黑ip
 过10分钟再执行
@@ -54,7 +54,7 @@ let activityCookie =''
     return;
   }
   $.activityId = "67ba2ad44b8041c9925bf0e72febbdb2"
-  $.shareUuid = "29d4e8a845b641caa2ee83bf1fdc96d2"
+  $.shareUuid = "5155eb9dc6924cabb09c0a04aab112ff"
   console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/dz/openCard/activity?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
   for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
