@@ -107,7 +107,10 @@ async function mt() {
             await task('common/accessLogWithAD', `venderId=${$.activityShopId}&code=99&pin=${encodeURIComponent($.secretPin)}&activityId=${$.activityId}&pageUrl=${$.activityUrl}&subType=app&adSource=null`, 1);
             await $.wait(2000)
             await task('activityContent', `activityId=${$.activityId}&pin=${encodeURIComponent($.secretPin)}&signUuid=${encodeURIComponent($.authorCode)}`)
+            await getShopOpenCardInfo({ "venderId": "1000001879", "channel": 401 }, 1000001879)
+            await bindWithVender({ "venderId": "1000001879", "shopId": "1000001879", "bindByVerifyCodeFlag": 1, "registerExtend": {}, "writeChildFlag": 0, "activityId": 3282318, "channel": 401 }, 100000000000085)
             if ($.activityContent) {
+                console.log($.activityContent.canJoin)
                 if ($.activityContent.canJoin) {
                     $.log("加入队伍成功，请等待队长瓜分京豆")
                     await $.wait(2000)
@@ -278,16 +281,16 @@ function bindWithVender(body, venderId) {
                     console.log(err)
                 } else {
                     res = JSON.parse(data)
-                    if (res.success) {
-                        if (res.result.giftInfo && res.result.giftInfo.giftList) {
-                            for (const vo of res.result.giftInfo.giftList) {
-                                if (vo.prizeType === 4) {
-                                    $.log(`==>获得【${vo.quantity}】京豆`)
-                                    $.bean += vo.quantity
-                                }
-                            }
-                        }
-                    }
+                    // if (res.success) {
+                    //     if (res.result.giftInfo && res.result.giftInfo.giftList) {
+                    //         for (const vo of res.result.giftInfo.giftList) {
+                    //             if (vo.prizeType === 4) {
+                    //                 $.log(`==>获得【${vo.quantity}】京豆`)
+                    //                 $.bean += vo.quantity
+                    //             }
+                    //         }
+                    //     }
+                    // }
                 }
             } catch (error) {
                 console.log(error)
