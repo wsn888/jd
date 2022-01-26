@@ -1,17 +1,17 @@
 /*
  * @Author: X1a0He
- * @Date: 2021-09-04 11:50:47
- * @LastEditTime: 2021-11-10 22:30:00
+ * @Contact: https://t.me/X1a0He
+ * @Date: 2021-09-05 23:20:00
+ * @LastEditTime: 2021-09-05 23:20:00
  * @LastEditors: X1a0He
- * @Description: 批量取关京东店铺和商品
- * @Fixed: 不再支持Qx，仅支持Node.js
+ * @Description: 清空购物车，支持环境变量设置关键字，用@分隔，使用前请认真看对应注释
  */
-const $ = new Env('批量取关店铺和商品');
+const $ = new Env('清空购物车');
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
 //IOS等用户直接用NobyDa的jd cookie
-let cookiesArr = [], cookie = '';
+let cookiesArr = [], cookie = '', postBody = '', venderCart;
 if($.isNode()){
     Object.keys(jdCookieNode).forEach((item) => {
         cookiesArr.push(jdCookieNode[item])
@@ -20,62 +20,22 @@ if($.isNode()){
 } else {
     cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
 }
-let args_xh = {
-    /*
-     * 是否执行取消关注，默认true
-     * 可通过环境变量控制：JD_UNSUB
-     * */
-    isRun: process.env.JD_UNSUB || true,
-    /*
-     * 执行完毕是否进行通知，默认false
-     * 可用环境变量控制：JD_TRY_PLOG
-     * */
-    isNotify: process.env.JD_UNSEB_NOTIFY || false,
-    /*
-     * 每次获取已关注的商品数
-     * 可设置环境变量：JD_UNSUB_GPAGESIZE，默认为20，不建议超过20
-     * */
-    goodPageSize: process.env.JD_UNSUB_GPAGESIZE * 1 || 20,
-    /*
-     * 每次获取已关注的店铺数
-     * 可设置环境变量：JD_UNSUB_SPAGESIZE，默认为20，不建议超过20
-     * */
-    shopPageSize: process.env.JD_UNSUB_SPAGESIZE * 1 || 20,
-    /*
-     * 商品类过滤关键词，只要商品名内包含关键词，则不会被取消关注
-     * 可设置环境变量：JD_UNSUB_GKEYWORDS，用@分隔
-     * */
-    goodsKeyWords: process.env.JD_UNSUB_GKEYWORDS && process.env.JD_UNSUB_GKEYWORDS.split('@') || [],
-    /*
-     * 店铺类过滤关键词，只要店铺名内包含关键词，则不会被取消关注
-     * 可设置环境变量：JD_UNSUB_SKEYWORDS，用@分隔
-     * */
-    shopKeyWords: process.env.JD_UNSUB_SKEYWORDS && process.env.JD_UNSUB_SKEYWORDS.split('@') || [],
-    /*
-     * 间隔，防止提示操作频繁，单位毫秒(1秒 = 1000毫秒)
-     * 可用环境变量控制：JD_UNSUB_INTERVAL，默认为3000毫秒
-     * */
-    unSubscribeInterval: process.env.JD_UNSUB_INTERVAL * 1 || 1000,
-    /*
-     * 是否打印日志
-     * 可用环境变量控制：JD_UNSUB_PLOG，默认为true
-     * */
-    printLog: process.env.JD_UNSUB_PLOG || true,
-    /*
-     * 失败次数，当取关商品或店铺时，如果连续 x 次失败，则结束本次取关，防止死循环
-     * 可用环境变量控制：JD_UNSUB_FAILTIMES，默认为3次
-     * */
-    failTimes: process.env.JD_UNSUB_FAILTIMES || 3
-}
+//购物车内容
+$.cart = process.env.JD_CART === 'true'; // 当环境变量中存在JD_CART并设置为true时才会执行删除购物车
+let removeSize = process.env.JD_CART_REMOVESIZE || 20; // 运行一次取消多全部已关注的商品。数字0表示不取关任何商品
+let isRemoveAll = process.env.JD_CART_REMOVEALL || true;    //是否清空，如果为false，则上面设置了多少就只删除多少条
+$.keywords = process.env.JD_CART_KEYWORDS || []
+$.keywordsNum = 0;
 !(async() => {
-    console.log('X1a0He留：运行前请看好脚本内的注释，日志已经很清楚了，有问题带着日志来问')
-    if(args_xh.isRun){
+    console.log('使用前请确保你认真看了注释')
+    console.log('看完注释有问题就带着你的问题来找我')
+    console.log('tg: https://t.me/X1a0He')
+    if($.cart){
         if(!cookiesArr[0]){
-            $.msg('【京东账号一】取关京东店铺商品失败', '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {
+            $.msg('【京东账号一】移除购物车失败', '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {
                 "open-url": "https://bean.m.jd.com/bean/signIndex.action"
             });
         }
-        await requireConfig();
         for(let i = 0; i < cookiesArr.length; i++){
             if(cookiesArr[i]){
                 cookie = cookiesArr[i];
@@ -84,7 +44,7 @@ let args_xh = {
                 $.isLogin = true;
                 $.nickName = '';
                 await TotalBean();
-                console.log(`\n****开始【京东账号${$.index}】${$.nickName || $.UserName}*****\n`);
+                console.log(`****开始【京东账号${$.index}】${$.nickName || $.UserName}*****`);
                 if(!$.isLogin){
                     $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {
                         "open-url": "https://bean.m.jd.com/bean/signIndex.action"
@@ -94,67 +54,23 @@ let args_xh = {
                     }
                     continue
                 }
-                $.shopsKeyWordsNum = 0;
-                $.goodsKeyWordsNum = 0;
-                $.unsubscribeGoodsNum = 0;
-                $.unsubscribeShopsNum = 0;
-                $.goodsTotalNum = 0     //记录当前总共关注了多少商品
-                $.shopsTotalNum = 0;    //记录当前总共关注了多少店铺
-                $.commIdList = ``;
-                $.shopIdList = ``;
-                $.endGoods = $.endShops = false;
-                $.failTimes = 0;
-                console.log(`=====京东账号${$.index} ${$.nickName || $.UserName}内部变量=====`)
-                console.log(`$.unsubscribeGoodsNum: ${$.unsubscribeGoodsNum}`)
-                console.log(`$.unsubscribeShopsNum: ${$.unsubscribeShopsNum}`)
-                console.log(`$.goodsTotalNum: ${$.goodsTotalNum}`)
-                console.log(`$.shopsTotalNum: ${$.shopsTotalNum}`)
-                console.log(`$.commIdList: ${$.commIdList}`)
-                console.log(`$.shopIdList: ${$.shopIdList}`)
-                console.log(`$.failTimes: ${$.failTimes}`)
-                console.log(`================`)
-                await favCommQueryFilter(); //获取商品并过滤
-                await $.wait(1000)
-                if(!$.endGoods && parseInt($.goodsTotalNum) !== parseInt($.goodsKeyWordsNum)) await favCommBatchDel();//取关商品
-                else console.log("不执行取消收藏商品\n")
-                await $.wait(args_xh.unSubscribeInterval)
-                await queryShopFavList();   //获取店铺并过滤
-                await $.wait(args_xh.unSubscribeInterval)
-                if(!$.endShops && parseInt($.shopsTotalNum) !== parseInt($.shopsKeyWordsNum)) await batchunfollow();      //取关店铺
-                else console.log("不执行取消收藏店铺\n")
+                await requireConfig();
                 do {
-                    //如果商品总数和店铺总数都为0则已清空，跳出循环
-                    if(parseInt($.goodsTotalNum) === 0 && parseInt($.shopsTotalNum) === 0) break;
-                    else {
-                        //如果商品总数或店铺总数有一个不为0的话，先判断是哪个不为0
-                        if(parseInt($.goodsTotalNum) !== 0){
-                            if(parseInt($.goodsTotalNum) === parseInt($.goodsKeyWordsNum)) break;
-                            else {
-                                $.commIdList = ``
-                                await favCommQueryFilter(); //获取商品并过滤
-                                await $.wait(args_xh.unSubscribeInterval)
-                                if(!$.endGoods && parseInt($.goodsTotalNum) !== parseInt($.goodsKeyWordsNum)) await favCommBatchDel();    //取关商品
-                                else console.log("不执行取消收藏商品\n")
-                            }
-                        } else if(parseInt($.shopsTotalNum) !== 0){
-                            if(parseInt($.shopsTotalNum) === parseInt($.shopsKeyWordsNum)) break;
-                            else {
-                                $.shopIdList = ``
-                                await queryShopFavList();   //获取店铺并过滤
-                                await $.wait(args_xh.unSubscribeInterval)
-                                if(!$.endShops && parseInt($.shopsTotalNum) !== parseInt($.shopsKeyWordsNum)) await batchunfollow();      //取关店铺
-                                else console.log("不执行取消收藏店铺\n")
-                            }
+                    await getCart_xh();
+                    $.keywordsNum = 0
+                    if($.beforeRemove !== "0"){
+                        await cartFilter_xh(venderCart);
+                        if(parseInt($.beforeRemove) !== $.keywordsNum) await removeCart();
+                        else {
+                            console.log('由于购物车内的商品均包含关键字，本次执行将不删除购物车数据')
+                            break;
                         }
-                    }
-                    if($.failTimes >= args_xh.failTimes){
-                        console.log('失败次数到达设定值，触发防死循环机制，该帐号已跳过');
-                        break;
-                    }
-                } while(true)
-                await showMsg_xh();
+                    } else break;
+                } while(isRemoveAll && $.keywordsNum !== $.beforeRemove)
             }
         }
+    } else {
+        console.log("你设置了不删除购物车数据，要删除请设置环境变量 JD_CART 为 true")
     }
 })().catch((e) => {
     $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
@@ -162,33 +78,106 @@ let args_xh = {
     $.done();
 })
 
-function requireConfig(){
-    return new Promise(resolve => {
-        if($.isNode() && process.env.JD_UNSUB){
-            args_xh.isRun = process.env.JD_UNSUB === 'true';
-            args_xh.isNotify = process.env.JD_UNSEB_NOTIFY === 'true';
-            args_xh.printLog = process.env.JD_UNSUB_PLOG === 'true';
-            console.log('=====环境变量配置如下=====')
-            console.log(`isNotify: ${typeof args_xh.isNotify}, ${args_xh.isNotify}`)
-            console.log(`goodPageSize: ${typeof args_xh.goodPageSize}, ${args_xh.goodPageSize}`)
-            console.log(`shopPageSize: ${typeof args_xh.shopPageSize}, ${args_xh.shopPageSize}`)
-            console.log(`goodsKeyWords: ${typeof args_xh.goodsKeyWords}, ${args_xh.goodsKeyWords}`)
-            console.log(`shopKeyWords: ${typeof args_xh.shopKeyWords}, ${args_xh.shopKeyWords}`)
-            console.log(`unSubscribeInterval: ${typeof args_xh.unSubscribeInterval}, ${args_xh.unSubscribeInterval}`)
-            console.log(`printLog: ${typeof args_xh.printLog}, ${args_xh.printLog}`)
-            console.log(`failTimes: ${typeof args_xh.failTimes}, ${args_xh.failTimes}`)
-            console.log('=======================')
+function getCart_xh(){
+    console.log('正在获取购物车数据...')
+    return new Promise((resolve) => {
+        const option = {
+            url: 'https://p.m.jd.com/cart/cart.action?fromnav=1&sceneval=2',
+            headers: {
+                "Cookie": cookie,
+                "User-Agent": "jdapp;JD4iPhone/167724 (iPhone; iOS 15.0; Scale/3.00)",
+            },
         }
-        resolve()
+        $.get(option, async(err, resp, data) => {
+            try{
+                let content = getSubstr(data, "window.cartData = ", "window._PFM_TIMING").replace(/\s*/g,"");
+                data = JSON.parse(content);
+                $.areaId = data.areaId;   // locationId的传值
+                $.traceId = data.traceId; // traceid的传值
+                venderCart = data.cart.venderCart;
+                postBody = 'pingouchannel=0&commlist=';
+                $.beforeRemove = data.cartJson.num
+                console.log(`获取到购物车数据 ${$.beforeRemove} 条`)
+            } catch(e){
+                $.logErr(e, resp);
+            } finally{
+                resolve(data);
+            }
+        });
     })
 }
 
-function showMsg_xh(){
-    if(args_xh.isNotify){
-        $.msg($.name, ``, `【京东账号${$.index}】${$.nickName}\n【还剩关注店铺】${$.shopsTotalNum}个\n【还剩关注商品】${$.goodsTotalNum}个`);
-    } else {
-        $.log(`【京东账号${$.index}】${$.nickName}\n【还剩关注店铺】${$.shopsTotalNum}个\n【还剩关注商品】${$.goodsTotalNum}个`);
+function cartFilter_xh(cartData){
+    console.log("正在整理数据...")
+    let pid;
+    $.pushed = 0
+    for(let cartJson of cartData){
+        if($.pushed === removeSize) break;
+        for(let sortedItem of cartJson.sortedItems){
+            if($.pushed === removeSize) break;
+            pid = typeof (sortedItem.polyItem.promotion) !== "undefined" ? sortedItem.polyItem.promotion.pid : ""
+            for(let product of sortedItem.polyItem.products){
+                if($.pushed === removeSize) break;
+                let mainSkuName = product.mainSku.name
+                $.isKeyword = false
+                $.isPush = true
+                for(let keyword of $.keywords){
+                    if(mainSkuName.indexOf(keyword) !== -1){
+                        $.keywordsNum += 1
+                        $.isPush = false
+                        $.keyword = keyword;
+                        break;
+                    } else $.isPush = true
+                }
+                if($.isPush){
+                    let skuUuid = product.skuUuid;
+                    let mainSkuId = product.mainSku.id
+                    if(pid === "") postBody += `${mainSkuId},,1,${mainSkuId},1,,0,skuUuid:${skuUuid}@@useUuid:0$`
+                    else postBody += `${mainSkuId},,1,${mainSkuId},11,${pid},0,skuUuid:${skuUuid}@@useUuid:0$`
+                    $.pushed += 1;
+                } else {
+                    console.log(`\n${mainSkuName}`)
+                    console.log(`商品已被过滤，原因：包含关键字 ${$.keyword}`)
+                    $.isKeyword = true
+                }
+            }
+        }
     }
+    postBody += `&type=0&checked=0&locationid=${$.areaId}&templete=1&reg=1&scene=0&version=20190418&traceid=${$.traceId}&tabMenuType=1&sceneval=2`
+}
+
+function removeCart(){
+    console.log('正在删除购物车数据...')
+    return new Promise((resolve) => {
+        const option = {
+            url: 'https://wq.jd.com/deal/mshopcart/rmvCmdy?sceneval=2&g_login_type=1&g_ty=ajax',
+            body: postBody,
+            headers: {
+                "Cookie": cookie,
+                "User-Agent": "jdapp;JD4iPhone/167724 (iPhone; iOS 15.0; Scale/3.00)",
+                "referer": "https://p.m.jd.com/",
+                "origin": "https://p.m.jd.com/"
+            },
+        }
+        $.post(option, async(err, resp, data) => {
+            try{
+                data = JSON.parse(data);
+                $.afterRemove = data.cartJson.num
+                if($.afterRemove < $.beforeRemove){
+                    console.log(`删除成功，当前购物车剩余数据 ${$.afterRemove} 条\n`)
+                    $.beforeRemove = $.afterRemove
+                } else {
+                    console.log('删除失败')
+                    console.log(data.errMsg)
+                    isRemoveAll = false;
+                }
+            } catch(e){
+                $.logErr(e, resp);
+            } finally{
+                resolve(data);
+            }
+        });
+    })
 }
 
 function getSubstr(str, leftStr, rightStr){
@@ -196,148 +185,6 @@ function getSubstr(str, leftStr, rightStr){
     let right = str.indexOf(rightStr, left);
     if(left < 0 || right < left) return '';
     return str.substring(left + leftStr.length, right);
-}
-
-function favCommQueryFilter(){
-    return new Promise((resolve) => {
-        console.log('正在获取已关注的商品...')
-        const option = {
-            url: `https://wq.jd.com/fav/comm/FavCommQueryFilter?cp=1&pageSize=${args_xh.goodPageSize}&category=0&promote=0&cutPrice=0&coupon=0&stock=0&sceneval=2`,
-            headers: {
-                "Cookie": cookie,
-                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36",
-                "Referer": "https://wqs.jd.com/"
-            },
-        }
-        $.get(option, async(err, resp, data) => {
-            try{
-                data = JSON.parse(getSubstr(data, "try{(", ");}catch(e){}"));
-                if(data.iRet === '0'){
-                    $.goodsTotalNum = parseInt(data.totalNum);
-                    console.log(`当前已关注商品：${$.goodsTotalNum}个`)
-                    $.goodsKeyWordsNum = 0;
-                    for(let item of data.data){
-                        if(args_xh.goodsKeyWords.some(keyword => item.commTitle.includes(keyword))){
-                            args_xh.printLog ? console.log(`${item.commTitle} `) : ''
-                            args_xh.printLog ? console.log('商品被过滤，含有关键词\n') : ''
-                            $.goodsKeyWordsNum += 1;
-                        } else {
-                            $.commIdList += item.commId + ",";
-                            $.unsubscribeGoodsNum++;
-                        }
-                    }
-                } else {
-                    $.endGoods = true;
-                    console.log("无商品可取消收藏\n");
-                }
-            } catch(e){
-                $.logErr(e, resp);
-            } finally{
-                resolve(data);
-            }
-        });
-    })
-}
-
-function favCommBatchDel(){
-    return new Promise(resolve => {
-        console.log("正在取消收藏商品...")
-        const option = {
-            url: `https://wq.jd.com/fav/comm/FavCommBatchDel?commId=${$.commIdList}&sceneval=2&g_login_type=1`,
-            headers: {
-                "Cookie": cookie,
-                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36",
-                "Referer": "https://wqs.jd.com/"
-            },
-        }
-        $.get(option, (err, resp, data) => {
-            try{
-                data = JSON.parse(data);
-                if(data.iRet === "0" && data.errMsg === "success"){
-                    console.log(`成功取消收藏商品：${$.unsubscribeGoodsNum}个\n`)
-                    $.failTimes = 0;
-                } else {
-                    console.log(`批量取消收藏商品失败，失败次数：${++$.failTimes}\n`, data)
-                }
-            } catch(e){
-                $.logErr(e, resp);
-            } finally{
-                resolve(data);
-            }
-        });
-    })
-}
-
-function queryShopFavList(){
-    return new Promise((resolve) => {
-        console.log("正在获取已关注的店铺...")
-        const option = {
-            url: `https://wq.jd.com/fav/shop/QueryShopFavList?cp=1&pageSize=${args_xh.shopPageSize}&sceneval=2&g_login_type=1&callback=jsonpCBKA`,
-            headers: {
-                "Cookie": cookie,
-                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36",
-                "Referer": "https://wqs.jd.com/"
-            },
-        }
-        $.get(option, (err, resp, data) => {
-            try{
-                data = JSON.parse(getSubstr(data, "try{jsonpCBKA(", ");}catch(e){}"));
-                if(data.iRet === '0'){
-                    $.shopsTotalNum = parseInt(data.totalNum);
-                    console.log(`当前已关注店铺：${$.shopsTotalNum}个`)
-                    if(data.data.length > 0){
-                        $.shopsKeyWordsNum = 0;
-                        for(let item of data.data){
-                            if(args_xh.shopKeyWords.some(keyword => item.shopName.includes(keyword))){
-                                args_xh.printLog ? console.log('店铺被过滤，含有关键词') : ''
-                                args_xh.printLog ? console.log(`${item.shopName}\n`) : ''
-                                $.shopsKeyWordsNum += 1;
-                            } else {
-                                $.shopIdList += item.shopId + ",";
-                                $.unsubscribeShopsNum++;
-                            }
-                        }
-                    } else {
-                        $.endShops = true;
-                        console.log("无店铺可取消关注\n");
-                    }
-                } else console.log(`获取已关注店铺失败：${JSON.stringify(data)}`)
-            } catch(e){
-                $.logErr(e, resp);
-            } finally{
-                resolve(data);
-            }
-        });
-    })
-}
-
-function batchunfollow(){
-    return new Promise(resolve => {
-        console.log('正在执行批量取消关注店铺...')
-        const option = {
-            url: `https://wq.jd.com/fav/shop/batchunfollow?shopId=${$.shopIdList}&sceneval=2&g_login_type=1`,
-            headers: {
-                "Cookie": cookie,
-                "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/97.0.4692.71 Safari/537.36",
-                "Referer": "https://wqs.jd.com/"
-            },
-        }
-        $.get(option, (err, resp, data) => {
-            try{
-                data = JSON.parse(data);
-                if(data.iRet === "0"){
-                    console.log(`已成功取消关注店铺：${$.unsubscribeShopsNum}个\n`)
-                    $.failTimes = 0;
-                } else {
-                    console.log(`批量取消关注店铺失败，失败次数：${++$.failTimes}\n`)
-                }
-            } catch(e){
-                $.logErr(e, resp);
-            } finally{
-                resolve(data);
-            }
-        });
-    })
 }
 
 function TotalBean(){
@@ -382,6 +229,17 @@ function TotalBean(){
                 resolve();
             }
         })
+    })
+}
+
+function requireConfig(){
+    return new Promise(resolve => {
+        if($.isNode() && process.env.JD_CART){
+            if(process.env.JD_CART_KEYWORDS){
+                $.keywords = process.env.JD_CART_KEYWORDS.split('@')
+            }
+        }
+        resolve()
     })
 }
 
