@@ -162,8 +162,9 @@ async function main() {
     if($.index === 1){
         fcwbinviter = homeInfo.markedPin;
         fcwbinviteCode = homeInfo.inviteCode;
-    }
+    
     await doTask();
+	}
     if($.freshFlag){
         await $.wait(2000);
         homeInfo = await takeRequest(`happyDigHome`,`{"linkId":"${link}"}`,true);
