@@ -6,7 +6,7 @@ TG https://t.me/duckjobs
 
 一天3次
 
-10 6,10,12 * * * jd_mpdzcar.js
+10 6,10,12 * * * jd_mpdzcar_game.js
 */
 const $ = new Env('头文字J 游戏');
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
@@ -27,6 +27,7 @@ if ($.isNode()) {
     cookiesArr = cookiesArr.filter(item => !!item);
 }
 !(async () => {
+	console.log(`\n活动入口：京东汽车 - 右下角 - 领京豆\n口令进入：24:/！4EuGxE5eNdRkY！，参与头文字J，集能量，换京豆。`);	
     if (!cookiesArr[0]) {
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
         return;
@@ -90,6 +91,7 @@ async function mpdzCar() {
         })
         // console.log($.buyerNick)
         if ($.buyerNick) {
+            await $.wait(5000);
             console.log("游戏")
             await task('/ql/front/carPlayUpdate', {
                 buyerNick: $.buyerNick,

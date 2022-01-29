@@ -8,6 +8,18 @@
  *
  * @Address: https://github.com/X1a0He/jd_scripts_fixed/blob/main/jd_try_xh.js
  * @LastEditors: X1a0He
+ 参考环境变量配置如下：
+export JD_TRY="true"
+export JD_TRY_PLOG="true" #是否打印输出到日志
+export JD_TRY_PASSZC="true" #过滤种草官类试用
+export JD_TRY_MAXLENGTH="50" #商品数组的最大长度
+export JD_TRY_APPLYINTERVAL="5000" #商品试用之间和获取商品之间的间隔
+export JD_TRY_APPLYNUMFILTER="100000" #过滤大于设定值的已申请人数
+export JD_TRY_MINSUPPLYNUM="1" #最小提供数量
+export JD_TRY_SENDNUM="10" #每隔多少账号发送一次通知，不需要可以不用设置
+export JD_TRY_UNIFIED="false" 默认采用不同试用组
+cron "4 1-22/8 * * *" jd_try.js, tag:京东试用
+
  */
 const $ = new Env('京东试用')
 const URL = 'https://api.m.jd.com/client.action'
@@ -36,7 +48,8 @@ $.innerKeyWords =
         "女用", "神油", "足力健", "老年", "老人",
         "宠物", "饲料", "丝袜", "黑丝", "磨脚",
         "脚皮", "除臭", "性感", "内裤", "跳蛋",
-        "安全套", "龟头", "阴道", "阴部"
+        "安全套", "龟头", "阴道", "阴部", "手机卡",
+        "流量卡", "和田玉", "钢化膜", "手机壳","习题","试卷"
     ]
 //下面很重要，遇到问题请把下面注释看一遍再来问
 let args_xh = {
@@ -100,7 +113,7 @@ let args_xh = {
      * 过滤大于设定值的已申请人数，例如下面设置的1000，A商品已经有1001人申请了，则A商品不会进行申请，会被跳过
      * 可设置环境变量：JD_TRY_APPLYNUMFILTER
      * */
-    applyNumFilter: process.env.JD_TRY_APPLYNUMFILTER * 1 || 10000,
+    applyNumFilter: process.env.JD_TRY_APPLYNUMFILTER * 1 || 100000,
     /*
      * 商品试用之间和获取商品之间的间隔, 单位：毫秒(1秒=1000毫秒)
      * 可设置环境变量：JD_TRY_APPLYINTERVAL
@@ -152,10 +165,7 @@ let args_xh = {
     sendNum: process.env.JD_TRY_SENDNUM * 1 || 4,
 }
 //上面很重要，遇到问题请把上面注释看一遍再来问
-!(async () => {
-    console.log('X1a0He留：遇到问题请把脚本内的注释看一遍再来问，谢谢')
-    console.log('X1a0He留：遇到问题请把脚本内的注释看一遍再来问，谢谢')
-    console.log('X1a0He留：遇到问题请把脚本内的注释看一遍再来问，谢谢')
+!(async() => {
     await $.wait(500)
     // 如果你要运行京东试用这个脚本，麻烦你把环境变量 JD_TRY 设置为 true
     if (process.env.JD_TRY && process.env.JD_TRY === 'true') {

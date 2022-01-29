@@ -2,6 +2,9 @@
 发财挖宝
 更新时间：2021-10-30
 活动入口：极速版-发财挖宝
+活动部分账号验证h5st参数，请自行抓包参数添加
+小号助力大号，抓包助力成功链接在代码235行末尾添加h5st=xxx参数。
+h5st参数有时效性，抓包后请及时运行脚本
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
 ============Quantumultx===============
 [task_local]
@@ -51,7 +54,7 @@ let curRound = 1
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
         return;
     }
-    console.log(`\n注意：本脚本暂时只会执行助力，助力后，请手动进活动进行游戏（发财挖宝: 入口,极速版-》我的-》发财挖宝）\n`)
+	console.log("\n活动入口：极速版-》我的-》发财挖宝"+"\n请务必先手动进入活动后随意点击方块后执行脚本"+"\n若点击方块获得0.01红包即活动黑了。"+"\n没助力是因为验证h5st，自行抓包替换");
     let res = [];
 
     try{res = await getAuthorShareCode('https://gitee.com/KingRan521/JD-Scripts/raw/master/shareCodes/fcwb.json');}catch (e) {}
@@ -162,9 +165,9 @@ async function main() {
     if($.index === 1){
         fcwbinviter = homeInfo.markedPin;
         fcwbinviteCode = homeInfo.inviteCode;
-    
-    await doTask();
-	}
+		await doTask();
+    }
+
     if($.freshFlag){
         await $.wait(2000);
         homeInfo = await takeRequest(`happyDigHome`,`{"linkId":"${link}"}`,true);
@@ -228,11 +231,8 @@ function safeGet(data) {
         return false;
     }
 }
-async function takeRequest(functionId,bodyInfo,h5stFlag = false){
+async function takeRequest(functionId,bodyInfo){
     let  url = `https://api.m.jd.com/?functionId=${functionId}&body=${encodeURIComponent(bodyInfo)}&t=${Date.now()}&appid=activities_platform&client=H5&clientVersion=1.0.0`;
-    if(h5stFlag){
-        //url = await getH5stUrl(functionId,bodyInfo);
-    }
     const headers = {
         'Host' : `api.m.jd.com`,
         'Accept' : `application/json, text/plain, */*`,
