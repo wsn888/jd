@@ -54,6 +54,19 @@ $.innerKeyWords =
 //下面很重要，遇到问题请把下面注释看一遍再来问
 let args_xh = {
     /*
+     * 控制是否输出当前环境变量设置，默认为false
+     * 环境变量名称：XH_TRY_ENV
+     */
+    env: process.env.XH_TRY_ENV === 'true' || false,
+    /*
+     * 跳过某个指定账号，默认为全部账号清空
+     * 填写规则：例如当前Cookie1为pt_key=key; pt_pin=pin1;则环境变量填写pin1即可，此时pin1的购物车将不会被清空
+     * 若有更多，则按照pin1@pin2@pin3进行填写
+     * 环境变量名称：XH_TRY_EXCEPT
+     */
+    except: process.env.XH_TRY_EXCEPT && process.env.XH_TRY_EXCEPT.split('@') || [],
+    //以上环境变量新增于2022.01.30
+    /*
      * 每个Tab页要便遍历的申请页数，由于京东试用又改了，获取不到每一个Tab页的总页数了(显示null)，所以特定增加一个环境变了以控制申请页数
      * 例如设置 JD_TRY_PRICE 为 30，假如现在正在遍历tab1，那tab1就会被遍历到30页，到31页就会跳到tab2，或下一个预设的tab页继续遍历到30页
      * 默认为20
@@ -69,7 +82,7 @@ let args_xh = {
      * 提示：想每个账号独立不同的试用产品的，请设置为false，想减少脚本运行时间的，请设置为true
      * 默认为false
      */
-    unified: process.env.JD_TRY_UNIFIED || false,
+    unified: process.env.JD_TRY_UNIFIED === 'true' || false,
     //以上环境变量新增于2022.01.25
     /*
      * 商品原价，低于这个价格都不会试用，意思是
@@ -134,7 +147,7 @@ let args_xh = {
      * 例如B商品是种草官专属试用商品，下面设置为true，即使你是种草官账号，A商品也不会被添加到待提交试用组
      * 可设置环境变量：JD_TRY_PASSZC，默认为true
      * */
-    passZhongCao: process.env.JD_TRY_PASSZC || true,
+    passZhongCao: process.env.JD_TRY_PASSZC === 'true' || true,
     /*
      * 是否打印输出到日志，考虑到如果试用组长度过大，例如100以上，如果每个商品检测都打印一遍，日志长度会非常长
      * 打印的优点：清晰知道每个商品为什么会被过滤，哪个商品被添加到了待提交试用组
@@ -144,13 +157,13 @@ let args_xh = {
      * 不打印的缺点：无法清晰知道每个商品为什么会被过滤，哪个商品被添加到了待提交试用组
      * 可设置环境变量：JD_TRY_PLOG，默认为true
      * */
-    printLog: process.env.JD_TRY_PLOG || true,
+    printLog: process.env.JD_TRY_PLOG === 'true' || true,
     /*
      * 白名单，是否打开，如果下面为true，那么黑名单会自动失效
      * 白名单和黑名单无法共存，白名单永远优先于黑名单
      * 可通过环境变量控制：JD_TRY_WHITELIST，默认为false
      * */
-    whiteList: process.env.JD_TRY_WHITELIST || false,
+    whiteList: process.env.JD_TRY_WHITELIST === 'true' || false,
     /*
      * 白名单关键词，当标题存在关键词时，加入到试用组
      * 例如A商品的名字为『旺仔牛奶48瓶特价』，白名单其中一个关键词是『牛奶』，那么A将会直接被添加到待提交试用组，不再进行另外判断
@@ -185,7 +198,13 @@ let args_xh = {
                 $.nickName = '';
                 await totalBean();
                 console.log(`\n开始【京东账号${$.index}】${$.nickName || $.UserName}\n`);
-                if (!$.isLogin) {
+                $.except = false;
+                if(args_xh.except.includes($.UserName)){
+                    console.log(`跳过账号：${$.nickName || $.UserName}`)
+                    $.except = true;
+                    continue
+                }
+                if(!$.isLogin){
                     $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {
                         "open-url": "https://bean.m.jd.com/bean/signIndex.action"
                     });
@@ -209,6 +228,7 @@ let args_xh = {
                 $.wrong = false
                 size = 1
                 while(trialActivityIdList.length < args_xh.maxLength && $.isForbidden === false){
+                    if(args_xh.unified && trialActivityIdList.length !== 0) break;
                     if($.nowTabIdIndex === args_xh.tabId.length){
                         console.log(`tabId组已遍历完毕，不在获取商品\n`);
                         break;
@@ -252,7 +272,7 @@ let args_xh = {
                 }
             }
         }
-        if($.isNode()){
+        if($.isNode() && $.except === false){
             if(($.cookiesArr.length - ($.sentNum * args_xh.sendNum)) < args_xh.sendNum){
                 console.log(`正在进行最后一次发送通知，发送数量：${($.cookiesArr.length - ($.sentNum * args_xh.sendNum))}`)
                 await $.notify.sendNotify(`${$.name}`, `${notifyMsg}`)
@@ -283,32 +303,28 @@ function requireConfig() {
             //IOS等用户直接用NobyDa的jd $.cookie
             $.cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
         }
-        if (typeof process.env.JD_TRY_WHITELIST === "undefined") args_xh.whiteList = false;
-        else args_xh.whiteList = process.env.JD_TRY_WHITELIST === 'true';
-        if (typeof process.env.JD_TRY_PLOG === "undefined") args_xh.printLog = true;
-        else args_xh.printLog = process.env.JD_TRY_PLOG === 'true';
-        if (typeof process.env.JD_TRY_UNIFIED === "undefined") args_xh.unified = false;
-        else args_xh.unified = process.env.JD_TRY_UNIFIED === 'true';
-        if (typeof process.env.JD_TRY_PASSZC === "undefined") args_xh.passZhongCao = true;
-        else args_xh.passZhongCao = process.env.JD_TRY_PASSZC === 'true';
-        for (let keyWord of $.innerKeyWords) args_xh.titleFilters.push(keyWord)
+        for(let keyWord of $.innerKeyWords) args_xh.titleFilters.push(keyWord)
         console.log(`共${$.cookiesArr.length}个京东账号\n`)
-        console.log('=====环境变量配置如下=====')
-        console.log(`totalPages: ${typeof args_xh.totalPages}, ${args_xh.totalPages}`)
-        console.log(`unified: ${typeof args_xh.unified}, ${args_xh.unified}`)
-        console.log(`jdPrice: ${typeof args_xh.jdPrice}, ${args_xh.jdPrice}`)
-        console.log(`tabId: ${typeof args_xh.tabId}, ${args_xh.tabId}`)
-        console.log(`titleFilters: ${typeof args_xh.titleFilters}, ${args_xh.titleFilters}`)
-        console.log(`trialPrice: ${typeof args_xh.trialPrice}, ${args_xh.trialPrice}`)
-        console.log(`minSupplyNum: ${typeof args_xh.minSupplyNum}, ${args_xh.minSupplyNum}`)
-        console.log(`applyNumFilter: ${typeof args_xh.applyNumFilter}, ${args_xh.applyNumFilter}`)
-        console.log(`applyInterval: ${typeof args_xh.applyInterval}, ${args_xh.applyInterval}`)
-        console.log(`maxLength: ${typeof args_xh.maxLength}, ${args_xh.maxLength}`)
-        console.log(`passZhongCao: ${typeof args_xh.passZhongCao}, ${args_xh.passZhongCao}`)
-        console.log(`printLog: ${typeof args_xh.printLog}, ${args_xh.printLog}`)
-        console.log(`whiteList: ${typeof args_xh.whiteList}, ${args_xh.whiteList}`)
-        console.log(`whiteListKeywords: ${typeof args_xh.whiteListKeywords}, ${args_xh.whiteListKeywords}`)
-        console.log('=======================')
+        if(args_xh.env){
+            console.log('=====环境变量配置如下=====')
+            console.log(`env: ${typeof args_xh.env}, ${args_xh.env}`)
+            console.log(`except: ${typeof args_xh.except}, ${args_xh.except}`)
+            console.log(`totalPages: ${typeof args_xh.totalPages}, ${args_xh.totalPages}`)
+            console.log(`unified: ${typeof args_xh.unified}, ${args_xh.unified}`)
+            console.log(`jdPrice: ${typeof args_xh.jdPrice}, ${args_xh.jdPrice}`)
+            console.log(`tabId: ${typeof args_xh.tabId}, ${args_xh.tabId}`)
+            console.log(`titleFilters: ${typeof args_xh.titleFilters}, ${args_xh.titleFilters}`)
+            console.log(`trialPrice: ${typeof args_xh.trialPrice}, ${args_xh.trialPrice}`)
+            console.log(`minSupplyNum: ${typeof args_xh.minSupplyNum}, ${args_xh.minSupplyNum}`)
+            console.log(`applyNumFilter: ${typeof args_xh.applyNumFilter}, ${args_xh.applyNumFilter}`)
+            console.log(`applyInterval: ${typeof args_xh.applyInterval}, ${args_xh.applyInterval}`)
+            console.log(`maxLength: ${typeof args_xh.maxLength}, ${args_xh.maxLength}`)
+            console.log(`passZhongCao: ${typeof args_xh.passZhongCao}, ${args_xh.passZhongCao}`)
+            console.log(`printLog: ${typeof args_xh.printLog}, ${args_xh.printLog}`)
+            console.log(`whiteList: ${typeof args_xh.whiteList}, ${args_xh.whiteList}`)
+            console.log(`whiteListKeywords: ${typeof args_xh.whiteListKeywords}, ${args_xh.whiteListKeywords}`)
+            console.log('=======================')
+        }
         resolve()
     })
 }
@@ -323,9 +339,9 @@ function try_tabList() {
         });
         let option = taskurl_xh('newtry', 'try_tabList', body)
         $.get(option, (err, resp, data) => {
-            try {
-                if (err) {
-                    if (JSON.stringify(err) === `\"Response code 403 (Forbidden)\"`) {
+            try{
+                if(err){
+                    if(JSON.stringify(err) === `\"Response code 403 (Forbidden)\"`){
                         $.isForbidden = true
                         console.log('账号被京东服务器风控，不再请求该帐号')
                     } else {
@@ -362,9 +378,9 @@ function try_feedsList(tabId, page) {
         });
         let option = taskurl_xh('newtry', 'try_feedsList', body)
         $.get(option, (err, resp, data) => {
-            try {
-                if (err) {
-                    if (JSON.stringify(err) === `\"Response code 403 (Forbidden)\"`) {
+            try{
+                if(err){
+                    if(JSON.stringify(err) === `\"Response code 403 (Forbidden)\"`){
                         $.isForbidden = true
                         console.log('账号被京东服务器风控，不再请求该帐号')
                     } else {
@@ -403,8 +419,7 @@ function try_feedsList(tabId, page) {
                                             args_xh.printLog ? console.log('商品被过滤，该商品是种草官专属') : ''
                                             $.isPush = false;
                                             break;
-                                        }
-                                        else if (itemTag.tagType === 5) {
+                                        } else if(itemTag.tagType === 5){
                                             args_xh.printLog ? console.log('商品被跳过，该商品是付费试用！') : ''
                                             $.isPush = false;
                                             break;
@@ -475,9 +490,9 @@ function try_apply(title, activityId) {
         });
         let option = taskurl_xh('newtry', 'try_apply', body)
         $.get(option, (err, resp, data) => {
-            try {
-                if (err) {
-                    if (JSON.stringify(err) === `\"Response code 403 (Forbidden)\"`) {
+            try{
+                if(err){
+                    if(JSON.stringify(err) === `\"Response code 403 (Forbidden)\"`){
                         $.isForbidden = true
                         console.log('账号被京东服务器风控，不再请求该帐号')
                     } else {
