@@ -22,7 +22,7 @@ let args_xh = {
      * 控制脚本是否执行，设置为true时才会执行删除购物车 
      * 环境变量名称：JD_CART
      */
-    clean: process.env.JD_CART === 'true' || false,
+    clean: process.env.JD_CART === 'true' || true,
     /*
      * 控制脚本运行一次取消多少条购物车数据，为0则不删除，默认为100
      * 环境变量名称：XH_CLEAN_REMOVESIZE
@@ -61,15 +61,15 @@ if ($.isNode()) {
                 cookie = cookiesArr[i];
                 $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
                 $.index = i + 1;
+                $.isLogin = true;
+                $.nickName = '';
+                $.error = false;
+                await TotalBean();
                 console.log(`****开始【京东账号${$.index}】${$.nickName || $.UserName}****`);
                 if (args_xh.except.includes($.UserName)) {
                     console.log(`跳过账号：${$.nickName || $.UserName}`)
                     continue
                 }
-                $.isLogin = true;
-                $.nickName = '';
-                $.error = false;
-                await TotalBean();
                 if (!$.isLogin) {
                     $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {
                         "open-url": "https://bean.m.jd.com/bean/signIndex.action"
@@ -91,7 +91,7 @@ if ($.isNode()) {
                             break;
                         }
                     } else break;
-                } while (!$.error || $.keywordsNum !== $.beforeRemove)
+                } while (!$.error && $.keywordsNum !== parseInt($.beforeRemove))
             }
         }
     } else {
