@@ -1,11 +1,7 @@
 # -*- coding: UTF-8 -*-
-# 作者仓库:https://github.com/spiritLHL/qinglong_auto_tools
-# 觉得不错麻烦点个star谢谢
-# 频道：https://t.me/qinglong_auto_tools
-
 
 '''
-cron: 1
+cron: 0
 new Env('单容器 二叉树修复脚本依赖文件');
 '''
 
