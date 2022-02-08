@@ -1,6 +1,6 @@
 /*
 财富岛珍珠兑换
-cron 59 0-23/1 * * * jd_cfd_pearl_ex.js
+59 0-23/1 * * * jd_cfd_pearl_ex.js
 更新时间：2021-9-11
 活动入口：京喜APP-我的-京喜财富岛-最左侧建筑
  */
@@ -9,6 +9,7 @@ const JD_API_HOST = "https://m.jingxi.com/";
 const notify = require('./sendNotify')
 const jdCookieNode = require("./jdCookie.js")
 let cookiesArr = [], cookie = '', token = '';
+let allMessage = ''
 const UA = process.env.JX_USER_AGENT || `jdpingou;iPhone;4.13.0;14.4.2;${randomString(40)};network/wifi;model/iPhone10,2;appBuild/100609;ADID/00000000-0000-0000-0000-000000000000;supportApplePay/1;hasUPPay/0;pushNoticeIsOpen/1;hasOCPay/0;supportBestPay/0;session/${Math.random * 98 + 1};pap/JA2019_3111789;brand/apple;supportJDSHWK/1;Mozilla/5.0 (iPhone; CPU iPhone OS 14_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148`
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
@@ -19,10 +20,8 @@ if ($.isNode()) {
 } else {
   cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
 }
-$.appId = 10032;
+$.appId = "92a36";
 !(async () => {
-console.log(`\n兑换红包环境变量：export ddwVirHb='1' 请自行设置兑换金额\n`);	
-console.log(`默认红包余额大于0.2元就参与兑换\n`);	
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
     return;
@@ -30,6 +29,7 @@ console.log(`默认红包余额大于0.2元就参与兑换\n`);
   $.CryptoJS = $.isNode() ? require('crypto-js') : CryptoJS;
   await requestAlgo();
   await $.wait(1000)
+  console.log(`\n默认兑换0.5元以上（1/5/10/100），如需调整请设置变量ddwVirHb，设置1就兑换大于1块，以此类推\n`)
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];
@@ -47,7 +47,7 @@ console.log(`默认红包余额大于0.2元就参与兑换\n`);
     .catch((e) => $.logErr(e))
     .finally(() => $.done());
 
-async function wait(starttime = process.env.pearl_wait || 60){
+async function wait(starttime = process.env.pearl_wait || 62){
   const nowtime = new Date().Format("s.S")
   if ($.index == 1 && nowtime < starttime) {
     const sleeptime = (starttime - nowtime) * 1000;
@@ -77,9 +77,9 @@ async function perl_auto() {
         if (prize.dwState == 3) {
           flag = false
           console.log(strPrizeName, '已兑换过')
-        }else if (!prize.strPrizeName || prize.ddwVirHb <= (process.env.ddwVirHb || 0.2) * 100) {
+        }else if (!prize.strPrizeName || prize.ddwVirHb <= (process.env.ddwVirHb || 0.5) * 100) {
           flag = false
-          console.log(strPrizeName, '不大于', (process.env.ddwVirHb || 0.2), '元 过滤')
+          console.log(strPrizeName, '不大于', (process.env.ddwVirHb || 0.5), '元 过滤')
         } else if (prize.dwState == 1) {
           console.log(strPrizeName, '当前缺货,但依然兑换.')
         } else {
@@ -88,7 +88,7 @@ async function perl_auto() {
       }
       return flag
     })
-	await wait()
+	await wait()	
     if (!prizes.length) {
       console.log('无红包满足条件,结束')
       return
@@ -113,6 +113,9 @@ async function perl_auto() {
       await perl_rp(prize.dwLvl,prize.ddwVirHb ? 0 : 1,prize.ddwVirHb,prize.strPool)
       await $.wait(3000)
     }
+  if (allMessage) {
+    if ($.isNode()) await notify.sendNotify(`${$.name}`, `${allMessage}`);
+  }	
   } catch (e) {
     $.logErr(e)
   }
@@ -128,6 +131,12 @@ async function perl_rp(dwLvl,dwIsRandHb,ddwVirHb,strPoolName) {
         } else {
           console.debug('perl_rp:',data)
           data = JSON.parse(data);
+		  if (data.iRet === 0) {
+			  console.log(`兑换成功`)
+			  allMessage += `【京东账号${$.index}】 ${$.nickName || $.UserName}\n兑换 ${(data.strAwardDetail.strName)}红包成功🎉\n`
+		  } else {
+				  console.log (`兑换失败,下个整点在战！\n`)
+			    }
         }
       } catch (e) {
         $.logErr(e, resp);
@@ -163,7 +172,7 @@ async function refresh_perl() {
           console.error(`${JSON.stringify(err)}`)
           console.error(`${$.name} refresh_rp API请求失败，请检查网路重试`)
         } else {
-          console.debug('refresh_perl:',data)
+          //('refresh_perl:',data)
           $.perl_data = JSON.parse(data)
           $.dwExchangeType = $.perl_data.dwExchangeType
         }
@@ -254,7 +263,7 @@ async function requestAlgo() {
       'Accept-Language': 'zh-CN,zh;q=0.9,zh-TW;q=0.8,en;q=0.7'
     },
     'body': JSON.stringify({
-      "version": "1.0",
+      "version": "3.0",
       "fp": $.fingerprint,
       "appId": $.appId.toString(),
       "timestamp": Date.now(),
@@ -277,9 +286,9 @@ async function requestAlgo() {
               let enCryptMethodJDString = data.data.result.algo;
               if (enCryptMethodJDString) $.enCryptMethodJD = new Function(`return ${enCryptMethodJDString}`)();
               console.log(`获取签名参数成功！`)
-              console.log(`fp: ${$.fingerprint}`)
-              console.log(`token: ${$.token}`)
-              console.log(`enCryptMethodJD: ${enCryptMethodJDString}`)
+              //console.log(`fp: ${$.fingerprint}`)
+              //console.log(`token: ${$.token}`)
+              //console.log(`enCryptMethodJD: ${enCryptMethodJDString}`)
             } else {
               console.log(`fp: ${$.fingerprint}`)
               console.log('request_algo 签名参数API请求失败:')
@@ -317,7 +326,7 @@ function decrypt(time, stk, type, url) {
     const hash2 = $.CryptoJS.HmacSHA256(st, hash1.toString()).toString($.CryptoJS.enc.Hex);
     // console.log(`\nst:${st}`)
     // console.log(`h5st:${["".concat(timestamp.toString()), "".concat(fingerprint.toString()), "".concat($.appId.toString()), "".concat(token), "".concat(hash2)].join(";")}\n`)
-    return encodeURIComponent(["".concat(timestamp.toString()), "".concat($.fingerprint.toString()), "".concat($.appId.toString()), "".concat($.token), "".concat(hash2)].join(";"))
+return encodeURIComponent(["".concat(timestamp.toString()), "".concat($.fingerprint.toString()), "".concat($.appId.toString()), "".concat($.token), "".concat(hash2), "".concat("3.0"), "".concat(time)].join(";"))
   } else {
     return '20210318144213808;8277529360925161;10001;tk01w952a1b73a8nU0luMGtBanZTHCgj0KFVwDa4n5pJ95T/5bxO/m54p4MtgVEwKNev1u/BUjrpWAUMZPW0Kz2RWP8v;86054c036fe3bf0991bd9a9da1a8d44dd130c6508602215e50bb1e385326779d'
   }
