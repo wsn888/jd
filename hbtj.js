@@ -1,4 +1,4 @@
-// 机器人当然要用QQBot : https://docs.qq.com/doc/DR0RtZ211cnhZaFJC
+// 机器人
 
 const notify = require('./sendNotify');
 const jdCookieNode = require('./jdCookie.js');
