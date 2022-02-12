@@ -27,7 +27,7 @@ except Exception as e:
 os.environ['no_proxy'] = '*'
 requests.packages.urllib3.disable_warnings()
 try:
-    from sendnotify import send
+    from notify import send
 except Exception as err:
     logger.debug(str(err))
     logger.info("无推送文件")
@@ -235,7 +235,7 @@ def appjmp(wskey, tokenKey):
             res_set = res.cookies.get_dict()
             pt_key = 'pt_key=' + res_set['pt_key']
             pt_pin = 'pt_pin=' + res_set['pt_pin']
-            jd_ck = str(pt_key) + '; ' + str(pt_pin) + '; __time=' + str(time.time())
+            jd_ck = str(pt_key) + '; ' + str(pt_pin) + ';'
         except Exception as err:
             logger.info("JD_appjmp提取Cookie错误 请重试或者更换IP\n")
             logger.info(str(err))

@@ -7,7 +7,7 @@
 Author: 一风一扬
 功能：健康社区-种植园自动任务
 Date: 2022-1-4
-cron: 20 9,11,15,21 * * * jd_beauty_plant.py
+cron: 10 9,11,15,21 * * * jd_beauty_plant.py
 new Env('化妆馆-种植园自动任务');
 
 
