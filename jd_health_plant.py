@@ -7,28 +7,18 @@
 Author: 一风一扬
 功能：健康社区-种植园自动任务
 Date: 2022-1-4
-cron: 23 11,13,21 * * * xF_jd_health_plant.py
+cron: 23 11,13,21 * * * jd_health_plant.py
 new Env('京东健康社区-种植园自动任务');
-
-
 活动入口：20:/#1DouT0KAaKuqv%
-
-教程：该活动与京东的ck通用，但是变量我还是独立出来。
-
-青龙变量填写export plant_cookie="xxxx"
-
-多账号用&隔开，例如export plant_cookie="xxxx&xxxx"
-
-
+教程：该活动与京东的ck通用，所以只需要填写第几个号运行改脚本就行了。
+青龙变量填写export plant_cookie="1"，代表京东CK的第一个号执行该脚本
+多账号用&隔开，例如export plant_cookie="1&2"，代表京东CK的第一、二个号执行该脚本。这样做，JD的ck过期就不用维护两次了，所以做出了更新。
 青龙变量export charge_targe_id = 'xxxx'，表示需要充能的id，单账号可以先填写export charge_targe_id = '11111'，运行一次脚本
 日志输出会有charge_targe_id，然后再重新修改export charge_targe_id = 'xxxxxx'。多个账号也一样，如果2个账号export charge_targe_id = '11111&11111'
 3个账号export charge_targe_id = '11111&11111&11111'，以此类推。
 注意：charge_targe_id和ck位置要对应。而且你有多少个账号，就得填多少个charge_targe_id，首次11111填写时，为5位数。
 例如export plant_cookie="xxxx&xxxx&xxx"，那export charge_targe_id = "11111&11111&11111",也要写满3个id，这样才能保证所有账号都能跑
-
 '''
-
-
 
 ######################################################以下代码请不要乱改######################################
 

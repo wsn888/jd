@@ -1,12 +1,11 @@
 /*
-cron 30 6-20/3 * * * jd_xinruimz.js
-需要手动选
+cron 38 6-20/3 * * * jd_xinruimz.js
+需要手动选品
 入口: https://xinruimz-isv.isvjcloud.com/plantation
-
 无助力
 */
 
-const $ = new Env("颜究种植园");
+const $ = new Env("美丽研究院-种植园");
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
 let cookiesArr = [], cookie = '', message = '';
