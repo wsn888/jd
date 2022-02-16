@@ -1,10 +1,16 @@
 /*
 星系牧场
 活动入口：QQ星儿童牛奶京东自营旗舰店->品牌会员->星系牧场
+快捷入口：26:/！BBs7bCLR1K56！，星系牧场养牛牛，可获得DHA专属奶！
+号1默认给作者助力,后续 2给1 3给2 接龙
 [task_local]
 #星系牧场
-22 4-22/3 * * * * * * jd_qqxing.js
+1 0-23/3 * * * jd_qqxing.js
 */
+if (process.env.QQX != "true") {
+    console.log("默认不运行,export QQX='true'来运行\n需要手动进入一次活动，且有加购任务")
+    return
+}
 const $ = new Env('QQ星系牧场');
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
@@ -34,7 +40,7 @@ if ($.isNode()) {
 
 const JD_API_HOST = `https://api.m.jd.com/client.action`;
 message = ""
-$.shareuuid = ["bf3ffb1c973a49acbac4983ac15162f3", "be5c05485b624d69b2bb1acee71ffc87"][Math.floor((Math.random() * 2))];
+$.shareuuid = "3081a5203b974323bbc06fa621c874d7"
     !(async () => {
         if (!cookiesArr[0]) {
             $.msg($.name, '【提示】请先获取cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {
@@ -115,7 +121,7 @@ $.shareuuid = ["bf3ffb1c973a49acbac4983ac15162f3", "be5c05485b624d69b2bb1acee71f
         }
         if (message.length != 0) {
         if ($.isNode()) {
-           await notify.sendNotify("星系牧场", `${message}\n牧场入口：QQ星儿童牛奶京东自营旗舰店->星系牧场\n\n`);
+           //await notify.sendNotify("星系牧场", `${message}\n牧场入口：QQ星儿童牛奶京东自营旗舰店->星系牧场\n\n`);
    }  else {
             $.msg($.name, "", '星系牧场' + message)
         }
@@ -406,8 +412,8 @@ function getUid() {
                            if(data.data.openCardStatus !=3){
                            console.log("当前未开卡,无法助力和兑换奖励哦")
                            }                           
-                            // $.shareuuid = data.data.uid                            
-                            console.log(`\n【京东账号${$.index}（${$.UserName}）的${$.name}好友互助码】${$.shareuuid}\n`);
+                             $.shareuuid = data.data.uid                            
+                            console.log(`\n【（${$.UserName}）的${$.name}互助码】${$.shareuuid}\n`);
                         }
                       }
             } catch (e) {
