@@ -10,24 +10,21 @@
 ============Quantumultx===============
 [task_local]
 #京东极速版红包
-20 0,22 * * * jd_speed_redpocke.js, tag=京东极速版红包, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
-
+26 2,19 * * * jd_speed_redpocke.js, tag=京东极速版红包, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
 ================Loon==============
 [Script]
-cron "20 0,22 * * *" script-path=jd_speed_redpocke.js,tag=京东极速版红包
-
+cron "26 2,19 * * *" script-path=jd_speed_redpocke.js,tag=京东极速版红包
 ===============Surge=================
-京东极速版红包 = type=cron,cronexp="20 0,22 * * *",wake-system=1,timeout=3600,script-path=jd_speed_redpocke.js
-
+京东极速版红包 = type=cron,cronexp="26 2,19 * * *",wake-system=1,timeout=3600,script-path=jd_speed_redpocke.js
 ============小火箭=========
-京东极速版红包 = type=cron,script-path=jd_speed_redpocke.js, cronexpr="20 0,22 * * *", timeout=3600, enable=true
+京东极速版红包 = type=cron,script-path=jd_speed_redpocke.js, cronexpr="26 2,19 * * *", timeout=3600, enable=true
 */
 const $ = new Env('京东极速版红包');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 let cookiesArr = [], cookie = '', message;
-const linkIdArr = ["7ya6o83WSbNhrbYJqsMfFA","Eu7-E0CUzqYyhZJo9d3YkQ"];
+const linkIdArr = ["Eu7-E0CUzqYyhZJo9d3YkQ"];
 const signLinkId = '9WA12jYGulArzWS7vcrwhw';
 let linkId;
 if ($.isNode()) {
@@ -80,14 +77,14 @@ if ($.isNode()) {
 async function jsRedPacket() {
   try {
     await invite2();
-    // await sign();//极速版签到提现
-    // await reward_query();
-    // for (let i = 0; i < 3; ++i) {
-    //   await redPacket();//开红包
-    //   await $.wait(2000)
-    // }
-    // await getPacketList();//领红包提现
-    // await signPrizeDetailList();
+    //await sign();//极速版签到提现
+    await reward_query();
+    for (let i = 0; i < 3; ++i) {
+      await redPacket();//开红包
+      await $.wait(2000)
+    }
+    await getPacketList();//领红包提现
+    await signPrizeDetailList();
     await showMsg()
   } catch (e) {
     $.logErr(e)
