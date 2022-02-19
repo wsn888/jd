@@ -23,6 +23,9 @@ cron "5 6-18/6 * * *" script-path=jd_fruit_task.js,tag=东东农场日常任务
 
 export DO_TEN_WATER_AGAIN="" 默认再次浇水
 
+每号间隔（毫秒），默认0毫秒（0分钟）
+export fruit_sleep=20000
+
 */
 const $ = new Env('东东农场日常任务');
 let cookiesArr = [],
@@ -79,6 +82,9 @@ const urlSchema = `openjd://virtual?params=%7B%20%22category%22:%20%22jump%22,%2
             //await shareCodesFormat();
             await jdFruit();
         }
+		if ($.isNode()) {
+		process.env.fruit_sleep ? await $.wait(Number(process.env.fruit_sleep)) : ''
+		}
     }
     if ($.isNode() && allMessage && $.ctrTemp) {
         await notify.sendNotify(`${$.name}`, `${allMessage}`)
@@ -253,9 +259,7 @@ async function doDailyTask() {
 async function predictionFruit() {
     console.log('开始预测水果成熟时间\n');
     await initForFarm();
-	await $.wait(2000);
     await taskInitForFarm();
-	await $.wait(2000);
     let waterEveryDayT = $.farmTask.totalWaterTaskInit.totalWaterTaskTimes; //今天到到目前为止，浇了多少次水
     message += `【今日共浇水】${waterEveryDayT}次\n`;
     message += `【剩余 水滴】${$.farmInfo.farmUserPro.totalEnergy}g💧\n`;
@@ -941,8 +945,8 @@ async function gotStageAwardForFarm(type) {
 }
 //浇水API
 async function waterGoodForFarm() {
-    await $.wait(2000);
-    console.log('等待了2秒');
+    await $.wait(1000);
+    console.log('等待了1秒');
 
     const functionId = arguments.callee.name.toString();
     $.waterResult = await request(functionId);
