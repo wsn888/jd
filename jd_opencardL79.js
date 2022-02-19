@@ -56,8 +56,8 @@ let activityCookie =''
   $.actId = '29a7e74b884d42adb90d8_22022001'
   $.MixNicks = ''
   $.inviteNick = 'QC6MjIz9kcaCtoRUgFAh1V4tLNYA4seuA67MOIYQxEk3Vl9+AVo4NF+tgyeIc6A6kdK3rLBQpEQH9V4tdrrh0w=='
-  console.log(`活动地址`)
-  console.log(`请自行测试有水无水`)
+  console.log(`活动地址:https://jinggengjcq-isv.isvjcloud.com/fronth5/#/pages/unitedCardNew20220220/unitedCardNew20220220?actId=29a7e74b884d42adb90d8_22022001`)
+  console.log(`请自行测试有水无水。`)
   for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
     if (cookie) {
