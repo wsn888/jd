@@ -1,6 +1,6 @@
 # -*- coding:utf-8 -*-
 """
-cron: 50 * * * *
+cron: 0
 new Env('禁用重复任务');
 """
 
