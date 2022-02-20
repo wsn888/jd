@@ -1,11 +1,14 @@
 /*
-cron 38 6-20/3 * * * jd_xinruimz.js
-需要手动选品
+cron 30 6-20/3 * * * jd_xinruimz.js
+TG https://t.me/duckjobs
+Rpeo https://github.com/okyyds
+需要手动选
 入口: https://xinruimz-isv.isvjcloud.com/plantation
+
 无助力
 */
 
-const $ = new Env("美丽研究院-种植园");
+const $ = new Env("颜究种植园");
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
 let cookiesArr = [], cookie = '', message = '';
@@ -50,6 +53,7 @@ if ($.isNode()) {
                 continue
             }
             await main();
+			await $.wait(10 * 1000);
         }
     }
     if (message !== "") {
@@ -204,7 +208,7 @@ async function fertilizerdotask() {
                 $.log("任务完成")
             }
         }
-        if ($.fertilizertasklist.prodcuts && ["card","car"].includes(process.env.FS_LEVEL)) {
+        if ($.fertilizertasklist.prodcuts) {
             $.log("去完成加购任务..")
             if ($.fertilizertasklist.prodcuts.length != $.fertilizerlist.view_product.length) {
                 for (const vo of $.fertilizertasklist.prodcuts) {
