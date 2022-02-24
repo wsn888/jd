@@ -3,8 +3,8 @@
 
 
 """
-cron: 35 10 * * *
-new Env('京东金融天天试手气');
+cron: 35 9 * * *
+new Env('京东金融抽白条');
 """
 
 
@@ -19,10 +19,21 @@ import string
 import urllib
 
 try:
+
+    import execjs   #引入需要的模块
+
+except:
+
+    os.system('pip install PyExecJS &> /dev/null')
+    import execjs
+
+"""
+try:
     import execjs
 except:
     print('缺少依赖文件PyExecJS,请先去Python3安装PyExecJS后再执行')
     sys.exit(0)
+"""
 
 def printf(text):
     print(text)
@@ -85,7 +96,7 @@ def randomuserAgent():
         return UserAgent
 
 def JDSignValidator(url):
-    with open('JDJRSignValidator.js', 'r', encoding='utf-8') as f:
+    with open('JDSignValidator.js', 'r', encoding='utf-8') as f:
         jstext = f.read()
     js = execjs.compile(jstext)
     result = js.call('getBody', url)
