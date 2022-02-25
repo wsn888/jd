@@ -27,7 +27,7 @@ except Exception as e:
 os.environ['no_proxy'] = '*'
 requests.packages.urllib3.disable_warnings()
 try:
-    from sendnotify import send
+    from notify import send
 except Exception as err:
     logger.debug(str(err))
     logger.info("无推送文件")
@@ -124,7 +124,7 @@ def get_ck():
 
 # 返回值 bool
 def check_ck(ck):
-    searchObj = re.search(r'pt_pin=([^;\s]+)', ck, re.M|re.I)
+    searchObj = re.search(r'pt_pin=([^;\s]+)', ck, re.M | re.I)
     if searchObj:
         pin = searchObj.group(1)
     else:
