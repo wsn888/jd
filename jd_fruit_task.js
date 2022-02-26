@@ -132,12 +132,6 @@ async function jdFruit() {
             await getTenWaterAward(); //领取10浇水奖励
             await getWaterFriendGotAward(); //领取为2好友浇水奖励
             await duck();
-            lnrun++;
-            if (lnrun == 10) {
-            console.log(`\n访问接口次数达到10次，休息30秒.....\n`);
-            await $.wait(30 * 1000);
-            lnrun = 0;
-            }
             if (!process.env.DO_TEN_WATER_AGAIN) {
                 console.log('执行再次浇水')
                 await doTenWaterAgain(); //再次浇水
@@ -302,6 +296,7 @@ async function doTenWater() {
         for (; waterCount < $.farmTask.totalWaterTaskInit.totalWaterTaskLimit - $.farmTask.totalWaterTaskInit.totalWaterTaskTimes; waterCount++) {
             console.log(`第${waterCount + 1}次浇水`);
             await waterGoodForFarm();
+			await $.wait(2000);
             console.log(`本次浇水结果:   ${JSON.stringify($.waterResult)}`);
             if ($.waterResult.code === '0') {
                 console.log(`剩余水滴${$.waterResult.totalEnergy}g`);
@@ -559,7 +554,7 @@ async function turntableFarm() {
                 }
             }
         }
-        console.log(`---天天抽奖次数remainLotteryTimes----${remainLotteryTimes}次`)
+        console.log(`---天天抽奖次数----${remainLotteryTimes}次`)
             //抽奖
         if (remainLotteryTimes > 0) {
             console.log('开始抽奖')
@@ -952,8 +947,8 @@ async function gotStageAwardForFarm(type) {
 }
 //浇水API
 async function waterGoodForFarm() {
-    await $.wait(1000);
-    console.log('等待了1秒');
+    await $.wait(3000);
+    console.log('等待了3秒');
 
     const functionId = arguments.callee.name.toString();
     $.waterResult = await request(functionId);
