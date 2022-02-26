@@ -10,22 +10,26 @@
  ==========================Quantumultx=========================
  [task_local]
  #东东电竞经理
- 2 0-23/2 * * * jd_EsportsManager.js, tag=东东电竞经理, img-url=https://raw.githubusercontent.com/JDHelloWorld/jd_scripts/main/icon/jd_EsportsManager.png, enabled=true
+ 0 0-23/2 * * * jd_EsportsManager.js, tag=东东电竞经理, img-url=https://raw.githubusercontent.com/JDHelloWorld/jd_scripts/main/icon/jd_EsportsManager.png, enabled=true
  =========================Loon=============================
  [Script]
- cron "2 0-23/2 * * *" script-path=jd_EsportsManager.js,tag=东东电竞经理
+ cron "0 0-23/2 * * *" script-path=jd_EsportsManager.js,tag=东东电竞经理
+
  =========================Surge============================
- 东东电竞经理 = type=cron,cronexp="2 0-23/2 * * *",wake-system=1,timeout=3600,script-path=jd_EsportsManager.js
+ 东东电竞经理 = type=cron,cronexp="0 0-23/2 * * *",wake-system=1,timeout=3600,script-path=jd_EsportsManager.js
+
  =========================小火箭===========================
- 东东电竞经理 = type=cron,script-path=jd_EsportsManager.js, cronexpr="2 0-23/2 * * *", timeout=3600, enable=true
+ 东东电竞经理 = type=cron,script-path=jd_EsportsManager.js, cronexpr="0 0-23/2 * * *", timeout=3600, enable=true
+
  按顺序给第(Math.floor((index - 1) / 6) + 1)个账号助力
  可能有BUG，但不会给别人号助力
+
  */
 
 const $ = new Env('东东电竞经理');
 let cookiesArr = [], cookie = '', isBox = false, notify, newShareCodes, allMessage = '';
 let tasks = [], shareCodes = [], first = true;
-
+let lnrun = 0;
 !(async () => {
   await requireConfig();
   if (!cookiesArr[0]) {
@@ -61,8 +65,13 @@ let tasks = [], shareCodes = [], first = true;
         continue
 
       await $.wait(1000);
-
+	  lnrun++;
       await main();
+	  if (lnrun == 10) {
+        console.log(`\n【访问接口次数达到10次，休息半分钟.....】\n`);
+        await $.wait(30 * 1000);
+        lnrun = 0;
+	  }
     }
   }
   if ($.isNode() && allMessage && $.ctrTemp) {
@@ -72,7 +81,6 @@ let tasks = [], shareCodes = [], first = true;
 
 async function main() {
   tasks = await detail();
-   console.log('tasks：++++++++++'+tasks);
   for (let i = 0; i < tasks.length; i++) {
     let product_info_vos = []
     let task_vos = tasks[i]
@@ -101,13 +109,15 @@ async function main() {
         ""
     }
     let taskId = task_vos.task_id, taskType = task_vos.task_type;
-    //for (let t of product_info_vos) {
-    //  if (t.status === '1') {
-    //    console.log(`开始任务：${task_vos.task_name}`)
-    //    let res = await do_task(t.task_token, taskId, taskType)
-    //    await $.wait(1000)
-    //  }
-    //}
+   if(product_info_vos != null ){
+     for (let t of product_info_vos) {
+       if (t.status === '1') {
+         console.log(`开始任务：${task_vos.task_name}`)
+         let res = await do_task(t.task_token, taskId, taskType)
+         await $.wait(1000)
+       }
+     }
+    }
   }
 }
 
