@@ -5,8 +5,10 @@
 拉库命令：</br>
 ql repo https://ghproxy.com/https://github.com/wsn888/jd.git "jd_|jx_|wsn_|jdCookie" "" "^jd[^_]|utils|function|sendNotify|ql.js"
 </li>
+<br>
 <li>
-2.28号新建QQ交流群：955063081<a target="_blank" href="https://qm.qq.com/cgi-bin/qm/qr?k=9Sj3XOUI_UDu5j9Z1Aw2Xy8TWJa1oN22&jump_from=webapi"><p>点击👉一键加群👈</p></a>
+2.28号新建QQ交流群：955063081</br>
+<a target="_blank" href="https://qm.qq.com/cgi-bin/qm/qr?k=9Sj3XOUI_UDu5j9Z1Aw2Xy8TWJa1oN22&jump_from=webapi"><p>点击👉一键加群👈</p></a>
 <img src="https://s3.bmp.ovh/imgs/2022/02/0d029dfb4510914e.png" alt="临时库-交流" title="临时库-交流">
 </li>
 <li>
