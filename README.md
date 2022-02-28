@@ -7,7 +7,7 @@ ql repo https://ghproxy.com/https://github.com/wsn888/jd.git "jd_|jx_|wsn_|jdCoo
 </li>
 <li>
 2.28号新建QQ交流群：</br>
-<a target="_blank" href="https://qm.qq.com/cgi-bin/qm/qr?k=9Sj3XOUI_UDu5j9Z1Aw2Xy8TWJa1oN22&jump_from=webapi"><img border="0" alt="临时库-交流" title="临时库-交流"></a>
+<a target="_blank" href="https://qm.qq.com/cgi-bin/qm/qr?k=9Sj3XOUI_UDu5j9Z1Aw2Xy8TWJa1oN22&jump_from=webapi"><b>临时库-交流</br></a>
 </li>
 <li>
 <p>本仓库发布的jd项目中涉及的任何解锁和解密分析脚本，仅用于测试和学习研究，禁止用于商业用途，不能保证其合法性，准确性，完整性和有效性，请根据情况自行判断.</p>
