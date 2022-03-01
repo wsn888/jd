@@ -44,8 +44,8 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
             $.retry = 0;
             lnrun++;
             await jdFruit();
-      if (lnrun == 5) {
-      console.log(`\n访问接口次数达到5次，休息60秒.....\n`);
+      if (lnrun == 3) {
+      console.log(`\n访问接口次数达到3次，休息60秒.....\n`);
       await $.wait(60 * 1000);
       lnrun = 0;
      }
@@ -94,8 +94,8 @@ async function jdFruit() {
             await duck();
             lnrun++;
             if (lnrun == 10) {
-            console.log(`\n访问接口次数达到10次，休息30秒.....\n`);
-            await $.wait(30 * 1000);
+            console.log(`\n访问接口次数达到10次，休息60秒.....\n`);
+            await $.wait(60 * 1000);
             lnrun = 0;
             }
             if (!process.env.DO_TEN_WATER_AGAIN) {
