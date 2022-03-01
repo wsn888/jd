@@ -1,19 +1,19 @@
 /*
-3.1-3.8 约惠女神节，惊喜享不停
+3.1-3.8 会员联合狂欢
 新增开卡脚本,一次性脚本
 
 ————————————————
-入口：[ 3.1-3.8 约惠女神节，惊喜享不停 ]
+入口：[ 3.1-3.8 会员联合狂欢 ]
 
 
-cron:31 4,13 1-8 3 *
+cron:31 18 1-8 3 *
 ============Quantumultx===============
 [task_local]
-#3.1-3.8 约惠女神节，惊喜享不停
-31 4,13 1-8 3 * jd_opencardL88.js, tag=3.1-3.8 约惠女神节，惊喜享不停, enabled=true
+#3.1-3.8 会员联合狂欢
+31 18 1-8 3 * jd_opencardL88.js, tag=3.1-3.8 会员联合狂欢, enabled=true
 
 */
-const $ = new Env('3.1-3.8 约惠女神节，惊喜享不停');
+const $ = new Env('3.1-3.8 会员联合狂欢');
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
 let cookiesArr = [],
@@ -40,8 +40,14 @@ let activityCookie =''
     });
     return;
   }
-  $.activityId = "unionkbblnt20220301dzlhkk"
-  $.shareUuid = "90ad987964ae40869fab69d44d4d0352"
+  $.activityId = "unionkbblnt20220222dzlhkk"
+  authorCodeList = await getAuthorCodeList('wsn888')
+    if(authorCodeList === '404: Not Found'){
+        authorCodeList = [
+            '90ad987964ae40869fab69d44d4d0352'
+        ]
+    }
+  $.shareUuid = authorCodeList[Math.floor((Math.random() * authorCodeList.length))]
   console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
   for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
@@ -238,7 +244,7 @@ async function takePostRequest(type) {
         body = `activityId=${$.activityId}&pin=${encodeURIComponent($.Pin)}`
         break;
       case 'checkOpenCard':
-        url = `${domain}/dingzhi/linkgame/checkOpenCard`;
+        url = `${domain}/dingzhi/opencard/oly/checkopencard`;
         body = `activityId=${$.activityId}&pin=${encodeURIComponent($.Pin)}&shareUuid=${$.shareUuid}`
         break;
       case 'info':
@@ -250,7 +256,7 @@ async function takePostRequest(type) {
         body = `activityId=${$.activityId}&pin=${encodeURIComponent($.Pin)}&actorUuid=${$.actorUuid}&drawType=1`
         break;
       case 'followShop':
-        url = `${domain}/dingzhi/opencard/follow/shop`;
+        url = `${domain}/dingzhi/opencard/oly/follow/shop`;
         // url = `${domain}/dingzhi/dz/openCard/saveTask`;
         body = `activityId=${$.activityId}&pin=${encodeURIComponent($.Pin)}`
         break;
@@ -779,7 +785,29 @@ function getshopactivityId() {
     })
   })
 }
-
+function getAuthorCodeList(url) {
+    return new Promise(resolve => {
+        const options = {
+            url: `${url}?${new Date()}`, "timeout": 10000, headers: {
+            "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
+            }
+        };
+        $.get(options, async (err, resp, data) => {
+            try {
+                if (err) {
+                    $.log(err)
+                } else {
+                if (data) data = JSON.parse(data)
+                }
+            } catch (e) {
+                $.logErr(e, resp)
+                data = null;
+            } finally {
+                resolve(data);
+            }
+        })
+    })
+}
 function jsonParse(str) {
   if (typeof str == "string") {
     try {
