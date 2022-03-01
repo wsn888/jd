@@ -42,7 +42,13 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
             subTitle = '';
             option = {};
             $.retry = 0;
+            lnrun++;
             await jdFruit();
+      if (lnrun == 5) {
+      console.log(`\n访问接口次数达到5次，休息60秒.....\n`);
+      await $.wait(60 * 1000);
+      lnrun = 0;
+     }
         }
     }
     if ($.isNode() && allMessage && $.ctrTemp) {
