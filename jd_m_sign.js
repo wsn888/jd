@@ -6,10 +6,10 @@
 ===========================
 [task_local]
 #京东通天塔--签到
-31 3,15 * * * jd_m_sign.js
+3 1,11 * * * jd_m_sign.js, tag=京东通天塔--签到, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
  */
 
-const $ = new Env('京东通天签到');
+const $ = new Env('京东通天塔--签到');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
@@ -66,8 +66,6 @@ async function jdsign() {
     await getInfo("https://pro.m.jd.com/mall/active/3S28janPLYmtFxypu37AYAGgivfp/index.html");//拍拍二手签到
     await $.wait(2000)
     await getInfo("https://pro.m.jd.com/mall/active/kPM3Xedz1PBiGQjY4ZYGmeVvrts/index.html");//陪伴
-    await $.wait(2000)
-    await getInfo("https://prodev.m.jd.com/mall/active/412SRRXnKE1Q4Y6uJRWVT6XhyseG/index.html");//京东服装
     await $.wait(2000)
     await getInfo("https://pro.m.jd.com/mall/active/3SC6rw5iBg66qrXPGmZMqFDwcyXi/index.html");//京东图书
 //     await getInfo("https://pro.m.jd.com/mall/active/ZrH7gGAcEkY2gH8wXqyAPoQgk6t/index.html");//箱包签到
