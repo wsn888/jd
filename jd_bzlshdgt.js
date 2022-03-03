@@ -1,14 +1,14 @@
 /*
 [task_local]
-#3.2-3.8食品女神价到抽奖机活动
-20 9,13 * * * jd_spnvjd.js, tag=3.2-3.8食品女神价到抽奖机活动, enabled=true
+#2.25-3.8女神节抽奖机活动
+15 7,14 * * * jd_bzlshdgt.js, tag=2.25-3.8女神节抽奖机活动, enabled=true
  */
-const $ = new Env('3.2-3.8食品女神价到抽奖机活动');
+const $ = new Env('2.25-3.8女神节抽奖机活动');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 let jdNotify = true;//是否关闭通知，false打开通知推送，true关闭通知推送
-$.configCode = "d82abd6d08c948a08fa87958430eb638";
+$.configCode = "02f742eb50cc4e2dbf98d6adc53bc492";
 //IOS等用户直接用NobyDa的jd cookie
 let cookiesArr = [], cookie = '', message;
 if ($.isNode()) {
@@ -21,7 +21,7 @@ if ($.isNode()) {
     cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
 }
 !(async () => {
-	console.log('入口下拉：https://prodev.m.jd.com/mall/active/47qob8cnh96GeqphcRJ7Hk2Y3DLd/index.html')
+	console.log('入口下拉：https://prodev.m.jd.com/mall/active/4ZocDBKbsGTxFHQyPzUfat9S1Sv6/index.html')
     if (!cookiesArr[0]) {
         $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
         return;
@@ -86,7 +86,6 @@ async function run() {
             if (vo.hasFinish === true) {
                 continue;
             }
-			
             if (vo.taskName == '每日签到') {
                 console.log(`开始做${vo.taskName}:${vo.taskItem.itemName}`);
                 await doTask(vo.taskType, vo.taskItem.itemId, vo.id);
@@ -101,8 +100,8 @@ async function run() {
             }
             if (vo.taskType == 4) {
                 console.log(`开始做${vo.taskName}:${vo.taskItem.itemName}`);
-                //await doTask(vo.taskType, vo.taskItem.itemId, vo.id);
-                //await getReward(vo.taskType, vo.taskItem.itemId, vo.id);
+                await doTask(vo.taskType, vo.taskItem.itemId, vo.id);
+                await getReward(vo.taskType, vo.taskItem.itemId, vo.id);
             }
             if (vo.taskType == 2) {
                 console.log(`开始做${vo.taskName}:${vo.taskItem.itemName}`);
