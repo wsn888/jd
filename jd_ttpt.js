@@ -1,22 +1,17 @@
 /*
 *
 活动入口：京东金融APP-签到-天天拼图
-
 已支持IOS双京东账号,Node.js支持N个京东账号
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
-
 ============Quantumultx===============
 [task_local]
 京东金融天天拼图
 20 0,16 * * * jd_ttpt.js, tag=京东金融天天拼图, enabled=true
-
 ================Loon==============
 [Script]
 cron "20 0,16 * * *" script-path=jd_ttpt.js,tag=京东金融天天拼图
-
 ===============Surge=================
 京东金融天天拼图 = type=cron,cronexp="20 0,16 * * *",wake-system=1,timeout=20,script-path=jd_ttpt.js
-
 ============小火箭============
 京东金融天天拼图 = type=cron,script-path=jd_ttpt.js, cronexpr="20 0,16 * * *", timeout=3600, enable=true
 *
@@ -45,7 +40,7 @@ if ($.isNode()) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
     return;
   }
-  console.log(`\n【活动入口：京东金融APP->我的->游戏与互动->更多】\n【部分号没有此任务，会返回操作繁忙】`);
+  console.log(`\n活动入口：京东金融APP->签到->天天拼图\n`);
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];
