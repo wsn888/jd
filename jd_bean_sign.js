@@ -2,7 +2,6 @@
 京东多合一签到,自用,可N个京东账号
 活动入口：各处的签到汇总
 Node.JS专用
-5 0,17 * * * jd_bean_sign.js
 IOS软件用户请使用 https://raw.githubusercontent.com/NobyDa/Script/master/JD-DailyBonus/JD_DailyBonus.js
 更新时间：2021-6-18
 推送通知默认简洁模式(多账号只发送一次)。如需详细通知，设置环境变量 JD_BEAN_SIGN_NOTIFY_SIMPLE 为false即可(N账号推送N次通知)。
@@ -16,8 +15,8 @@ const exec = require('child_process').execSync
 const fs = require('fs')
 const download = require('download');
 let resultPath = "./result.txt";
-let JD_DailyBonusPath = "./JD_DailyBonus.js";
-let outPutUrl = './';
+let JD_DailyBonusPath = "./utils/JD_DailyBonus.js";
+let outPutUrl = './utils';
 let NodeSet = 'CookieSet.json';
 let cookiesArr = [], cookie = '', allMessage = '', jrBodyArr = [], jrBody = '';
 
@@ -85,7 +84,7 @@ if ($.isNode()) {
   //await deleteFile(JD_DailyBonusPath);//删除下载的JD_DailyBonus.js文件
   if ($.isNode() && allMessage && process.env.JD_BEAN_SIGN_NOTIFY_SIMPLE === 'true') {
     $.msg($.name, '', allMessage);
-    //await notify.sendNotify($.name, allMessage)
+    await notify.sendNotify($.name, allMessage)
   }
 })()
     .catch((e) => $.logErr(e))
@@ -136,7 +135,7 @@ async function execSign() {
     }
     //运行完成后，删除下载的文件
     await deleteFile(resultPath);//删除result.txt
-    await deleteFile('./CookieSet.json')
+    await deleteFile('./utils/CookieSet.json')
     console.log(`\n\n*****************${new Date(new Date().getTime()).toLocaleString('zh', {hour12: false})} 京东账号${$.index} ${$.nickName || $.UserName} ${$.name}完成*******************\n\n`);
   } catch (e) {
     console.log("京东签到脚本执行异常:" + e);
@@ -146,9 +145,9 @@ async function downFile () {
   let url = '';
   await downloadUrl();
   if ($.body) {
-    url = 'https://raw.githubusercontent.com/NobyDa/Script/master/JD-DailyBonus/JD_DailyBonus.js';
+    url = 'https://raw.githubusercontent.com/Yun-City/City/main/utils/JD_DailyBonus.js';
   } else {
-    url = 'https://cdn.jsdelivr.net/gh/NobyDa/Script@master/JD-DailyBonus/JD_DailyBonus.js';
+    url = 'https://cdn.jsdelivr.net/gh/Yunc-City/City@master/utils/JD_DailyBonus.js';
   }
   try {
     const options = { }
@@ -244,7 +243,7 @@ function TotalBean() {
     })
   })
 }
-function downloadUrl(url = 'https://raw.githubusercontent.com/NobyDa/Script/master/JD-DailyBonus/JD_DailyBonus.js') {
+function downloadUrl(url = 'https://raw.githubusercontent.com/Yun-City/City/main/utils/JD_DailyBonus.js') {
   return new Promise(resolve => {
     const options = { url, "timeout": 10000 };
     if ($.isNode() && process.env.TG_PROXY_HOST && process.env.TG_PROXY_PORT) {
@@ -264,7 +263,7 @@ function downloadUrl(url = 'https://raw.githubusercontent.com/NobyDa/Script/mast
         if (err) {
           // console.log(`${JSON.stringify(err)}`)
           console.log(`检测到您当前网络环境不能访问外网,将使用jsdelivr CDN下载JD_DailyBonus.js文件`);
-          await $.http.get({url: `https://purge.jsdelivr.net/gh/NobyDa/Script@master/JD-DailyBonus/JD_DailyBonus.js`, timeout: 10000}).then((resp) => {
+          await $.http.get({url: `https://purge.jsdelivr.net/gh/Yun-City/City@master/utils/JD_DailyBonus.js`, timeout: 10000}).then((resp) => {
             if (resp.statusCode === 200) {
               let { body } = resp;
               body = JSON.parse(body);
