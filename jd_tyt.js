@@ -1,13 +1,9 @@
 /*
-注意：助力码每天会变，旧的不可用。
-助力逻辑：优先助力互助码变量，默认助力前三个可助力的账号，需要修改助力人数修改代码57行的数字即可
-入口-极速版-推推赚大钱  5元无门槛卷 大概需要50人助力
  [task_local]
 #快速推一推
-0 1 * * * jd_tyt.js, tag=推一推, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
+0 1 * * * jd_tyt.js, tag=推一推, img-url=
 */
-
-const $ = new Env('极速版-推推赚大钱');//助力前三个可助力的账号
+const $ = new Env('极速版-推推赚大钱');//助力前八个可助力的账号不满意改脚本即可
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
@@ -53,8 +49,8 @@ if ($.isNode()) {
           await info()
           await coinDozerBackFlow()
           await getCoinDozerInfo()
-          console.log('\n注意助力前三个可助力的账号\n');
-          if (inviteCodes.length >= 3) {
+          console.log('\n助力前八个可助力的账号不满意去57行改即可\n');
+          if (inviteCodes.length >= 7) {
                break
           }
      }
@@ -95,7 +91,7 @@ function info() {
      return new Promise((resolve) => {
 
           const nm = {
-               url: `${JD_API_HOST}`,
+               url: `https://api.m.jd.com/?_t=1646094718628`,
                body: `functionId=initiateCoinDozer&body={"actId":"49f40d2f40b3470e8d6c39aa4866c7ff","channel":"coin_dozer","antiToken":"","referer":"-1","frontendInitStatus":"s"}&appid=megatron&client=ios&clientVersion=14.3&t=1636014459632&networkType=4g&eid=&fp=-1&frontendInitStatus=s&uuid=8888&osVersion=14.3&d_brand=&d_model=&agent=-1&pageClickKey=-1&screen=400*700&platform=3&lang=zh_CN`,
                headers: {
                     "Cookie": cookie,
@@ -251,7 +247,6 @@ function help(packetId) {
                               if (data.msg.indexOf("完成") != -1) {
                                    $.ok = true
                               }
-                              console.log(data.msg)
                          }
                     }
                } catch (e) {
@@ -285,7 +280,7 @@ function getCoinDozerInfo() {
                          if (safeGet(data)) {
                               data = JSON.parse(data);
                               if (data.success == true && data?.data?.sponsorActivityInfo?.packetId) {
-                                   console.log('叼毛：' + data.data.sponsorActivityInfo.initiatorNickname)
+                                   console.log('CK：' + data.data.sponsorActivityInfo.initiatorNickname)
                                    console.log('邀请码：' + data.data.sponsorActivityInfo.packetId)
                                    console.log('推出：' + data.data.sponsorActivityInfo.dismantledAmount)
                                    if (data.data && data.data.sponsorActivityInfo.packetId) {
