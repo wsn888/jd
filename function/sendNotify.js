@@ -14,7 +14,7 @@ const querystring = require('querystring');
 const exec = require('child_process').exec;
 const $ = new Env();
 const timeout = 15000; //超时时间(单位毫秒)
-//console.log("加载sendNotify，当前版本: 20220302");
+console.log("加载sendNotify，当前版本: 20220306");
 // =======================================go-cqhttp通知设置区域===========================================
 //gobot_url 填写请求地址http://127.0.0.1/send_private_msg
 //gobot_token 填写在go-cqhttp文件设置的访问密钥
@@ -130,24 +130,24 @@ const {
     getEnvs,
     DisableCk,
     getEnvByPtPin
-} = require('./function/ql');
+} = require('./ql');
 const fs = require('fs');
 let strCKFile = '/ql/scripts/CKName_cache.json';
 let Fileexists = fs.existsSync(strCKFile);
 let TempCK = [];
 if (Fileexists) {
-    //console.log("检测到别名缓存文件CKName_cache.json，载入...");
+    console.log("检测到别名缓存文件CKName_cache.json，载入...");
     TempCK = fs.readFileSync(strCKFile, 'utf-8');
     if (TempCK) {
         TempCK = TempCK.toString();
         TempCK = JSON.parse(TempCK);
     }
 }
-let strUidFile = './CK_WxPusherUid.json';
+let strUidFile = '/ql/scripts/CK_WxPusherUid.json';
 let UidFileexists = fs.existsSync(strUidFile);
 let TempCKUid = [];
 if (UidFileexists) {
-    //console.log("检测到一对一Uid文件WxPusherUid.json，载入...");
+    console.log("检测到一对一Uid文件WxPusherUid.json，载入...");
     TempCKUid = fs.readFileSync(strUidFile, 'utf-8');
     if (TempCKUid) {
         TempCKUid = TempCKUid.toString();
@@ -165,8 +165,14 @@ let Notify_SkipText = [];
 let isLogin = false;
 if (process.env.NOTIFY_SHOWNAMETYPE) {
     ShowRemarkType = process.env.NOTIFY_SHOWNAMETYPE;
+    if (ShowRemarkType == "2")
+        console.log("检测到显示备注名称，格式为: 京东别名(备注)");
+    if (ShowRemarkType == "3")
+        console.log("检测到显示备注名称，格式为: 京东账号(备注)");
+    if (ShowRemarkType == "4")
+        console.log("检测到显示备注名称，格式为: 备注");
 }
-async function sendNotify(text, desp, params = {}, author = '\n\n本通知 By 6dylan6',strsummary="") {
+async function sendNotify(text, desp, params = {}, author = '\n\n本通知 By ccwav Mod', strsummary = "") {
     console.log(`开始发送通知...`); 
 	
 	//NOTIFY_FILTERBYFILE代码来自Ca11back.
@@ -348,7 +354,7 @@ async function sendNotify(text, desp, params = {}, author = '\n\n本通知 By 6d
                                 if (DisableCkBody.code == 200) {
                                     console.log(`京东账号` + strdecPtPin + `已失效,自动禁用成功!\n`);
 
-                                    strNotifyOneTemp = `京东账号: ` + strdecPtPin + ` 已失效,已自动禁用!\n如果要继续挂机，请重新登录账号，账号有效期为30天.`;
+                                    strNotifyOneTemp = `京东账号: ` + strdecPtPin + ` 已失效,自动禁用成功!\n如果要继续挂机，请联系管理员重新登录账号，账号有效期为30天.`;
                                     strNotifyOneTemp += "\n任务标题：" + strtext;
                                     if (strAllNotify)
                                         strNotifyOneTemp += `\n` + strAllNotify;
@@ -359,7 +365,7 @@ async function sendNotify(text, desp, params = {}, author = '\n\n本通知 By 6d
 
                                 } else {
                                     console.log(`京东账号` + strPtPin + `已失效,自动禁用失败!\n`);
-                                    strNotifyOneTemp = `京东账号: ` + strdecPtPin + ` 已失效!\n如果要继续挂机，请重新登录账号，账号有效期为30天.`;
+                                    strNotifyOneTemp = `京东账号: ` + strdecPtPin + ` 已失效!\n如果要继续挂机，请联系管理员重新登录账号，账号有效期为30天.`;
                                     strNotifyOneTemp += "\n任务标题：" + strtext;
                                     if (strAllNotify)
                                         strNotifyOneTemp += `\n` + strAllNotify;
@@ -464,7 +470,7 @@ async function sendNotify(text, desp, params = {}, author = '\n\n本通知 By 6d
         const titleIndexGp5 = notifyGroup5List.findIndex((item) => item === strTitle);
         const notifyGroup6List = process.env.NOTIFY_GROUP6_LIST ? process.env.NOTIFY_GROUP6_LIST.split('&') : [];
         const titleIndexGp6 = notifyGroup6List.findIndex((item) => item === strTitle);
-		    const notifyGroup7List = process.env.NOTIFY_GROUP7_LIST ? process.env.NOTIFY_GROUP7_LIST.split('&') : [];
+		const notifyGroup7List = process.env.NOTIFY_GROUP7_LIST ? process.env.NOTIFY_GROUP7_LIST.split('&') : [];
         const titleIndexGp7 = notifyGroup7List.findIndex((item) => item === strTitle);
 		
         if (titleIndex2 !== -1) {
@@ -487,7 +493,7 @@ async function sendNotify(text, desp, params = {}, author = '\n\n本通知 By 6d
             console.log(`${strTitle} 在群组6推送名单中，初始化群组推送`);
             UseGroupNotify = 6;
         }
-	    	if (titleIndexGp7 !== -1) {
+		if (titleIndexGp7 !== -1) {
             console.log(`${strTitle} 在群组7推送名单中，初始化群组推送`);
             UseGroupNotify = 7;
         }
@@ -526,7 +532,7 @@ async function sendNotify(text, desp, params = {}, author = '\n\n本通知 By 6d
                             console.log("自定义设定强制使用组6配置通知...");
                             UseGroupNotify = 6;
                         }
-					             	if (strCustomTempArr[1] == "组7") {
+						if (strCustomTempArr[1] == "组7") {
                             console.log("自定义设定强制使用组6配置通知...");
                             UseGroupNotify = 7;
                         }
@@ -1236,7 +1242,7 @@ async function sendNotify(text, desp, params = {}, author = '\n\n本通知 By 6d
             }
             break;
 			
-		    case 7:
+		case 7:
             //==========================第七套环境变量赋值=========================
 
             if (process.env.GOBOT_URL7 && Use_gobotNotify) {
@@ -1370,7 +1376,7 @@ async function sendNotify(text, desp, params = {}, author = '\n\n本通知 By 6d
             if (envs[0]) {
                 var strTempdesp = [];
                 var strAllNotify = "";
-                if (text == "京东资产统计" || text == "京东资产统计#2" || text == "京东资产统计#3" || text == "京东资产统计#4") {
+                if (text == "京东资产变动" || text == "京东资产变动#2" || text == "京东资产变动#3" || text == "京东资产变动#4") {
                     strTempdesp = desp.split('🎏🎏🎏🎏🎏🎏🎏🎏🎏🎏🎏🎏🎏');
                     if (strTempdesp.length == 2) {
                         strAllNotify = strTempdesp[0];
@@ -1435,7 +1441,7 @@ async function sendNotify(text, desp, params = {}, author = '\n\n本通知 By 6d
                             //额外处理1，nickName包含星号
                             $.nickName = $.nickName.replace(new RegExp(`[*]`, 'gm'), "[*]");
                             text = text.replace(new RegExp(`${$.UserName}|${$.nickName}`, 'gm'), $.Remark);
-                            if (text == "京东资产统计" || text == "京东资产统计#2" || text == "京东资产统计#3" || text == "京东资产统计#4") {
+                            if (text == "京东资产变动" || text == "京东资产变动#2" || text == "京东资产变动#3" || text == "京东资产变动#4") {
                                 var Tempinfo = getQLinfo(cookie, envs[i].created, envs[i].timestamp, envs[i].remarks);
                                 if (Tempinfo) {
                                     $.Remark += Tempinfo;
@@ -1581,7 +1587,7 @@ function getQLinfo(strCK, intcreated, strTimestamp, strRemark) {
     var strCheckCK = strCK.match(/pt_key=([^; ]+)(?=;?)/) && strCK.match(/pt_key=([^; ]+)(?=;?)/)[1];
     var strPtPin = decodeURIComponent(strCK.match(/pt_pin=([^; ]+)(?=;?)/) && strCK.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
     var strReturn = "";
-    //if (strCheckCK.substring(0, 3) == "AAJ") {
+    if (strCheckCK.substring(0, 3) == "AAJ") {
         var DateCreated = new Date(intcreated);
         var DateTimestamp = new Date(strTimestamp);
         var DateToday = new Date();
@@ -1606,12 +1612,12 @@ function getQLinfo(strCK, intcreated, strTimestamp, strRemark) {
         var UseDay = Math.ceil((DateToday.getTime() - DateCreated.getTime()) / 86400000);
         var LogoutDay = 30 - Math.ceil((DateToday.getTime() - DateTimestamp.getTime()) / 86400000);
         if (LogoutDay < 1) {
-            strReturn = "\n【登录信息】已服务" + UseDay + "天(账号即将到期，请重登续期)"
+            strReturn = "\n【登录信息】总挂机" + UseDay + "天(账号即将到期，请重登续期)"
         } else {
-            strReturn = "\n【登录信息】已服务" + UseDay + "天(有效期约剩" + LogoutDay + "天)"
+            strReturn = "\n【登录信息】总挂机" + UseDay + "天(有效期约剩" + LogoutDay + "天)"
         }
 
-    //}
+    }
     return strReturn
 }
 
@@ -1632,14 +1638,14 @@ function getRemark(strRemark) {
     }
 }
 
-async function sendNotifybyWxPucher(text, desp, PtPin, author = '\n\n本通知 By 6dylan6', strsummary = "") {
+async function sendNotifybyWxPucher(text, desp, PtPin, author = '\n\n本通知 By ccwav Mod', strsummary = "") {
 
     try {
         var Uid = "";
         var UserRemark = "";
         var strTempdesp = [];
         var strAllNotify = "";
-        if (text == "京东资产统计") {
+        if (text == "京东资产变动") {
             strTempdesp = desp.split('🎏🎏🎏🎏🎏🎏🎏🎏🎏🎏🎏🎏🎏');
             if (strTempdesp.length == 2) {
                 strAllNotify = strTempdesp[0];
@@ -1660,7 +1666,7 @@ async function sendNotifybyWxPucher(text, desp, PtPin, author = '\n\n本通知 B
                     WP_UIDS_ONE = Uid;
                     console.log("正在发送一对一通知,请稍后...");
 
-                    if (text == "京东资产统计") {
+                    if (text == "京东资产变动") {
                         try {
                             $.nickName = "";
                             $.FoundPin = "";
@@ -1966,57 +1972,58 @@ function BarkNotify(text, desp, params = {}) {
 }
 
 function tgBotNotify(text, desp) {
-    return new Promise((resolve) => {
-        if (TG_BOT_TOKEN && TG_USER_ID) {
-            const options = {
-                url: `https://${TG_API_HOST}/bot${TG_BOT_TOKEN}/sendMessage`,
-                body: `chat_id=${TG_USER_ID}&text=${text}\n\n${desp}&disable_web_page_preview=true`,
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                timeout,
-            };
-            if (TG_PROXY_HOST && TG_PROXY_PORT) {
-                const tunnel = require('tunnel');
-                const agent = {
-                    https: tunnel.httpsOverHttp({
-                        proxy: {
-                            host: TG_PROXY_HOST,
-                            port: TG_PROXY_PORT * 1,
-                            proxyAuth: TG_PROXY_AUTH,
-                        },
-                    }),
-                };
-                Object.assign(options, {
-                    agent
-                });
+  return new Promise(resolve => {
+    if (TG_BOT_TOKEN && TG_USER_ID) {
+      const options = {
+        url: `https://${TG_API_HOST}/bot${TG_BOT_TOKEN}/sendMessage`,
+        json: {
+            chat_id: `${TG_USER_ID}`,
+            text: `${text}\n\n${desp}`,
+            disable_web_page_preview:true,
+          },
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        timeout
+      }
+      if (TG_PROXY_HOST && TG_PROXY_PORT) {
+        const tunnel = require("tunnel");
+        const agent = {
+          https: tunnel.httpsOverHttp({
+            proxy: {
+              host: TG_PROXY_HOST,
+              port: TG_PROXY_PORT * 1,
+              proxyAuth: TG_PROXY_AUTH
             }
-            $.post(options, (err, resp, data) => {
-                try {
-                    if (err) {
-                        console.log('telegram发送通知消息失败！！\n');
-                        console.log(err);
-                    } else {
-                        data = JSON.parse(data);
-                        if (data.ok) {
-                            console.log('Telegram发送通知消息成功🎉。\n');
-                        } else if (data.error_code === 400) {
-                            console.log('请主动给bot发送一条消息并检查接收用户ID是否正确。\n');
-                        } else if (data.error_code === 401) {
-                            console.log('Telegram bot token 填写错误。\n');
-                        }
-                    }
-                } catch (e) {
-                    $.logErr(e, resp);
-                }
-                finally {
-                    resolve(data);
-                }
-            });
-        } else {
-            resolve();
+          })
         }
-    });
+        Object.assign(options, {agent})
+      }
+      $.post(options, (err, resp, data) => {
+        try {
+          if (err) {
+            console.log('telegram发送通知消息失败！！\n')
+            console.log(err);
+          } else {
+            data = JSON.parse(data);
+            if (data.ok) {
+              console.log('Telegram发送通知消息成功�。\n')
+            } else if (data.error_code === 400) {
+              console.log('请主动给bot发送一条消息并检查接收用户ID是否正确。\n')
+            } else if (data.error_code === 401) {
+              console.log('Telegram bot token 填写错误。\n')
+            }
+          }
+        } catch (e) {
+          $.logErr(e, resp);
+        } finally {
+          resolve(data);
+        }
+      })
+    } else {     
+      resolve()
+    }
+  })
 }
 
 function ddBotNotify(text, desp) {
