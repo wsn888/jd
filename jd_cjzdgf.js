@@ -3,7 +3,7 @@
 一共有2个变量
 jd_cjhy_activityId  活动ID 必需
 jd_cjhy_activityUrl 活动地址 必需
-const $ = new Env("微定制瓜分通用")
+const $ = new Env("CJ组队瓜分京豆")
 cron:10 10 10 10 *
 ============Quantumultx===============
 [task_local]
