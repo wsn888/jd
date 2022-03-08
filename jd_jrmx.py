@@ -236,7 +236,7 @@ if __name__ == '__main__':
     get_remarkinfo()
     
     
-    jdjrcookie=os.environ["JDJR_COOKIE"]
+    jdjrcookie=os.environ["JD_COOKIE"]
     
     UserAgent=randomuserAgent()
     info=JDSignValidator('https://jrmfp.jr.jd.com/')
