@@ -1,4 +1,3 @@
-
 /*
 京东通天塔--签到
 脚本更新时间：2021-12-17 14:20
@@ -6,7 +5,7 @@
 ===========================
 [task_local]
 #京东通天塔--签到
-3 1,11 * * * jd_m_sign.js, tag=京东通天塔--签到, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
+3 1,11 * * * jd_m_sign.js, tag=京东通天塔--签到, enabled=true
  */
 
 const $ = new Env('京东通天塔--签到');
