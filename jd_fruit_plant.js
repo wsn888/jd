@@ -1,7 +1,7 @@
 /**
  * 农场自动收+种4级
  */
-
+const $ = new Env('农场自动收+种4级');
 import USER_AGENT, {o2s, requireConfig, wait} from "./TS_USER_AGENTS"
 import axios from "axios";
 
