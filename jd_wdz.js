@@ -1,7 +1,7 @@
 /**
  * 微定制瓜分京豆
  * @author gua的代码修改而来.
- * @description 下面三个id是今天活动
+ * @description 代码加密有啥意思？大家一起玩才有意思..下面三个id是今天活动。.
  * @param activityId 活动id
  * @param activityUrl 活动url
  * @param pin 用户名

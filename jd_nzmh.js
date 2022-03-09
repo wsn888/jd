@@ -8,17 +8,14 @@
 ============Quantumultx===============
 [task_local]
 #女装盲盒
-35 1,23 * * * jd_nzmh.js, tag=女装盲盒, enabled=true
-
+35 2,12 * * * jd_nzmh.js, tag=女装盲盒, enabled=true
 ================Loon==============
 [Script]
-cron "35 1,23 * * *" jd_nzmh.js,tag=女装盲盒
-
+cron "35 2,12 * * *" jd_nzmh.js,tag=女装盲盒
 ===============Surge=================
-女装盲盒 = type=cron,cronexp="35 1,23 * * *",wake-system=1,timeout=3600,jd_nzmh.js
-
+女装盲盒 = type=cron,cronexp="35 2,12 * * *",wake-system=1,timeout=3600,jd_nzmh.js
 ============小火箭=========
-女装盲盒 = type=cron,jd_nzmh.js, cronexpr="35 1,23 * * *", timeout=3600, enable=true
+女装盲盒 = type=cron,jd_nzmh.js, cronexpr="35 8,12 * * *", timeout=3600, enable=true
  */
 const $ = new Env('女装盲盒抽京豆');
 const notify = $.isNode() ? require('./sendNotify') : '';
