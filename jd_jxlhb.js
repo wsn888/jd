@@ -12,7 +12,7 @@
 [Script]
 cron "4 3,13,21 * * *" jd_jxlhb.js,tag=京喜领88元红包
 ================Surge===============
-京喜领88元红包 = type=cron,cronexp="4 3,13,21 * * *",wake-system=1,timeout=3600,jd_scripts/jd_jxlhb.js
+京喜领88元红包 = type=cron,cronexp="4 3,13,21 * * *",wake-system=1,timeout=3600,jd_jxlhb.js
 ===============小火箭==========
 京喜领88元红包 = type=cron,jd_jxlhb.js, cronexpr="4 3,13,21 * * *", timeout=3600, enable=true
  */
@@ -145,6 +145,7 @@ async function main() {
   await $.wait(2000);
   if (!$.openFail){
   await getUserInfo();
+  }
 }
 //参与活动
 function joinActive() {
