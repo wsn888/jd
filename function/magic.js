@@ -4,7 +4,7 @@ const axios = require('axios');
 const fs = require("fs");
 const {format} = require("date-fns");
 const notify = require('./sendNotify');
-const jdCookieNode = require('./jdcookie.js');
+const jdCookieNode = require('./jdCookie.js');
 const CryptoJS = require("crypto-js");
 const got = require("got");
 let cookies = [];
@@ -53,7 +53,7 @@ const USER_AGENTS = [
     "jdapp;iPhone;10.0.2;14.1;network/wifi;Mozilla/5.0 (iPhone; CPU iPhone OS 14_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1",
 ]
 
-const $ = axios.create({timeout: 4000});
+const $ = axios.create({timeout: 24000});
 $.defaults.headers['Accept'] = '*/*';
 $.defaults.headers['User-Agent'] = USER_AGENTS[randomNumber(0,
     USER_AGENTS.length)];
