@@ -3,7 +3,7 @@
 <ul>
 <li>
 拉库命令：</br>
-ql repo https://ghproxy.com/https://github.com/wsn888/jd.git "jd_|jx_|wsn_|jdCookie" "" "^jd[^_]|utils|function|sendNotify|ql.js"
+ql repo https://ghproxy.com/https://github.com/wsn888/jd.git "jd_|jx_|wsn_|jdCookie" "" "^jd[^_]|jd_Cookie|magic|cleancart_activity|ZooFaker_Necklace|USER|JD|JDJR|utils|function|sign|ql|sendNotify"
 </li>
 <br>
 <li>
