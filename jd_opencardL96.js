@@ -60,7 +60,7 @@ let activityCookie =''
             '89332fa0c0214f9d90dd51337c53245f',
         ]
     }
-  $.shareUuid = authorCodeList[Math.floor((Math.random() * authorCodeList.length))]
+  $.shareUuid = '1'
   console.log(`入口:\nhttps://lzkjdz-isv.isvjcloud.com/m/1000410747/99/${$.activityId}/?helpUuid=${$.shareUuid}`)
 
   for (let i = 0; i < cookiesArr.length; i++) {
