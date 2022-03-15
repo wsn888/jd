@@ -1,11 +1,18 @@
+//20 * * * * jd_jx_factory_automation.js
+//其他活动自动化 以后再写
 /*
 [task_local]
 京喜工厂自动化
+20 7,19 * * * jd_jx_factory_automation.js, tag=京喜工厂自动化, enabled=true
+================Loon==============
+[Script]
+cron "20 7,19 * * *" script-path=jd_jx_factory_automation.js,tag=京喜工厂自动化
+
 变量：京喜工厂自动化生产(填写需要生产的商品名)
 配合京喜工厂商品列表详情使用
-//export COMMODITY_NAME="芦荟洗手液2瓶"
+//export COMMODITY_NAME=""
 */
-const {Env} = require('./function/magic');
+const {Env} = require('./utils/magic');
 const $ = new Env('M京喜工厂自动化');
 let commodityName = process.env.COMMODITY_NAME ? process.env.COMMODITY_NAME
     : '还没设置要生产商品的变量COMMODITY_NAME,先运行获取商品任务，例：export COMMODITY_NAME="芦荟洗手液2瓶"'
