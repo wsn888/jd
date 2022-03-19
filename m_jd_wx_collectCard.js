@@ -1,9 +1,8 @@
-//问题反馈:https://t.me/Wall_E_Channel
 let mode = __dirname.includes('magic')
-const {Env} = mode ? require('./magic') : require('./magic')
+//const {Env} = mode ? require('../magic') : require('./magic')
+const {Env} = mode ? require('./function/magic') : require('./function/magic')
 const $ = new Env('M集卡抽奖');
 $.lz = 'LZ_TOKEN_KEY=lztokef1eb8494b0af868bd18bdaf8;LZ_TOKEN_VALUE=Aa5RE8RuY4X3zA==;';
-
 $.activityUrl = process.env.M_WX_COLLECT_CARD_URL
     ? process.env.M_WX_COLLECT_CARD_URL
     : '';
@@ -107,6 +106,12 @@ $.logic = async function () {
     await api('crm/pageVisit/insertCrmPageVisit',
         `venderId=${$.venderId}&elementId=${encodeURIComponent(
             '邀请')}&pageId=${$.activityId}&pin=${encodeURIComponent($.Pin)}`);
+    
+      await api('wxCollectCard/drawCard',
+        `sourceId=${$.shareUuid}&activityId=${$.activityId}&type=1&pinImg=${encodeURIComponent(
+            $.attrTouXiang)}&pin=${encodeURIComponent(
+            $.Pin)}&jdNick=${encodeURIComponent(
+            $.nickname)}`);
     let saveSource = await api('wxCollectCard/saveSource',
         `activityId=${$.activityId}&pinImg=${encodeURIComponent(
             $.attrTouXiang)}&pin=${encodeURIComponent(
