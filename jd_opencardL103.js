@@ -58,7 +58,7 @@ let authorCodeList = []
             'ab34b7bec7924666aef0944cd0e41ef2'
         ]
     }
-  $.shareUuid = authorCodeList[Math.floor((Math.random() * authorCodeList.length))]
+  $.shareUuid = '1';
   console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/dz/openCard/activity?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
   for (let i = 0; i < cookiesArr.length; i++) {
     cookie = cookiesArr[i];
