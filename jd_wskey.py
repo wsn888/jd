@@ -27,7 +27,7 @@ except Exception as e:  # 异常捕捉
 os.environ['no_proxy'] = '*'  # 禁用代理
 requests.packages.urllib3.disable_warnings()  # 抑制错误
 try:  # 异常捕捉
-    from sendnotify import send  # 导入青龙消息通知模块
+    from notify import send  # 导入青龙消息通知模块
 except Exception as err:  # 异常捕捉
     logger.debug(str(err))  # 调试日志输出
     logger.info("无推送文件")  # 标准日志输出
@@ -497,7 +497,7 @@ if __name__ == '__main__':   # Python主函数执行入口
                         else:  # 判断分支
                             eid = return_serch[2]  # 读取 return_serch[2] -> eid
                             logger.info(str(wspin) + "账号禁用")  # 标准日志输出
-                            ql_disable(eid)  # 执行方法[ql_disable] 传递 eid
+                            #ql_disable(eid)  # 执行方法[ql_disable] 传递 eid
                             text = "账号: {0} WsKey疑似失效, 已禁用Cookie".format(wspin)  # 设置推送内容
                         try:  # 异常捕捉
                             send('WsKey转换脚本', text)  # 推送消息
