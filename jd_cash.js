@@ -8,17 +8,14 @@
 ============Quantumultx===============
 [task_local]
 #签到领现金
-2 0-23/4 * * * jd_cash.js, tag=签到领现金, enabled=true
-
+5 0-23/4 * * * jd_cash.js, tag=签到领现金, , enabled=true
 ================Loon==============
 [Script]
-cron "2 0-23/4 * * *" script-path=jd_cash.js,tag=签到领现金
-
+cron "5 0-23/4 * * *" script-path=jd_cash.js,tag=签到领现金
 ===============Surge=================
-签到领现金 = type=cron,cronexp="2 0-23/4 * * *",wake-system=1,timeout=3600,script-path=jd_cash.js
-
+签到领现金 = type=cron,cronexp="5 0-23/4 * * *",wake-system=1,timeout=3600,script-path=jd_cash.js
 ============小火箭=========
-签到领现金 = type=cron,script-path=jd_cash.js, cronexpr="2 0-23/4 * * *", timeout=3600, enable=true
+签到领现金 = type=cron,script-path=jd_cash.js, cronexpr="5 0-23/4 * * *", timeout=3600, enable=true
  */
 const $ = new Env('签到领现金潘达接口版');
 const notify = $.isNode() ? require('./sendNotify') : '';
