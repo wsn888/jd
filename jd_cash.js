@@ -8,7 +8,7 @@
 ============Quantumultx===============
 [task_local]
 #签到领现金
-5 0-23/4 * * * jd_cash.js, tag=签到领现金, , enabled=true
+5 0-23/4 * * * jd_cash.js, tag=签到领现金, enabled=true
 ================Loon==============
 [Script]
 cron "5 0-23/4 * * *" script-path=jd_cash.js,tag=签到领现金
@@ -17,6 +17,7 @@ cron "5 0-23/4 * * *" script-path=jd_cash.js,tag=签到领现金
 ============小火箭=========
 签到领现金 = type=cron,script-path=jd_cash.js, cronexpr="5 0-23/4 * * *", timeout=3600, enable=true
  */
+ 
 const $ = new Env('签到领现金潘达接口版');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
@@ -317,7 +318,7 @@ function showMsg() {
 function readShareCode() {
   console.log(`开始`)
   return new Promise(async resolve => {
-    $.get({url: `http://code.chiang.fun/api/v1/jd/jdcash/read/${randomCount}/`, 'timeout': 30000}, (err, resp, data) => {
+    $.get({url: `http://11111113.fun/api/v1/jd/jdcash/read/${randomCount}/`, 'timeout': 30000}, (err, resp, data) => {
       try {
         if (err) {
           console.log(`${JSON.stringify(err)}`)
