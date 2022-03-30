@@ -3,6 +3,7 @@
 一共有2个变量
 jd_fxyl_activityId  活动ID 必需
 
+
 其他变量：
 OWN_COOKIE_NUM  需要被助力的人数
 HELP_COOKIE_NUM 助力的人数
@@ -124,10 +125,11 @@ if ($.isNode()) {
                 $.authorCode = authorCodeList[i]
                 console.log('去助力: '+$.authorCode)
                 await share();
+				await $.wait(3000)
                 if ($.errorMessage === '活动太火爆，还是去买买买吧') {
                     break
                 }
-				await $.wait(3000)
+				
             }
         }
     }
@@ -147,6 +149,7 @@ if ($.isNode()) {
 			await $.wait(3000)
         }
     }
+	        await $.wait(2000)
 })()
     .catch((e) => {
         $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
