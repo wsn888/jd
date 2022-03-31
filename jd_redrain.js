@@ -5,14 +5,14 @@
 ==============Quantumult X==============
 [task_local]
 #整点京豆雨
-0 * * * * https://raw.githubusercontent.com/KingRan/JDJB/main/jd_redrain.js, tag=整点京豆雨, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
+0 * * * * jd_redrain.js, tag=整点京豆雨, enabled=true
 ==============Loon==============
 [Script]
-cron "0 * * * *" script-path=https://raw.githubusercontent.com/KingRan/JDJB/main/jd_redrain.js,tag=整点京豆雨
+cron "0 * * * *" jd_redrain.js,tag=整点京豆雨
 ================Surge===============
-整点京豆雨 = type=cron,cronexp="0 * * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/KingRan/JDJB/main/jd_redrain.js
+整点京豆雨 = type=cron,cronexp="0 * * * *",wake-system=1,timeout=3600,jd_redrain.js
 ===============小火箭==========
-整点京豆雨 = type=cron,script-path=https://raw.githubusercontent.com/KingRan/JDJB/main/jd_redrain.js, cronexpr="0 * * * *", timeout=3600, enable=true
+整点京豆雨 = type=cron,jd_redrain.js, cronexpr="0 * * * *", timeout=3600, enable=true
 */
 const $ = new Env('整点京豆雨');
 const notify = $.isNode() ? require('./sendNotify') : '';
@@ -46,7 +46,7 @@ if ($.isNode()) {
     let RedRainIds = await getRedRainIds(jd_redrain_url);
 	if (!RedRainIds) {
     await $.wait(1000)
-    RedRainIds = await getRedRainIds('https://gitee.com/KingRan521/JD-Scripts/raw/master/shareCodes/redrain.json')
+    RedRainIds = await getRedRainIds('https://cdn.jsdelivr.net/gh/KingRan/shareCodes@master/redrain.json')
 	}
     for (let i = 0; i < 1; i++) {
       jd_redrain_activityId = RedRainIds[0];
