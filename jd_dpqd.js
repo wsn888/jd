@@ -10,7 +10,7 @@ cron "15 2,14 * * *" jd_shop_sign.js,tag=店铺签到
 ============Surge=============
 店铺签到 = type=cron,cronexp="15 2,14 * * *",wake-system=1,timeout=3600,jd_shop_sign.js
 ===========小火箭========
-店铺签到 = type=cron,jd_shop_sign.jss, cronexpr="15 2,14 * * *", timeout=3600, enable=true
+店铺签到 = type=cron,jd_shop_sign.js, cronexpr="15 2,14 * * *", timeout=3600, enable=true
 */
 const $ = new Env('店铺签到');
 const notify = $.isNode() ? require('./sendNotify') : '';
@@ -33,7 +33,8 @@ const token = [
   "F28F320D6ACF02CFBF9F2718D76DDCDF",
   "D3A2F5DBC71205B3F7FB393D085A9C6C",
   "490047103854B8B5E17D3D76C2C65D1D",
-  "734DCFA4A578505A421F4689012DC75A"
+  "734DCFA4A578505A421F4689012DC75A",
+  "833857BA916CBE17638A463C3DBAD4BB"
 ]
 
 if ($.isNode()) {
