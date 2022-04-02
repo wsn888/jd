@@ -7,6 +7,7 @@
 默认：不执行 如需要请添加环境变量
 gua_cleancart_Run="true"
 gua_cleancart_SignUrl="" # 算法url
+gua_cleancart_Authorization="" # 算法url token 有则填
 
 ——————————————
 1.@&@ 前面加数字 指定账号pin
@@ -35,9 +36,10 @@ pin3@&@不清空👉该pin不清空
 防止没指定的账号购物车全清空
 
 */
-let jdSignUrl = 'https://jd.smiek.tk/jdcleancatr_21102717' // 算法url
+let jdSignUrl = '' // 算法url
+let Authorization = '' // 算法url token 有则填
 let cleancartRun = 'false'
-let cleancartProducts = '*@&@'
+let cleancartProducts = ''
 
 const $ = new Env('清空购物车');
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
@@ -57,6 +59,9 @@ if ($.isNode()) {
 message = ''
 
 jdSignUrl = $.isNode() ? (process.env.gua_cleancart_SignUrl ? process.env.gua_cleancart_SignUrl : `${jdSignUrl}`) : ($.getdata('gua_cleancart_SignUrl') ? $.getdata('gua_cleancart_SignUrl') : `${jdSignUrl}`);
+
+Authorization = process.env.gua_cleancart_Authorization ? process.env.gua_cleancart_Authorization : `${Authorization}`
+if(Authorization && Authorization.indexOf("Bearer ") === -1) Authorization = `Bearer ${Authorization}`
 
 cleancartRun = $.isNode() ? (process.env.gua_cleancart_Run ? process.env.gua_cleancart_Run : `${cleancartRun}`) : ($.getdata('gua_cleancart_Run') ? $.getdata('gua_cleancart_Run') : `${cleancartRun}`);
 
@@ -89,6 +94,9 @@ for (let i in productsArr) {
   }
   if(!cleancartProducts){
     console.log('脚本停止\n请添加环境变量[gua_cleancart_products]\n清空商品\n内容规则看脚本文件')
+    return
+  }
+  if(jdSignUrl.indexOf("://jd.smiek.tk/") > -1) {
     return
   }
   $.out = false
@@ -278,7 +286,7 @@ function jdSign(fn,body) {
     return ''
   }
   return new Promise((resolve) => {
-    let url = {
+    let options = {
       url: jdSignUrl,
       body:`{"fn":"${fn}","body":${body}}`,
       followRedirect:false,
@@ -289,12 +297,13 @@ function jdSign(fn,body) {
       },
       timeout:30000
     }
-    $.post(url, async (err, resp, data) => {
+    if(Authorization) options["headers"]["Authorization"] = Authorization
+    $.post(options, async (err, resp, data) => {
       try {
         // console.log(data)
         let res = $.toObj(data,data)
         if(typeof res === 'object' && res){
-          if(res.code && res.code == 200 && res.msg == "ok" && res.data){
+          if(res.code && res.code == 200 && res.data){
             if(res.data.sign) sign = res.data.sign || ''
             if(sign != '') resolve(sign)
           }else{

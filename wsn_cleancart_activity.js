@@ -1,7 +1,7 @@
 /*
-
 */
 let jdSignUrl = '' // 算法url
+let Authorization = '' // 算法url token 有则填
 let got = '';
 try{
   got = require('got');
@@ -11,6 +11,8 @@ try{
 
 
 jdSignUrl = process.env.gua_cleancart_SignUrl ? process.env.gua_cleancart_SignUrl : `${jdSignUrl}`
+Authorization = process.env.gua_cleancart_Authorization ? process.env.gua_cleancart_Authorization : `${Authorization}`
+if(Authorization && Authorization.indexOf("Bearer ") === -1) Authorization = `Bearer ${Authorization}`
 let cookie = ''
 let out = false
 
@@ -22,6 +24,10 @@ async function clean(ck,url,goodsArr){
       if(!ck) return ''
       if(!jdSignUrl) jdSignUrl = url
       cookie = ck
+      if(jdSignUrl.indexOf("://jd.smiek.tk/") > -1) {
+        resolve(msg)
+        return false
+      }
       let signBody = `{"homeWishListUserFlag":"1","userType":"0","updateTag":true,"showPlusEntry":"2","hitNewUIStatus":"1","cvhv":"049591","cartuuid":"hjudwgohxzVu96krv/T6Hg==","adid":""}`
       let body = await jdSign('cartClearQuery', signBody)
       if(out) return
@@ -187,7 +193,7 @@ function jdSign(fn,body) {
     return ''
   }
   return new Promise((resolve) => {
-    let opts = {
+    let options = {
       url: jdSignUrl,
       body:`{"fn":"${fn}","body":${body}}`,
       headers: {
@@ -197,13 +203,14 @@ function jdSign(fn,body) {
       },
       timeout:30000
     }
-    got.post(opts).then(
+    if(Authorization) options["headers"]["Authorization"] = Authorization
+    got.post(options).then(
       (resp) => {
         const {body:data } = resp
         try {
           let res = jsonParse(data)
           if(typeof res === 'object' && res){
-            if(res.code && res.code == 200 && res.msg == "ok" && res.data){
+            if(res.code && res.code == 200 && res.data){
               if(res.data.sign) sign = res.data.sign || ''
               if(sign != '') resolve(sign)
             }else{
