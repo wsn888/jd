@@ -8,18 +8,16 @@
 ============Quantumultx===============
 [task_local]
 #签到领现金
-2 0-23/4 * * * jd_cash.js, tag=签到领现金, enabled=true
-
+5 2,9 * * * jd_cash.js, tag=签到领现金, enabled=true
 ================Loon==============
 [Script]
-cron "2 0-23/4 * * *" script-path=jd_cash.js,tag=签到领现金
-
+cron "5 2,9 * * *" script-path=jd_cash.js,tag=签到领现金
 ===============Surge=================
-签到领现金 = type=cron,cronexp="2 0-23/4 * * *",wake-system=1,timeout=3600,script-path=jd_cash.js
-
+签到领现金 = type=cron,cronexp="5 2,9 * * *",wake-system=1,timeout=3600,script-path=jd_cash.js
 ============小火箭=========
-签到领现金 = type=cron,script-path=jd_cash.js, cronexpr="2 0-23/4 * * *", timeout=3600, enable=true
+签到领现金 = type=cron,script-path=jd_cash.js, cronexpr="5 2,9 * * *", timeout=3600, enable=true
  */
+ 
 const $ = new Env('签到领现金_Panda');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
@@ -440,6 +438,39 @@ function taskUrl(functionId, body = {}) {
   }
 }
 
+function getAuthorShareCode(url) {
+  return new Promise(resolve => {
+    const options = {
+      url: `${url}?${new Date()}`, "timeout": 30000, headers: {
+        "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
+      }
+    };
+    if ($.isNode() && process.env.TG_PROXY_HOST && process.env.TG_PROXY_PORT) {
+      const tunnel = require("tunnel");
+      const agent = {
+        https: tunnel.httpsOverHttp({
+          proxy: {
+            host: process.env.TG_PROXY_HOST,
+            port: process.env.TG_PROXY_PORT * 1
+          }
+        })
+      }
+      Object.assign(options, { agent })
+    }
+    $.get(options, async (err, resp, data) => {
+      try {
+        if (err) {
+        } else {
+          if (data) data = JSON.parse(data)
+        }
+      } catch (e) {
+        // $.logErr(e, resp)
+      } finally {
+        resolve(data);
+      }
+    })
+  })
+}
 function TotalBean() {
   return new Promise(async resolve => {
     const options = {
