@@ -3,21 +3,24 @@
 可互助，助力码每日不变，只变日期
 活动入口：京东APP搜索领现金进入
 更新时间：2021-06-07
+PandaToken 请前往 https://t.me/pang_da_bot  获取Token
 已支持IOS双京东账号,Node.js支持N个京东账号
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
 ============Quantumultx===============
 [task_local]
 #签到领现金
-5 2,9 * * * jd_cash.js, tag=签到领现金, enabled=true
+11 1,20 * * * jd_cash.js, tag=签到领现金, enabled=true
+
 ================Loon==============
 [Script]
-cron "5 2,9 * * *" script-path=jd_cash.js,tag=签到领现金
+cron "11 1,20 * * *" script-path=jd_cash.js,tag=签到领现金
+
 ===============Surge=================
-签到领现金 = type=cron,cronexp="5 2,9 * * *",wake-system=1,timeout=3600,script-path=jd_cash.js
+签到领现金 = type=cron,cronexp="11 1,20 * * *",wake-system=1,timeout=3600,script-path=jd_cash.js
+
 ============小火箭=========
-签到领现金 = type=cron,script-path=jd_cash.js, cronexpr="5 2,9 * * *", timeout=3600, enable=true
+签到领现金 = type=cron,script-path=jd_cash.js, cronexpr="11 1,20 * * *", timeout=3600, enable=true
  */
- 
 const $ = new Env('签到领现金_Panda');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
@@ -438,39 +441,6 @@ function taskUrl(functionId, body = {}) {
   }
 }
 
-function getAuthorShareCode(url) {
-  return new Promise(resolve => {
-    const options = {
-      url: `${url}?${new Date()}`, "timeout": 30000, headers: {
-        "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
-      }
-    };
-    if ($.isNode() && process.env.TG_PROXY_HOST && process.env.TG_PROXY_PORT) {
-      const tunnel = require("tunnel");
-      const agent = {
-        https: tunnel.httpsOverHttp({
-          proxy: {
-            host: process.env.TG_PROXY_HOST,
-            port: process.env.TG_PROXY_PORT * 1
-          }
-        })
-      }
-      Object.assign(options, { agent })
-    }
-    $.get(options, async (err, resp, data) => {
-      try {
-        if (err) {
-        } else {
-          if (data) data = JSON.parse(data)
-        }
-      } catch (e) {
-        // $.logErr(e, resp)
-      } finally {
-        resolve(data);
-      }
-    })
-  })
-}
 function TotalBean() {
   return new Promise(async resolve => {
     const options = {
