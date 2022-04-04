@@ -5,7 +5,7 @@
 # 用不着每天跑，配合desi指定账号
 '''
 new Env('豆子7天统计');
-0 jd_beans_7days.py
+jd_beans_7days.py
 '''
 
 import requests
