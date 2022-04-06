@@ -8,8 +8,6 @@ JOY_COIN_MAXIMIZE =   最大化硬币收益，如果合成后全部挖土后还�
 
 如需关闭请添加变量，变量名：HELP_JOYPARK，变量值：false
 
-更新地址：https://github.com/Tsukasa007/my_script
-
 ============Quantumultx===============
 [task_local]
 #汪汪乐园养joy
