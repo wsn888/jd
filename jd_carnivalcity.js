@@ -1,24 +1,29 @@
 /*
 京东手机狂欢城活动，每日可获得20+以上京豆（其中20京豆是往期奖励，需第一天参加活动后，第二天才能拿到）
-活动时间: 2021-10-23至2021-11-13
+活动时间: 2022-04-06至2022-04-22
 活动入口：暂无 [活动地址](https://carnivalcity.m.jd.com/)
+
 往期奖励：
 a、第1名、第618名可获得实物手机一部
 b、 每日第2-10000名，可获得50个京豆
 c、 每日第10001-30000名可获得20个京豆
 d、 30000名之外，0京豆
+
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
 ===================quantumultx================
 [task_local]
 #京东手机狂欢城
-0 0-18/6 * * * jd_carnivalcity.js, tag=京东手机狂欢城, enabled=true
+1 0,6,12,18 * * * jd_carnivalcity.js, tag=京东手机狂欢城, enabled=true
+
 =====================Loon================
 [Script]
-cron "0 0-18/6 * * *" jd_carnivalcity.js, tag=京东手机狂欢城
+cron "1 0,6,12,18 * * *" script-path=jd_carnivalcity.js, tag=京东手机狂欢城
+
 ====================Surge================
-京东手机狂欢城 = type=cron,cronexp=0 0-18/6 * * *,wake-system=1,timeout=3600,jd_carnivalcity.js
+京东手机狂欢城 = type=cron,cronexp=1 0,6,12,18 * * *,wake-system=1,timeout=3600,jd_carnivalcity.js
+
 ============小火箭=========
-京东手机狂欢城 = type=cron,jd_carnivalcity.js, cronexpr="0 0-18/6 * * *", timeout=3600, enable=true
+京东手机狂欢城 = type=cron,script-path=jd_carnivalcity.js, cronexpr="1 0,6,12,18 * * *", timeout=3600, enable=true
 */
 const $ = new Env('京东手机狂欢城');
 const notify = $.isNode() ? require('./sendNotify') : '';
@@ -36,9 +41,10 @@ if ($.isNode()) {
   cookiesArr = [$.getdata('CookieJD'), $.getdata('CookieJD2'), ...jsonParse($.getdata('CookiesJD') || "[]").map(item => item.cookie)].filter(item => !!item);
 }
 const JD_API_HOST = 'https://api.m.jd.com/api';
-const activeEndTime = '2022/4/23 00:00:00+08:00';//活动结束时间
+const activeEndTime = '2022/04/22 00:00:00+08:00';//活动结束时间
 let nowTime = new Date().getTime() + new Date().getTimezoneOffset()*60*1000 + 8*60*60*1000;
 !(async () => {
+console.log(`\n入口：https://welfare.m.jd.com/#/home\n`);
   if (!cookiesArr[0]) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
     return;
@@ -114,7 +120,7 @@ async function JD818() {
     await getListRank();
     await getListIntegral();
     await getListJbean();
-    await check();//查询抽奖记录(未兑换的，发送提醒通知);
+    //await check();//查询抽奖记录(未兑换的，发送提醒通知);
     await showMsg()
   } catch (e) {
     $.logErr(e)
@@ -686,10 +692,10 @@ function getListIntegral() {
           if (data.code === 200) {
             $.integralCount = data.data.integralNum || 0;//累计活动积分
             message += `累计获得积分：${$.integralCount}\n`;
-            console.log(`开始抽奖，当前积分可抽奖${parseInt($.integralCount / 50)}次\n`);
+            //console.log(`开始抽奖，当前积分可抽奖${parseInt($.integralCount / 50)}次\n`);
             for (let i = 0; i < parseInt($.integralCount / 50); i ++) {
-              await lottery();
-              await $.wait(500);
+              //await lottery();
+              //await $.wait(500);
             }
           } else {
             console.log(`integralRecord失败：${JSON.stringify(data)}`);
