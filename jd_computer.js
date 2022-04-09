@@ -1,11 +1,11 @@
 /*
+自动车监控脚本-电脑配件
 #电脑配件ID任务jd_computer,自行加入以下环境变量，多个ID用@连接
-export computer_activityIdList="17"  
-
+export computer_activityId="16"  
 即时任务，无需cron
 */
 
-const $ = new Env('电脑配件通用ID任务');
+const $ = new Env('电脑配件');
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 
 const notify = $.isNode() ? require('./sendNotify') : '';
@@ -37,15 +37,8 @@ $.outFlag = 0
     return;
   }
   if (!activityIdList) {
-    $.log(`没有电脑配件ID，尝试获取远程`);
-    let data = await getData("https://cdn.jsdelivr.net/gh/KingRan/shareCodes@master/dlpj.json")
-    if (data && data.length) {
-        $.log(`获取到远程且有数据`);
-        activityIdList = data.join('@')
-    }else{
-        $.log(`获取失败或当前无远程数据`);
-        return
-    }
+    $.log(`\n没有电脑配件ID，改日再来～`);
+    return;
   }
   MD5()
   for (let i = 0; i < cookiesArr.length; i++) {
@@ -62,7 +55,7 @@ $.outFlag = 0
       let activityIdArr = activityIdList.split("@");
       for (let j = 0; j < activityIdArr.length; j++) {
       activityId = activityIdArr[j]
-      console.log(`电脑配件ID就位: ${activityId}，准备开始薅豆`);
+      console.log(`\n电脑配件ID就位: ${activityId}，准备开始薅豆`);
       await run();
        if($.bean > 0 || message) {
           let msg = `【京东账号${$.index}】${$.nickName || $.UserName}\n${$.bean > 0 && "获得"+$.bean+"京豆\n" || ""}${message}\n`
@@ -278,29 +271,7 @@ function extraTaskPrize() {
     })
   })
 }
-function getData(url) {
-  return new Promise(async resolve => {
-    const options = {
-      url: `${url}?${new Date()}`, "timeout": 10000, headers: {
-        "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
-      }
-    };
-    $.get(options, async (err, resp, data) => {
-      try {
-        if (err) {
-        } else {
-          if (data) data = JSON.parse(data)
-        }
-      } catch (e) {
-        // $.logErr(e, resp)
-      } finally {
-        resolve(data);
-      }
-    })
-    await $.wait(10000)
-    resolve();
-  })
-}
+
 /*
  *Progcessed By JSDec in 0.01s
  *JSDec - JSDec.js.org
