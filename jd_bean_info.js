@@ -1,3 +1,12 @@
+/*
+ * 详细版京东京豆统计
+ 
+ * 默认不发送通知。
+ 
+[task_local]
+#京豆详情统计
+20 22 * * * jd_bean_info.js, tag=京豆详情统计, enabled=true
+ * */
 const $ = new Env('京豆详情统计');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
@@ -20,6 +29,7 @@ if ($.isNode()) {
     $.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
     return;
   }
+  console.log(`\n正在查询今天所有账号的京豆收入......`);
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];
@@ -36,7 +46,7 @@ if ($.isNode()) {
       $.balance = 0;
       $.expiredBalance = 0;
       await TotalBean();
-      console.log(`\n********开始【京东账号${$.index}】${$.nickName || $.UserName}******\n`);
+      //console.log(`\n********开始【京东账号${$.index}】${$.nickName || $.UserName}******\n`);
       if (!$.isLogin) {
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
 

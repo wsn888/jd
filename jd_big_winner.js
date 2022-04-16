@@ -2,15 +2,28 @@
 省钱大赢家之翻翻乐
 一天可翻多次，但有上限
 运气好每次可得0.3元以上的微信现金(需京东账号绑定到微信)
-15 0,2,4,6 * * * jd_big_winner.js
+脚本兼容: QuantumultX, Surge,Loon, JSBox, Node.js
+=================================Quantumultx=========================
+[task_local]
+#省钱大赢家之翻翻乐
+20 0,6-23 * * * jd_big_winner.js, tag=省钱大赢家之翻翻乐, enabled=true
 
+=================================Loon===================================
+[Script]
+cron "20 0,6-23 * * *" script-path=jd_big_winner.js,tag=省钱大赢家之翻翻乐
+
+===================================Surge================================
+省钱大赢家之翻翻乐 = type=cron,cronexp="20 0,6-23 * * *",wake-system=1,timeout=3600,script-path=jd_big_winner.js
+
+====================================小火箭=============================
+省钱大赢家之翻翻乐 = type=cron,script-path=jd_big_winner.js, cronexpr="20 0,6-23 * * *", timeout=3600, enable=true
  */
 const $ = new Env('省钱大赢家之翻翻乐');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 //IOS等用户直接用NobyDa的jd cookie
-let cookiesArr = [], cookie = '', message = '', linkId = 'u_2EYfsxu0skdtZ6gbRjBQ', fflLinkId = 'WMDf1PTHmh8MYBpD97sieQ';
+let cookiesArr = [], cookie = '', message = '', linkId = 'PFbUR7wtwUcQ860Sn8WRfw', fflLinkId = 'YhCkrVusBVa_O2K-7xE6hA';
 const JD_API_HOST = 'https://api.m.jd.com/api';
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
@@ -38,16 +51,14 @@ const len = cookiesArr.length;
       $.index = i + 1;
       $.isLogin = true;
       $.nickName = '';
-      await TotalBean();
       console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
       await main()
-	  await $.wait(1000)
     }
   }
-  //if (message) {
-    //$.msg($.name, '', message);
+  if (message) {
+    $.msg($.name, '', message);
     //if ($.isNode()) await notify.sendNotify($.name, message);
- //}
+  }
 })()
     .catch((e) => {
       $.log('', `❌ ${$.name}, 失败! 原因: ${e}!`, '')
@@ -65,69 +76,32 @@ async function main() {
     if (!$.time) {
       console.log(`开始进行翻翻乐拿红包\n`)
       await gambleOpenReward();//打开红包
-	}
-    await openRedReward();
-    if ($.canApCashWithDraw) {
-        //提现
-       await apCashWithDraw($.rewardData.id, $.rewardData.poolBaseId, $.rewardData.prizeGroupId, $.rewardData.prizeBaseId, $.rewardData.prizeType);
+      if ($.canOpenRed) {
+        let time = 10
+        while (!$.canApCashWithDraw && $.changeReward && time--) {
+          await openRedReward();
+          await $.wait(500);
+        }
+        if ($.canApCashWithDraw) {
+          //提现
+          await openRedReward('gambleObtainReward', $.rewardData.rewardType);
+          await apCashWithDraw($.rewardData.id, $.rewardData.poolBaseId, $.rewardData.prizeGroupId, $.rewardData.prizeBaseId, $.rewardData.prizeType);
+        }
+      }
     }
   } catch (e) {
     $.logErr(e)
   }
 }
-function TotalBean () {
-  return new Promise( async resolve => {
-    const options = {
-      url: "https://me-api.jd.com/user_new/info/GetJDUserInfoUnion",
-      headers: {
-        Host: "me-api.jd.com",
-        Accept: "*/*",
-        Connection: "keep-alive",
-        Cookie: cookie,
-        "User-Agent": $.isNode() ? ( process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : ( require( './USER_AGENTS' ).USER_AGENT ) ) : ( $.getdata( 'JDUA' ) ? $.getdata( 'JDUA' ) : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1" ),
-        "Accept-Language": "zh-cn",
-        "Referer": "https://home.m.jd.com/myJd/newhome.action?sceneval=2&ufc=&",
-        "Accept-Encoding": "gzip, deflate, br"
-      }
-    }
-    $.get( options, ( err, resp, data ) => {
-      try {
-        if ( err ) {
-          $.logErr( err )
-        } else {
-          if ( data ) {
-            data = JSON.parse( data );
-            if ( data[ 'retcode' ] === "1001" ) {
-              $.isLogin = false; //cookie过期
-              return;
-            }
-            if ( data[ 'retcode' ] === "0" && data.data && data.data.hasOwnProperty( "userInfo" ) ) {
-              $.nickName = data.data.userInfo.baseInfo.nickname;
-            }
-            if ( data[ 'retcode' ] === '0' && data.data && data.data[ 'assetInfo' ] ) {
-              $.beanCount = data.data && data.data[ 'assetInfo' ][ 'beanNum' ];
-            }
-          } else {
-            $.log( '京东服务器返回空数据' );
-          }
-        }
-      } catch ( e ) {
-        $.logErr( e )
-      } finally {
-        resolve();
-      }
-    } )
-  } )
-}
 
 
+//查询剩余多长时间可进行翻翻乐
 function gambleHomePage() {
   const headers = {
     'Host': 'api.m.jd.com',
     'Origin': 'https://openredpacket-jdlite.jd.com',
     'Accept': 'application/json, text/plain, */*',
-    'User-Agent': $.isNode() ? ( process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : ( require( './USER_AGENTS' ).USER_AGENT ) ) : ( $.getdata( 'JDUA' ) ? $.getdata( 'JDUA' ) : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1" ),
-        "Accept-Language": "zh-cn",
+    'User-Agent': 'jdltapp;iPhone;3.3.2;14.4.1;network/wifi;Mozilla/5.0 (iPhone; CPU iPhone OS 14_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1',
     'Referer': `https://618redpacket.jd.com/withdraw?activityId=${linkId}&channel=wjicon&lng=&lat=&sid=&un_area=`,
     'Accept-Language': 'zh-cn',
     'Cookie': cookie
@@ -152,7 +126,7 @@ function gambleHomePage() {
               } else {
                 $.time = (data.data.leftTime / (60 * 1000)).toFixed(2);
               }
-              console.log( `\n查询下次翻翻乐剩余时间成功：\n京东账号【${ $.nickName || $.UserName}】距开始剩 ${$.time} 分钟`);
+              console.log(`\n查询下次翻翻乐剩余时间成功：\n京东账号【${$.UserName}】距开始剩 ${$.time} 分钟`);
             } else {
               console.log(`查询下次翻翻乐剩余时间失败：${JSON.stringify(data)}\n`);
             }
@@ -166,14 +140,13 @@ function gambleHomePage() {
     })
   })
 }
-
+//打开翻翻乐红包
 function gambleOpenReward() {
   const headers = {
     'Host': 'api.m.jd.com',
     'Origin': 'https://openredpacket-jdlite.jd.com',
     'Accept': 'application/json, text/plain, */*',
-    'User-Agent': $.isNode() ? ( process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : ( require( './USER_AGENTS' ).USER_AGENT ) ) : ( $.getdata( 'JDUA' ) ? $.getdata( 'JDUA' ) : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1" ),
-        "Accept-Language": "zh-cn",
+    'User-Agent': 'jdltapp;iPhone;3.3.2;14.4.1;network/wifi;Mozilla/5.0 (iPhone; CPU iPhone OS 14_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1',
     'Referer': `https://618redpacket.jd.com/withdraw?activityId=${linkId}&channel=wjicon&lng=&lat=&sid=&un_area=`,
     'Accept-Language': 'zh-cn',
     "Content-Type": "application/x-www-form-urlencoded",
@@ -195,7 +168,7 @@ function gambleOpenReward() {
           if (data) {
             data = JSON.parse(data);
             if (data['code'] === 0) {
-              console.log(`翻翻乐打开红包 成功，获得：${data.data.rewardValue}元现金\n`);
+              console.log(`翻翻乐打开红包 成功，获得：${data.data.rewardValue}元红包\n`);
             } else {
               console.log(`翻翻乐打开红包 失败：${JSON.stringify(data)}\n`);
               if (data.code === 20007) {
@@ -213,24 +186,24 @@ function gambleOpenReward() {
     })
   })
 }
-
-function openRedReward() {
+//翻倍红包
+function openRedReward(functionId = 'gambleChangeReward', type) {
   const headers = {
     'Host': 'api.m.jd.com',
     'Origin': 'https://openredpacket-jdlite.jd.com',
     'Accept': 'application/json, text/plain, */*',
-    'User-Agent': $.isNode() ? ( process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : ( require( './USER_AGENTS' ).USER_AGENT ) ) : ( $.getdata( 'JDUA' ) ? $.getdata( 'JDUA' ) : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1" ),
-        "Accept-Language": "zh-cn",
+    'User-Agent': 'jdltapp;iPhone;3.3.2;14.4.1;network/wifi;Mozilla/5.0 (iPhone; CPU iPhone OS 14_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1',
     'Referer': `https://618redpacket.jd.com/withdraw?activityId=${linkId}&channel=wjicon&lng=&lat=&sid=&un_area=`,
     'Accept-Language': 'zh-cn',
     "Content-Type": "application/x-www-form-urlencoded",
     'Cookie': cookie
   }
   const body = {'linkId': fflLinkId};
+  if (type) body['rewardType'] = type;
   const options = {
     url: `https://api.m.jd.com/`,
     headers,
-    body: `functionId=gambleObtainReward&body=${encodeURIComponent(JSON.stringify(body))}&t=${+new Date()}&appid=activities_platform&clientVersion=3.5.0`
+    body: `functionId=${functionId}&body=${encodeURIComponent(JSON.stringify(body))}&t=${+new Date()}&appid=activities_platform&clientVersion=3.5.0`
   }
   return new Promise(resolve => {
     $.post(options, (err, resp, data) => {
@@ -240,13 +213,40 @@ function openRedReward() {
           console.log(`${$.name} API请求失败，请检查网路重试`)
         } else {
           if (data) {
-            //console.log(`翻翻乐结果：${data}\n`);
+            console.log(`翻翻乐结果：${data}\n`);
             data = JSON.parse(data);
             if (data['code'] === 0) {
               $.rewardData = data.data;
-			  $.canApCashWithDraw = true;
+              if (data.data.rewardState === 1) {
+                if (data.data.rewardValue >= 0.3) {
+                  //已翻倍到0.3元，可以提现了
+                  $.canApCashWithDraw = true;
+                  $.changeReward = false;
+                  // message += `${data.data.rewardValue}元现金\n`
+                }
+                if (data.data.rewardType === 1) {
+                  console.log(`翻翻乐 第${data.data.changeTimes}次翻倍 成功，获得：${data.data.rewardValue}元红包\n`);
+                } else if (data.data.rewardType === 2) {
+                  console.log(`翻翻乐 第${data.data.changeTimes}次翻倍 成功，获得：${data.data.rewardValue}元现金\n`);
+                  // $.canApCashWithDraw = true;
+                } else {
+                  console.log(`翻翻乐 第${data.data.changeTimes}次翻倍 成功，获得：${JSON.stringify(data)}\n`);
+                }
+              } else if (data.data.rewardState === 3) {
+                console.log(`翻翻乐 第${data.data.changeTimes}次翻倍 失败，奖品溜走了/(ㄒoㄒ)/~~\n`);
+                $.changeReward = false;
+              } else {
+                if (type) {
+                  console.log(`翻翻乐领取成功：${data.data.amount}现金\n`)
+                  message += `【京东账号${$.index}】${$.nickName || $.UserName}\n${new Date().getHours()}点：${data.data.amount}现金\n`;
+                } else {
+                  console.log(`翻翻乐 翻倍 成功，获得：${JSON.stringify(data)}\n`);
+                }
+              }
             } else {
-              console.log(`失败：${JSON.stringify(data)}\n`);
+              $.canApCashWithDraw = true;
+              $.changeReward = false;
+              console.log(`翻翻乐 翻倍 失败：${JSON.stringify(data)}\n`);
             }
           }
         }
@@ -258,14 +258,13 @@ function openRedReward() {
     })
   })
 }
-
+//翻翻乐提现
 function apCashWithDraw(id, poolBaseId, prizeGroupId, prizeBaseId, prizeType) {
   const headers = {
     'Host': 'api.m.jd.com',
     'Origin': 'https://openredpacket-jdlite.jd.com',
     'Accept': 'application/json, text/plain, */*',
-    'User-Agent': $.isNode() ? ( process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : ( require( './USER_AGENTS' ).USER_AGENT ) ) : ( $.getdata( 'JDUA' ) ? $.getdata( 'JDUA' ) : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1" ),
-        "Accept-Language": "zh-cn",
+    'User-Agent': 'jdltapp;iPhone;3.3.2;14.4.1;network/wifi;Mozilla/5.0 (iPhone; CPU iPhone OS 14_4_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1',
     'Referer': `https://618redpacket.jd.com/withdraw?activityId=${linkId}&channel=wjicon&lng=&lat=&sid=&un_area=`,
     'Accept-Language': 'zh-cn',
     "Content-Type": "application/x-www-form-urlencoded",
@@ -299,7 +298,7 @@ function apCashWithDraw(id, poolBaseId, prizeGroupId, prizeBaseId, prizeType) {
             data = JSON.parse(data);
             if (data['code'] === 0) {
               if (data['data']['status'] === '310') {
-                console.log(`翻翻乐提现 成功🎉\n`);
+                console.log(`翻翻乐提现 成功🎉，详情：${JSON.stringify(data)}\n`);
                 message += `提现至微信钱包成功🎉\n\n`;
               } else {
                 console.log(`翻翻乐提现 失败，详情：${JSON.stringify(data)}\n`);
