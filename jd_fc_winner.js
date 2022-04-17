@@ -22,7 +22,7 @@ cron "40 0-20/4 * * *" script-path=jd_big_winner.js,tag=发财大赢家之翻翻
 const $ = new Env('发财大赢家之翻翻乐');
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
-const money = $.isNode() ? (process.env.Openmoney ? process.env.Openmoney : 0.3) : 0.3
+const money = $.isNode() ? (process.env.Openmoney ? process.env.Openmoney : 0.04) : 0.04
 const randomCount = $.isNode() ? 20 : 5;
 const notify = $.isNode() ? require('./sendNotify') : '';
 let merge = {}
@@ -57,6 +57,7 @@ message = ""
                 $.isLogin = true;
                 $.canDraw = true;
                 $.canOpen = true;
+				$.llAPIError = false;
                 $.cash = 0
                 $.prize = 0
                 $.Hb = 0
@@ -80,9 +81,9 @@ message = ""
                 } else {
                     console.log("时间已到,开始开红包")
                     await open("gambleOpenReward")
-                    while ($.canOpen && $.canDraw) {
+                    while ($.canOpen && $.canDraw && $.llAPIError) {
                         await open("gambleChangeReward")
-                        await $.wait(500);
+                        await $.wait(3000);
                     }
                     if ($.canDraw) {
                         console.log("金额已可提现,开始提现...")
@@ -94,6 +95,7 @@ message = ""
                         //    await notify.sendNotify(`京东极速版大赢家翻倍红包提现`, `${$.message}`); 
                     }
                 }
+				
             }
         }
         if ($.isNode()) {
@@ -199,6 +201,7 @@ function open(functionid, type) {
                 if (err) {
                     console.log(`${JSON.stringify(err)}`);
                     console.log(`${$.name} API请求失败，请检查网路重试`);
+					$.llAPIError = true
                 } else {
                     data = JSON.parse(data);
                     if (data.code === 0 && data.data) {
@@ -212,12 +215,15 @@ function open(functionid, type) {
                             } else if (data.data.rewardState === 1) {
                                 console.log("翻倍成功啦")
                                 console.log("当前红包：" + data.data.rewardValue + "翻倍次数：" + data.data.changeTimes)
+								
                             } else {
                                 console.log(data.data)
                                 console.log(`状态 ${data.data.rewardState} 还不知道是什么原因嗷`)
                             }
+							
                         } else {
                             console.log(data)
+							
                         }
 
 

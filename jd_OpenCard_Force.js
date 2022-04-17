@@ -10,11 +10,18 @@
 ## 入会开卡
 //export VENDER_ID=""
 ## 最小入会值 （默认10）
+//export OPENCARD_BEAN=""
 
+cron:10 10 10 10 *
+============Quantumultx===============
+[task_local]
+#入会开卡领取礼包(通用)
 1 1 1 1 * jd_OpenCard_Force.js, tag=入会开卡领取礼包(通用), enabled=true
 
+
 */
-const $ = new Env('开卡通用');
+
+const $ = new Env('入会开卡领取礼包通用');
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
 //IOS等用户直接用NobyDa的jd cookie
@@ -89,6 +96,16 @@ async function run() {
             }
             if($.errorJoinShop.indexOf('活动太火爆，请稍后再试') > -1){
                 console.log('第3次 重新开卡')
+                await $.wait(500)
+                await joinShop()
+            }
+			if($.errorJoinShop.indexOf('活动太火爆，请稍后再试') > -1){
+                console.log('第4次 重新开卡')
+                await $.wait(500)
+                await joinShop()
+            }
+			if($.errorJoinShop.indexOf('活动太火爆，请稍后再试') > -1){
+                console.log('第5次 重新开卡')
                 await $.wait(500)
                 await joinShop()
             }
