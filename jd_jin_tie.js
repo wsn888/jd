@@ -1,5 +1,9 @@
+const { url } = require('inspector');
+
 /*
-领金贴(只做签到以及互助任务里面的部分任务)
+ 领金贴(只做签到以及互动任务中部分任务) Fixed By X1a0He
+ Last Modified time: 2021-09-04 22:25:00
+ Last Modified By X1a0He
 活动入口：京东APP首页-领金贴，[活动地址](https://active.jd.com/forever/cashback/index/)
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
 =================QuantumultX==============
@@ -8,11 +12,11 @@
 10 0 * * * jd_jin_tie.js, tag=领金贴, enabled=true
 ===========Loon===============
 [Script]
-cron "10 0 * * *" script-path=jd_jin_tie.js,tag=领金贴
+cron "10 0 * * *" jd_jin_tie.js,tag=领金贴
 =======Surge===========
-领金贴 = type=cron,cronexp="10 0 * * *",wake-system=1,timeout=3600,script-path=jd_jin_tie.js
+领金贴 = type=cron,cronexp="10 0 * * *",wake-system=1,timeout=3600,jd_jin_tie.js
 ==============小火箭=============
-领金贴 = type=cron,script-path=jd_jin_tie.js, cronexpr="10 0 * * *", timeout=3600, enable=true
+领金贴 = type=cron,jd_jin_tie.js, cronexpr="10 0 * * *", timeout=3600, enable=true
  */
 const $ = new Env('领金贴');
 const notify = $.isNode() ? require('./sendNotify') : '';
@@ -66,7 +70,7 @@ if ($.isNode()) {
 async function main() {
     try {
         await channelUserSignInfo_xh();
-        await queryMission_xh();
+        //await queryMission_xh();
         await channelUserSubsidyInfo_xh();
     } catch (e) {
         $.logErr(e)
