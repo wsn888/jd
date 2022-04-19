@@ -12,11 +12,11 @@
 请求太频繁会被黑ip
 过10分钟再执行
 
-cron:30 13 1-5,18-30 4,5 *
+cron:50 2,18 1-5,18-30 4,5 *
 ============Quantumultx===============
 [task_local]
 #4.18~5.5 甄选大牌 品质嗨购
-30 13 1-5,18-30 4,5 * jd_opencardL119.js, tag=4.18~5.5 甄选大牌 品质嗨购, enabled=true
+50 2,18 1-5,18-30 4,5 * jd_opencardL119.js, tag=4.18~5.5 甄选大牌 品质嗨购, enabled=true
 
 */
 
@@ -56,7 +56,7 @@ let activityCookie =''
   $.shareUuid = "508f99fb7c114dc58132074f397199ff"
   console.log(`入口:\nhttps://lzdz1-isv.isvjcloud.com/dingzhi/customized/common/activity?activityId=${$.activityId}&shareUuid=${$.shareUuid}`)
   let shareUuidArr = ["508f99fb7c114dc58132074f397199ff"]
-  let s = Math.floor((Math.random()*10))
+  let s = Math.floor((Math.random()*3))
   let n = 0
   n = Math.floor((Math.random()*shareUuidArr.length))
   $.shareUuid = shareUuidArr[n] ? shareUuidArr[n] : $.shareUuid
