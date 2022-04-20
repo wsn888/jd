@@ -6,10 +6,10 @@
 ===========================
 [task_local]
 #京东通天塔--签到
-3 1,11 * * * jd_m_sign.js, tag=京东通天塔--签到, enabled=true
+31 3,15 * * * jd_m_sign.js
  */
 
-const $ = new Env('京东通天塔--签到');
+const $ = new Env('京东通天签到');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
@@ -67,14 +67,13 @@ async function jdsign() {
     await $.wait(2000)
     await getInfo("https://pro.m.jd.com/mall/active/kPM3Xedz1PBiGQjY4ZYGmeVvrts/index.html");//陪伴
     await $.wait(2000)
-    //await getInfo("https://pro.m.jd.com/mall/active/3SC6rw5iBg66qrXPGmZMqFDwcyXi/index.html");//京东图书
-    //await $.wait(2000)
-    await getInfo("https://prodev.m.jd.com/mall/active/hPJiMgUQmc34bamrApLUBRUy82W/index.html");//4.3结束   
+    await getInfo("https://pro.m.jd.com/mall/active/4RBT3H9jmgYg1k2kBnHF8NAHm7m8/index.html");//京东服装
     await $.wait(2000)
-    await getInfo("https://prodev.m.jd.com/mall/active/2FzVtkSfUtvU8YoiTeALkJ68PxAs/index.html");//医疗馆 12.31结束	
-//     await getInfo("https://pro.m.jd.com/mall/active/ZrH7gGAcEkY2gH8wXqyAPoQgk6t/index.html");//箱包签到
-//     await $.wait(1000)
-//     await getInfo("https://pro.m.jd.com/mall/active/4RXyb1W4Y986LJW8ToqMK14BdTD/index.html");//鞋靴馆签到
+    await getInfo("https://pro.m.jd.com/mall/active/3SC6rw5iBg66qrXPGmZMqFDwcyXi/index.html");//京东图书
+    await $.wait(2000)
+    await getInfo("https://prodev.m.jd.com/mall/active/2FzVtkSfUtvU8YoiTeALkJ68PxAs/index.html");//医疗馆 
+    await $.wait(2000)
+    await getInfo("https://prodev.m.jd.com/mall/active/hPJiMgUQmc34bamrApLUBRUy82W/index.html");//3.31结束    
 
 //     await $.wait(1000)
 //     await getInfo("https://pro.m.jd.com/mall/active/3joSPpr7RgdHMbcuqoRQ8HbcPo9U/index.html");//生活特权签到
