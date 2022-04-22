@@ -1,18 +1,13 @@
-
 /*
-一次性开卡
-25 12,16 19-31 4 * jd_opencard16.js
-默认不执行，需要执行请设置变量
-export DY_OPENALL="true"
+一次性脚本
+cron:30 12,16 19-31/3 4 *
+============Quantumultx===============
+[task_local]
+30 12,16 19-31/3 4 * jd_opencardty.js, tag=joy通用活动, enabled=true
+
 */
-
-if (process.env.DY_OPENALL != "true") {
-    console.log('\n开卡任务部分加密默认不运行,设置变量export DY_OPENALL="true"来运行\n')
-    return
-}
-
-const $ = new Env('4月桌面好物和小天才-开卡');
-const Faker=require('./function/sign_graphics_validate.js') 
+const $ = new Env('4月桌面好物和小天才任务开卡');
+const Faker=require('./sign_graphics_validate.js') 
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const notify = $.isNode() ? require('./sendNotify') : '';
 CryptoScripts()
