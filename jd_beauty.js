@@ -3,10 +3,11 @@
 修复+尽量优化为同步执行,减少并发,说不定就减小黑号概率了呢?
 更新时间:2021-12-03
 活动入口：京东app首页-美妆馆-底部中间按钮
-20 7,12,19 * * * jd_beautyStudy.js, tag=美丽研究院, enabled=true
+20 2,9,20 * * * jd_beautyStudy.js, tag=美丽研究院, enabled=true
  */
 const $ = new Env('美丽研究院');
 const notify = $.isNode() ? require('./sendNotify') : '';
+console.log('连接服务器不稳定,能不能用随缘!!!')
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const WebSocket = require('ws');
 const UA = process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)
@@ -292,7 +293,6 @@ async function mr() {
               await $.wait(2500)
             }
           }
-
           if ($.taskState.today_answered === 0) {
             console.log(`去做每日问答任务`)
             client.send(`{"msg":{"type":"action","args":{"source":1},"action":"get_question"}}`)
@@ -502,9 +502,9 @@ async function mr() {
           for (let benefit of vo.data) {
             if (benefit.type === 1) { //type 1 是京豆
               //console.log(`benefit:${JSON.stringify(benefit)}`);
-              if(benefit.description === "1 京豆" && parseInt(benefit.day_exchange_count) < 10 && $.total > benefit.coins){
+              if(benefit.description === "1 京豆" && parseInt(benefit.day_exchange_count) < 5 && $.total > benefit.coins){
                 $timenum = parseInt($.total / benefit.coins);
-                if ($timenum > 10) $timenum = 10;
+                if ($timenum > 5) $timenum = 5;
                 console.log(`\n可兑换${$timenum}次京豆:`)
                 for (let i = 0; i < $timenum; i++){
                   client.send(`{"msg":{"type":"action","args":{"benefit_id":${benefit.id}},"action":"to_exchange"}}`);
