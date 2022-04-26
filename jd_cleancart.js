@@ -1,7 +1,5 @@
 /*
  * @Author: X1a0He
- * @Contact: https://t.me/X1a0He
- * @Github: https://github.com/X1a0He/jd_scripts_fixed
  * 清空购物车，支持环境变量设置关键字，用@分隔，使用前请认真看对应注释
  * 由于不是用app来进行购物车删除，所以可能会出现部分购物车数据无法删除的问题，例如预购商品，属于正常
  */
@@ -22,7 +20,7 @@ let args_xh = {
      * 控制脚本是否执行，设置为true时才会执行删除购物车 
      * 环境变量名称：JD_CART
      */
-    clean: process.env.JD_CART === 'true' || true,
+    clean: process.env.JD_CART === 'true' || false,
     /*
      * 控制脚本运行一次取消多少条购物车数据，为0则不删除，默认为100
      * 环境变量名称：XH_CLEAN_REMOVESIZE
