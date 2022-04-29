@@ -1,27 +1,12 @@
 /* 
-京东签到翻牌
-by:小手冰凉 tg:@chianPLA
+8 8,16 * * * jd_sign_graphics1.js
 只支持nodejs环境
 需要安装依赖 
 npm i png-js 或者 npm i png-js -S
-============Quantumultx===============
-[task_local]
-#京东签到翻牌
-10 8 * * * https://raw.githubusercontent.com/444444/JDJB/main/jd_sign_graphics1.js, tag=京东签到翻牌, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jxcfd.png, enabled=true
-
-================Loon==============
-[Script]
-cron "10 8 * * *" script-path=https://raw.githubusercontent.com/444444/JDJB/main/jd_sign_graphics1.js,tag=京东签到翻牌
-
-===============Surge=================
-京东签到翻牌 = type=cron,cronexp="10 8 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/444444/JDJB/main/jd_sign_graphics1.js
-
-============小火箭=========
-京东签到翻牌 = type=cron,script-path=https://raw.githubusercontent.com/444444/JDJB/main/jd_sign_graphics1.js, cronexpr="10 8 * * *", timeout=3600, enable=true
 */
 
-const Faker = require('./sign_graphics_validate.js')
-const $ = new Env('京东签到翻牌');
+const Faker = require('./function/sign_graphics_validate.js')
+const $ = new Env('京东美妆签到');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
@@ -43,9 +28,10 @@ let successNum = 0
 let errorNum = 0
 let JD_API_HOST = 'https://sendbeans.jd.com'
 const turnTableId = [
-  // { "name": "美妆-1", "id": 815, "shopid": 887726, "url": "https://sendbeans.jd.com/jump/index/" },
-  { "name": "美妆-2", "id": 1162, "shopid": 56178, "url": "https://sendbeans.jd.com/jump/index/" },
-  { "name": "美妆-3", "id": 1082, "shopid": 1000004123, "url": "https://sendbeans.jd.com/jump/index/" },
+ //  { "name": "美妆-1", "id": 293, "shopid": 30284, "url": "https://sendbeans.jd.com/jump/index/" },
+ // { "name": "美妆-2", "id": 1162, "shopid": 56178, "url": "https://sendbeans.jd.com/jump/index/" },
+   { "name": "美妆-3", "id": 1082, "shopid": 1000004123, "url": "https://sendbeans.jd.com/jump/index/" },
+   { "name": "翻牌", "id": 1082, "shopid": 1000004123, "url": "https://sendbeans.jd.com/jump/index/" },
 ]
 
 !(async () => {
