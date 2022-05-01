@@ -11,7 +11,7 @@ IOS等用户直接用NobyDa的jd cookie
 [Script]
 cron "18 9 * * *" jd_mengniu.js,tag=组队分豆-飞利浦
 ===============Surge=================
-组队分豆-飞利浦 = type=cron,cronexp="18 9 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/KingRan/KR/main/jd_mengniu.js
+组队分豆-飞利浦 = type=cron,cronexp="18 9 * * *",wake-system=1,timeout=3600,jd_mengniu.js
 ============小火箭=========
 组队分豆-飞利浦 = type=cron,jd_mengniu.js, cronexpr="18 9 * * *", timeout=3600, enable=true
 */
