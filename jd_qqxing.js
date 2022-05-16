@@ -1,19 +1,17 @@
 /*
 星系牧场
 活动入口：QQ星儿童牛奶京东自营旗舰店->品牌会员->星系牧场
-[task_local]
-#星系牧场
-22 4-22/3 * * * jd_qqxing.js
+快捷入口：12:/￥H32Qx4jJlV￥ ，【京ㅛD○ōσng】星系牧场养牛牛，可获得DHA专属奶！
+号1默认给作者助力,后续 2给1 3给2 接龙,助力需要新用户，已助力过的不能在助力
+#伊利星系牧场
+1 0-23/3 * * * jd_qqxing.js
 */
-const $ = new Env('QQ星系牧场');
+
+const $ = new Env('伊利星系牧场');
 //Node.js用户请在jdCookie.js处填写京东ck;
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
-const randomCount = $.isNode() ? 20 : 5;
 const notify = $.isNode() ? require('./sendNotify') : '';
-let merge = {}
-let codeList = []
-Exchange = true;
-//IOS等用户直接用NobyDa的jd cookie
+Exchange = true;//是否自动兑换
 let cookiesArr = [],
     cookie = '';
 function oc(fn, defaultVal) {//optioanl chaining
@@ -34,98 +32,98 @@ if ($.isNode()) {
 
 const JD_API_HOST = `https://api.m.jd.com/client.action`;
 message = ""
+console.log('\n活动快捷入口：12:/￥H32Qx4jJlV￥ ，【京ㅛD○ōσng】星系牧场养牛牛，可获得DHA专属奶！')
 !(async () => {
-		console.log("活动入口：https://lzdz-isv.isvjcloud.com/dingzhi/qqxing/pasture/activity/5270742?activityId=90121061401\n此活动黑IP严重，仅跑前7账号，需要请自行修改")
-        if (!cookiesArr[0]) {
-            $.msg($.name, '【提示】请先获取cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {
-                "open-url": "https://bean.m.jd.com/"
-            });
-            return;
-        }
-		let codeList = ['bf3ffb1c973a49acbac4983ac15162f3','be5c05485b624d69b2bb1acee71ffc87']
-		$.shareUuid = codeList[Math.floor((Math.random()*codeList.length))]
-        //for (let i = 0; i <cookiesArr.length; i++) {
-		for (let i = 0; i < 7; i++) {
-            cookie = cookiesArr[i];
-            if (cookie) {
-                $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
-                $.index = i + 1;
-                $.cando = true
-                $.cow = ""
-                $.openCard = true
-                $.isLogin = true;
-                $.needhelp = true
-                $.foodNum = 0
-                $.nickName = '';
-                $.drawresult = ""
-                $.exchange =0
-                console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
-                if (!$.isLogin) {
-                    $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {
-                        "open-url": "https://bean.m.jd.com/bean/signIndex.action"
-                    });
-                    if ($.isNode()) {
-                        await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
-                    }
-                    continue
+    if (!cookiesArr[0]) {
+        $.msg($.name, '【提示】请先获取cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/', {
+            "open-url": "https://bean.m.jd.com/"
+        });
+        return;
+    }
+    let codeList = ['3081a5203b974323bbc06fa621c874d7','65c835b2cc1b44918bcad9adfbdb2816','4ff8b32e6b2e4dc1ba1f546f9363e09c','a17e04ef07fd42de82f1014acd78a03a','988211503df847ddafa6abe61d22bffd']
+    $.shareUuid = codeList[Math.floor((Math.random()*codeList.length))]
+    for (let i = 0; i < 10; i++) {
+        cookie = cookiesArr[i];
+        if (cookie) {
+            $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
+            $.index = i + 1;
+            $.cando = true
+            $.cow = ""
+            $.openCard = true
+            $.isLogin = true;
+            $.needhelp = true
+            $.foodNum = 0
+            $.nickName = '';
+            $.drawresult = ""
+            $.exchange =0
+            console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
+            if (!$.isLogin) {
+                $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {
+                    "open-url": "https://bean.m.jd.com/bean/signIndex.action"
+                });
+                if ($.isNode()) {
+                    await notify.sendNotify(`${$.name}cookie已失效 - ${$.UserName}`, `京东账号${$.index} ${$.UserName}\n请重新登录获取cookie`);
                 }
-                await genToken()
-                await getActCk()
-                await getToken2()
-                await getshopid()
-                await getMyPin()
-                await adlog()
-                await getUserInfo()
-                if ($.cando) {
-                    await getUid($.shareuuid)
-                    await getinfo()
-                    taskList = [...$.taskList, ...$.taskList2]
-                    for (j = 0; j < taskList.length; j++) {
-                        task = taskList[j]
-                        console.log(task.taskname)
-                        if (task.taskid == "interact") {
-                            for (l = 0; l < 20 - task.curNum; l++) {
-                                console.log('完成任务中....等待5秒....')
-								await dotask(task.taskid, task.params)
-                                await $.wait(5000)
-                            }
-						console.log('互动完成')
-                        } else if (task.taskid == "scansku") {
-                            await getproduct()
-                            await writePersonInfo($.vid)
-                            await dotask(task.taskid, $.pparam)
-						} else if (task.taskid !== "add2cart") {
+                continue
+            }
+            await genToken()
+            await getActCk()
+            await getToken2()
+            await getshopid()
+            await getMyPin()
+            await adlog()
+            await getUserInfo()
+            if ($.cando) {
+                await getUid($.shareuuid)
+                await getinfo()
+                let exchanges =Math.floor($.foodNum/1000)
+                console.log(`可兑换 ${exchanges} 次 20京🐶`)
+                for(q = 0;q < 1 && Exchange; q++){
+                await exchange(13)   //16是100豆，14是50豆，13是20豆
+                }
+                //await getinfo()
+                if(!Exchange){console.log("你设置的不兑换东西,请自行进去活动兑换")}
+                taskList = [...$.taskList, ...$.taskList2]
+                for (j = 0; j < taskList.length; j++) {
+                    task = taskList[j]
+                    console.log(task.taskname)
+                    if (task.taskid == "interact") {
+                        for (l = 0; l < 20 - task.curNum; l++) {
                             await dotask(task.taskid, task.params)
                             await $.wait(5000)
                         }
+                        console.log('互动完成')
+                    } else if (task.taskid == "scansku") {
+                        await getproduct()
+                        await writePersonInfo($.vid)
+                        await dotask(task.taskid, $.pparam)
+                    } else if (task.taskid !== "add2cart") {
+                        await dotask(task.taskid, task.params)
+                        await $.wait(3000)
                     }
-                    await getinfo()
-                    for (k = 0; k < $.drawchance; k++) {
-                        await draw()
-                    }
-                    let exchanges =Math.floor($.foodNum/10000)
-                    console.log(`可兑换 ${exchanges} 次 100京🐶`)
-                    for(q = 0;q<exchanges && Exchange;q++){
-                    await exchange(14)   //16是100豆，14是50豆，13是20豆
-                    }
-                    await getinfo()
-                    if(!Exchange){console.log("你 默认 不兑换东西,请自行进去活动兑换")}
-                    message += `【京东账号${$.index}】${$.nickName || $.UserName}\n${$.cow} 兑换京🐶 ${$.exchange}  ${$.drawresult}\n`
-                    console.log("休息休息~") 
-                    await $.wait(80*1000) 
-                } else {
-                  $.msg($.name, "", "跑不起来了~请自己进去一次牧场")
                 }
+                await getinfo()
+                for (k = 0; k < $.drawchance; k++) {
+                    await draw()
+                    await $.wait(1000)
+                }
+
+                message += `【京东账号${$.index}】${$.nickName || $.UserName}\n${$.cow} 兑换京🐶 ${$.exchange}  ${$.drawresult}\n`
+                console.log("休息休息~") 
+                await $.wait(20*1000) 
+            } else {
+              $.msg($.name,  " 跑不起来~手动进活动看看吧")
             }
         }
-        if (message.length != 0) {
-        if ($.isNode()) {
-           //await notify.sendNotify("星系牧场", `${message}\n牧场入口：QQ星儿童牛奶京东自营旗舰店->星系牧场\n\n`);
-   }  else {
-            $.msg($.name, "", '星系牧场' + message)
-        }
-           }
-    })()
+    }
+    if (message.length != 0) {
+    if ($.isNode()) {
+       //await notify.sendNotify("星系牧场", `${message}\n牧场入口：QQ星儿童牛奶京东自营旗舰店->星系牧场\n\n`);
+            }  else {
+                   $.msg($.name, "", '星系牧场' + message)
+            }
+    }
+})()
     .catch((e) => $.logErr(e))
     .finally(() => $.done())
 //获取活动信息
@@ -196,10 +194,10 @@ function genToken() {
                     console.log(`${JSON.stringify(err)}`)
                 } else {
                     data = JSON.parse(data);
-                    // console.log(data, 'data')
+                     //console.log(data, 'data')
                     $.isvToken = data['tokenKey']
                     cookie += `IsvToken=${data['tokenKey']}`
-                    //   console.log($.isvToken)
+                       //console.log($.isvToken)
                 }
             } catch (e) {
                 $.logErr(e, resp)
@@ -317,9 +315,9 @@ function getMyPin() {
                     console.log(`${$.name} API请求失败，请检查网路重试`)
                 } else {
                     data = JSON.parse(data);
+
                     if (data.data && data.data.secretPin) {
                         $.pin = data.data.secretPin
-                        //    console.log($.pin)
                         $.nickname = data.data.nickname
                         // console.log(data)
                         console.log(`欢迎回来~  ${$.nickname}`);
@@ -411,8 +409,8 @@ function getUid() {
                            if(data.data.openCardStatus !=3){
                            console.log("当前未开卡,无法助力和兑换奖励哦")
                            }                           
-                            $.shareuuid = data.data.uid                            
-                            console.log(`\n【京东账号${$.index}（${$.UserName}）的${$.name}好友互助码】${$.shareuuid}\n`);
+                             $.shareuuid = data.data.uid                            
+                            console.log(`\n【（${$.UserName}）的${$.name}互助码】${$.shareuuid}\n`);
                         }
                       }
             } catch (e) {
@@ -426,13 +424,13 @@ function getUid() {
 
 //获取任务列表
 function getinfo() {
-    let config = taskPostUrl("/dingzhi/qqxing/pasture/myInfo", `activityId=90121061401&pin=${encodeURIComponent($.pin)}&pinImg=${$.pinImg}&actorUuid=${$.shareuuid}&userUuid=${$.shareuuid}`)
+    let config = taskPostUrl("/dingzhi/qqxing/pasture/myInfo", `activityId=90121061401&pin=${encodeURIComponent($.pin)}&pinImg=${$.pinImg}&nick=${$.nick}&cjyxPin=&cjhyPin=&shareUuid=${$.shareuuid}`)
     return new Promise(resolve => {
         $.post(config, async (err, resp, data) => {
             updateCookie(resp)
             try {
                 if (err) {
-                    //console.log(`${JSON.stringify(err)}`)
+                    console.log(`${JSON.stringify(err)}`)
                     console.log(`${$.name} API请求失败，请检查网路重试`)
                 } else {
                     data = JSON.parse(data);
@@ -446,7 +444,7 @@ function getinfo() {
                         //    console.log(data.data.task)
                         let helpinfo = data.data.task.filter(x => x.taskid == 'share2help')[0]
                         if (helpinfo) {
-                            console.log(`今天已有${helpinfo.curNum}人为你助力啦`)
+                            console.log(`今天有${helpinfo.curNum}人为你助力`)
                             if (helpinfo.curNum == 20) {
                                 $.needhelp = false
                             }
@@ -533,13 +531,12 @@ function exchange(id) {
                     console.log(`${$.name} API请求失败，请检查网路重试`)
                 } else {
                     data = JSON.parse(data);
-                 //   console.log()
-					if(data.result){
-					console.log(`兑换 ${data.data.rewardName}成功`)
-					$.exchange += 20
-					}else{
+                   if(data.result){
+                    console.log(`兑换 ${data.data.rewardName}成功`)
+                    $.exchange += 20
+                    } else {
                      console.log(data.errorMessage,'\n')
-					}
+                    }
                 }
             } catch (e) {
                 $.logErr(e, resp)
