@@ -5,14 +5,14 @@
 ===============Quantumultx===============
 [task_local]
 #众筹许愿池
-40 0,2,19 * * * jd_wish.js, tag=众筹许愿池, enabled=true
+40 0,11,19 * * * jd_wish.js, tag=众筹许愿池, enabled=true
 ================Loon==============
 [Script]
-cron "40 0,2,19 * * *" jd_wish.js,tag=众筹许愿池
+cron "40 0,11,19 * * *" jd_wish.js,tag=众筹许愿池
 ===============Surge=================
-众筹许愿池 = type=cron,cronexp="40 0,2,19 * * *",wake-system=1,timeout=3600,jd_wish.js
+众筹许愿池 = type=cron,cronexp="40 0,11,19 * * *",wake-system=1,timeout=3600,jd_wish.js
 ============小火箭=========
-众筹许愿池 = type=cron,jd_wish.js, cronexpr="40 0,2,19 * * *", timeout=3600, enable=true
+众筹许愿池 = type=cron,jd_wish.js, cronexpr="40 0,11,19 * * *", timeout=3600, enable=true
  */
 const $ = new Env('众筹许愿池');
 const notify = $.isNode() ? require('./sendNotify') : '';
