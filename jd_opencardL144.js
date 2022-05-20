@@ -185,7 +185,7 @@ async function run() {
         await takePostRequest('抽奖');
         if($.runFalag == false) break
         if(Number(count) <= 0) break
-        if(m >= 10){
+        if(m >= 1){
           console.log("抽奖太多次，多余的次数请再执行脚本")
           break
         }
@@ -206,9 +206,9 @@ async function run() {
       console.log(`后面的号都会助力:${$.shareUuid}`)
     }
     await $.wait(parseInt(Math.random() * 1000 + 5000, 10))
-    if(flag) await $.wait(parseInt(Math.random() * 1000 + 10000, 10))
+    if(flag) await $.wait(parseInt(Math.random() * 1000 + 5000, 10))
       if($.index % 3 == 0) console.log('休息半分钟，别被黑ip了\n可持续发展')
-      if($.index % 3 == 0) await $.wait(parseInt(Math.random() * 5000 + 30000, 10))
+      if($.index % 3 == 0) await $.wait(parseInt(Math.random() * 5000 + 20000, 10))
   } catch (e) {
     console.log(e)
   }
@@ -252,7 +252,7 @@ async function takePostRequest(type) {
         break;
       case 'checkOpenCard':
         url = `${domain}/dingzhi/may/childrenWear/initOpenCard`;
-        body = `activityId=${$.activityId}&pin=${encodeURIComponent($.Pin)}&actorUuid=${$.actorUuid}&shareUuid=${$.shareUuid}`
+        body = `activityId=${$.activityId}&pin=${encodeURIComponent($.Pin)}&shareUuid=${$.shareUuid}`
         break;
       case '报名':
         url = `${domain}/dingzhi/may/childrenWear/saveTask`;
