@@ -1,8 +1,8 @@
 /**
 汪汪乐园-跑步+组队+提现
-默认翻倍到0.08红包结束,修改请设置变量
+默认翻倍到0.04红包结束,修改请设置变量
 export JD_JOY_PARK_RUN_ASSETS="0.08"
-32 * * * * jd_joy_park_run.ts
+11 * * * * jd_joy_park_run.ts
 new Env('极速版汪汪赛跑')
 Modify By Dylan from HW
 **/
@@ -54,7 +54,7 @@ let assets: number = 0, captainId: string = '', h5stTool: H5ST = null
         }
       }
       console.log('今日成功', success, '次')
-      console.log('今日收益', sum, '元')
+      console.log('今日收益', sum.toFixed(2), '元')
 
       res = await team('runningTeamInfo', {"linkId": "L-sOanK_5RJCz7I314FpnQ"})
       if (!captainId) {
