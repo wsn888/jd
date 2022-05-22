@@ -3,24 +3,21 @@
 可互助，助力码每日不变，只变日期
 活动入口：京东APP搜索领现金进入
 更新时间：2021-06-07
-PandaToken 请前往 https://t.me/pang_da_bot  获取Token
 已支持IOS双京东账号,Node.js支持N个京东账号
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
 ============Quantumultx===============
 [task_local]
 #签到领现金
-11 1,20 * * * jd_cash.js, tag=签到领现金, enabled=true
-
+5 2,9 * * * jd_cash.js, tag=签到领现金, enabled=true
 ================Loon==============
 [Script]
-cron "11 1,20 * * *" script-path=jd_cash.js,tag=签到领现金
-
+cron "5 2,9 * * *" script-path=jd_cash.js,tag=签到领现金
 ===============Surge=================
-签到领现金 = type=cron,cronexp="11 1,20 * * *",wake-system=1,timeout=3600,script-path=jd_cash.js
-
+签到领现金 = type=cron,cronexp="5 2,9 * * *",wake-system=1,timeout=3600,script-path=jd_cash.js
 ============小火箭=========
-签到领现金 = type=cron,script-path=jd_cash.js, cronexpr="11 1,20 * * *", timeout=3600, enable=true
+签到领现金 = type=cron,script-path=jd_cash.js, cronexpr="5 2,9 * * *", timeout=3600, enable=true
  */
+ 
 const $ = new Env('签到领现金_Panda');
 const notify = $.isNode() ? require('./sendNotify') : '';
 //Node.js用户请在jdCookie.js处填写京东ck;
@@ -43,6 +40,7 @@ if ($.isNode()) {
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 let allMessage = '';
 let jdPandaToken = '';
+
 jdPandaToken = $.isNode() ? (process.env.PandaToken ? process.env.PandaToken : `${jdPandaToken}`) : ($.getdata('PandaToken') ? $.getdata('PandaToken') : `${jdPandaToken}`);
 if (!jdPandaToken) {
     console.log('请填写Panda获取的Token,变量是PandaToken');
@@ -55,7 +53,6 @@ if (!jdPandaToken) {
     return;
   }
  // await requireConfig()
-  
   for (let i = 0; i < cookiesArr.length; i++) {
     if (cookiesArr[i]) {
       cookie = cookiesArr[i];
@@ -156,6 +153,12 @@ async function appindex(info=false) {
                     await appdoTask(task.type, task.jump.params.url)
                     await $.wait(5000)
                   }
+                }else if (task.type === 7) {
+                  for (let i = task.doTimes; i < task.times; ++i) {
+                    console.log(`去做${task.name}任务 ${i+1}/${task.times}`)
+                    await appdoTask(task.type, 1)
+                    await $.wait(5000)
+                  }
                 }
               }
             }
@@ -222,33 +225,37 @@ function index() {
 async function appdoTask(type,taskInfo) {
   let functionId = 'cash_doTask'
   let body = {"type":type,"taskInfo":taskInfo}
+  for (let i=0; i<3; i++){
+  var sign = await getSignfromPanda(functionId, body)
+  if(sign) break;
   await $.wait(5000)
-  let sign = await getSignfromPanda(functionId, body)  
-
-  return new Promise((resolve) => {
-    $.post(apptaskUrl(functionId, sign), (err, resp, data) => {
-      try {
-        if (err) {
-          console.log(`${JSON.stringify(err)}`)
-          console.log(`appdoTask API请求失败，请检查网路重试`)
-        } else {
-          if (safeGet(data)) {
-            data = JSON.parse(data);
-            if(data.code === 0) {
-              console.log(`任务完成成功`)
-              // console.log(data.data.result.taskInfos)
-            } else {
-              //console.log(JSON.stringify(data))
+  }  
+  if(sign){
+    return new Promise((resolve) => {
+      $.post(apptaskUrl(functionId, sign), (err, resp, data) => {
+        try {
+          if (err) {
+            console.log(`${JSON.stringify(err)}`)
+            console.log(`appdoTask API请求失败，请检查网路重试`)
+          } else {
+            if (safeGet(data)) {
+              data = JSON.parse(data);
+              if(data.code === 0) {
+                console.log(`任务完成成功`)
+                // console.log(data.data.result.taskInfos)
+              } else {
+                console.log(JSON.stringify(data))
+              }
             }
           }
+        } catch (e) {
+          $.logErr(e, resp)
+        } finally {
+          resolve(data);
         }
-      } catch (e) {
-        $.logErr(e, resp)
-      } finally {
-        resolve(data);
-      }
+      })
     })
-  })
+  }
 }
 function doTask(type,taskInfo) {
   return new Promise((resolve) => {
@@ -296,27 +303,24 @@ function getSignfromPanda(functionId, body) {
 		    timeout: 30000
         }
         $.post(url, async(err, resp, data) => {
-            try {				
-				if (err) {
-					console.log(`衰仔，没有连接上熊猫服务，兄弟帮不了你啦！o(╥﹏╥)o`)
-				} else {
-					data = JSON.parse(data);				
+            try {
+              if (data){
+                data = JSON.parse(data);
 				if (data && data.code == 200) {
                     lnrequesttimes = data.request_times;
-                    console.log("衰仔，连接熊猫服务成功(*^▽^*)，当前Token使用次数为:" + lnrequesttimes);
+                    console.log("连接Panda服务成功，当前Token使用次数为" + lnrequesttimes);
                     if (data.data){
                         strsign = data.data.sign || '';
-						}
+					}
                     if (strsign != ''){
                         resolve(strsign);
 					}
-                    else {
-                        console.log("签名获取失败,可能Token使用次数上限或被封.");
-					}
+                    else
+                        console.log("签名获取失败,可能Token使用次数上限或被封或换个时间再试.");
                 } else {
                     console.log("签名获取失败.");
                 }
-				}
+              }else{console.log('连接连接Panda服务失败，重试。。。')}	
             }catch (e) {
                 $.logErr(e, resp);
             }finally {
@@ -341,6 +345,30 @@ function showMsg() {
     } else {
       $.log(`京东账号${$.index}${$.nickName}\n${message}`);
     }
+    resolve()
+  })
+}
+function readShareCode() {
+  console.log(`开始`)
+  return new Promise(async resolve => {
+    $.get({url: `http://code.chiang.fun/api/v1/jd/jdcash/read/${randomCount}/`, 'timeout': 30000}, (err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`${JSON.stringify(err)}`)
+          console.log(`${$.name} API请求失败，请检查网路重试`)
+        } else {
+          if (data) {
+            console.log(`随机取${randomCount}个码放到您固定的互助码后面(不影响已有固定互助)`)
+            data = JSON.parse(data);
+          }
+        }
+      } catch (e) {
+        $.logErr(e, resp)
+      } finally {
+        resolve(data);
+      }
+    })
+    await $.wait(30000);
     resolve()
   })
 }
@@ -423,6 +451,39 @@ function taskUrl(functionId, body = {}) {
   }
 }
 
+function getAuthorShareCode(url) {
+  return new Promise(resolve => {
+    const options = {
+      url: `${url}?${new Date()}`, "timeout": 30000, headers: {
+        "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
+      }
+    };
+    if ($.isNode() && process.env.TG_PROXY_HOST && process.env.TG_PROXY_PORT) {
+      const tunnel = require("tunnel");
+      const agent = {
+        https: tunnel.httpsOverHttp({
+          proxy: {
+            host: process.env.TG_PROXY_HOST,
+            port: process.env.TG_PROXY_PORT * 1
+          }
+        })
+      }
+      Object.assign(options, { agent })
+    }
+    $.get(options, async (err, resp, data) => {
+      try {
+        if (err) {
+        } else {
+          if (data) data = JSON.parse(data)
+        }
+      } catch (e) {
+        // $.logErr(e, resp)
+      } finally {
+        resolve(data);
+      }
+    })
+  })
+}
 function TotalBean() {
   return new Promise(async resolve => {
     const options = {
