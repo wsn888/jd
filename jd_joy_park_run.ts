@@ -1,13 +1,14 @@
 /**
-汪汪乐园-跑步+组队+提现
+汪汪乐园-跑步+组队
 默认翻倍到0.04红包结束,修改请设置变量
-export JD_JOY_PARK_RUN_ASSETS="0.08"
-11 * * * * jd_joy_park_run.ts
-new Env('极速版汪汪赛跑')
-Modify By Dylan from HW
+export JD_JOY_PARK_RUN_ASSETS="0.04"
+cron:30 0 * * * *
+30 0 * * * * jd_joy_park_run.ts
+new Env('极速版汪汪赛跑');
+
 **/
 
-import {get, post, o2s, requireConfig, wait} from './TS_USER_AGENTS'
+import {get, post, o2s, requireConfig, wait} from './function/TS_USER_AGENTS'
 import {H5ST} from "./function/h5st"
 import {existsSync, readFileSync} from "fs";
 import {getDate} from "date-fns";
@@ -18,6 +19,7 @@ let assets: number = 0, captainId: string = '', h5stTool: H5ST = null
 !(async () => {
   let cookiesArr: string[] = await requireConfig()
   let account: { pt_pin: string, joy_park_run: number }[] = []
+
 
   for (let [index, value] of cookiesArr.entries()) {
     cookie = value
@@ -54,7 +56,7 @@ let assets: number = 0, captainId: string = '', h5stTool: H5ST = null
         }
       }
       console.log('今日成功', success, '次')
-      console.log('今日收益', sum.toFixed(2), '元')
+      console.log('今日收益', sum, '元')
 
       res = await team('runningTeamInfo', {"linkId": "L-sOanK_5RJCz7I314FpnQ"})
       if (!captainId) {

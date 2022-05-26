@@ -1,6 +1,6 @@
 /*
 清空购物车
-更新时间：2021-10-27
+更新时间：2022-05-26
 因其他脚本会加入商品到购物车，故此脚本用来清空购物车
 包括预售
 需要算法支持
@@ -221,7 +221,10 @@ async function run(){
     if(msg){
       message += `【京东账号${$.index}】${$.nickName || $.UserName}\n${msg}\n`
     }
-    await $.wait(parseInt(Math.random() * 2000 + 2000, 10))
+    if(!$.out){
+      console.log('等待45秒')
+      await $.wait(parseInt(Math.random() * 2000 + 40000, 10))
+    }
   }catch(e){
     console.log(e)
   }
@@ -252,6 +255,9 @@ function jdApi(functionId,body) {
             if(res.mainTitle) console.log(res.mainTitle)
             if(res.resultCode == 0){
               resolve(res);
+            }else if (res.tips && res.tips.includes("正在努力加载")){
+              console.log("请求太快，ip被限制了")
+              $.out = true
             }
           }
         }
