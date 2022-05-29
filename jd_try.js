@@ -214,8 +214,6 @@ let args_xh = {
                 $.nowTabIdIndex = 0;
                 $.nowPage = 1;
                 $.nowItem = 1;
-
-
                 if (!args_xh.unified) {
                     trialActivityIdList = []
                     trialActivityTitleList = []
