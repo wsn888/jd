@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 '''
-定时自定义
-35 15 27 5 * jd_fcwb.py
+cron: 35 15 * * *
 new Env('发财挖宝');
 活动入口: 京东极速版>我的>发财挖宝
 脚本功能为: 挖宝，提现，没有助力功能! 
@@ -11,8 +10,9 @@ new Env('发财挖宝');
 import os,json,random,time,re,string,functools,asyncio
 import sys
 sys.path.append('../../tmp')
+print('\n运行本脚本之前请手动进入游戏点击一个方块\n')
 print('\n挖的如果都是0.01红包就是黑了，别挣扎了！\n')
-print('\n当血量剩余 1 时停止挖宝，领取奖励并提现，请先跑助力\n')
+print('\n默认自动领取奖励，关闭请在代码383行加上#号注释即可\n')
 try:
     import requests
 except Exception as e:
@@ -127,7 +127,7 @@ def taskGetUrl(functionId, body, cookie):
 
 # 剩余血量
 def xueliang(cookie):
-    body={"linkId":linkId}
+    body={"linkId":linkId,"round":1}
     res=taskGetUrl("happyDigHome", body, cookie)
     if not res:
         return
@@ -155,7 +155,7 @@ def jinge(cookie,i):
 
 # 页面数据
 def happyDigHome(cookie):
-    body={"linkId":linkId}
+    body={"linkId":linkId,"round":1}
     res=taskGetUrl("happyDigHome", body, cookie)
     if not res:
         return
@@ -202,20 +202,20 @@ def happyDigHome(cookie):
         print(f'获取数据失败\n{res}\n')
 
 
-# # 玩一玩
-# def apDoTask(cookie):
-#     print('开始 玩一玩')
-#     body={"linkId":linkId,"taskType":"BROWSE_CHANNEL","taskId":454,"channel":4,"itemId":"https%3A%2F%2Fsignfree.jd.com%2F%3FactivityId%3DPiuLvM8vamONsWzC0wqBGQ","checkVersion":False}
-#     res=taskGetUrl('apDoTask', body, cookie)
-#     if not res:
-#         return
-#     try:    
-#         if res['success']:
-#             print('任务完成，获得血量 1\n')
-#         else:
-#             print(f"{res['errMsg']}\n")
-#     except:
-#         print(f"错误\n{res}\n")
+ # 玩一玩
+def apDoTask(cookie):
+     print('开始 玩一玩')
+     body={"linkId":linkId,"taskType":"BROWSE_CHANNEL","taskId":454,"channel":4,"itemId":"https%3A%2F%2Fsignfree.jd.com%2F%3FactivityId%3DPiuLvM8vamONsWzC0wqBGQ","checkVersion":False}
+     res=taskGetUrl('apDoTask', body, cookie)
+     if not res:
+         return
+     try:    
+         if res['success']:
+             print('任务完成，获得血量 1\n')
+         else:
+             print(f"{res['errMsg']}\n")
+     except:
+         print(f"错误\n{res}\n")
     
 
 # 挖宝
@@ -379,6 +379,7 @@ def main():
 
     for e,cookie in enumerate(cookie_list,start=1):
         print(f'******开始【账号 {e}】 {get_pin(cookie)} *********\n')
+        apDoTask(cookie)
         happyDigHome(cookie)
         spring_reward_list(cookie)
 
