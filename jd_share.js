@@ -1,6 +1,7 @@
 /* 
 1 1 1 1 * jd_share.js
 注意控制ck数量
+车头数量OWN_COOKIE_NUM，默认为1
 */
 const $ = new Env("分享有礼");
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
@@ -15,8 +16,8 @@ let activityShopId = ''
 if (process.env.OWN_COOKIE_NUM && process.env.OWN_COOKIE_NUM != 4) {
     ownCookieNum = process.env.OWN_COOKIE_NUM;
 }
-if (process.env.ACTIVITY_ID && process.env.ACTIVITY_ID != "") {
-    activityId = process.env.ACTIVITY_ID;
+if (process.env.SHARE_ACTIVITY_ID && process.env.SHARE_ACTIVITY_ID != "") {
+    activityId = process.env.SHARE_ACTIVITY_ID;
 }
 
 if ($.isNode()) {
@@ -67,11 +68,12 @@ if ($.isNode()) {
             $.activityShopId = ''
             $.activityUrl = `https://lzkjdz-isv.isvjcloud.com/wxShareActivity/activity/${$.authorNum}?activityId=${$.activityId}&friendUuid=${encodeURIComponent($.authorCode)}&shareuserid4minipg=null&shopid=${$.activityShopId}`
             await share();
+			await $.wait(1000)
             activityShopId = $.venderId;
         }
     }
     isGetAuthorCodeList = false;
-    console.log('需要助力助力码')
+    console.log('需要助力的助力码')
     console.log(authorCodeList)
     for (let i = 0; i < cookiesArr.length; i++) {
         if (cookiesArr[i]) {
@@ -106,6 +108,7 @@ if ($.isNode()) {
                 console.log('去助力: '+$.authorCode)
                 
                 await share();
+				await $.wait(1000)
                 if ($.errorMessage === '活动太火爆，还是去买买买吧') {
                     break
                 }
@@ -127,7 +130,7 @@ if ($.isNode()) {
             $.activityId = activityId
             $.activityShopId = activityShopId
             await getPrize();
-            //await $.wait(2000)
+			await $.wait(2000)
         }
     }
 })()
@@ -148,7 +151,7 @@ async function share() {
     if ($.token) {
         await getMyPing();
         if ($.secretPin) {
-            await $.wait(500)
+			await $.wait(2000)
             await task('common/accessLogWithAD', `venderId=${$.activityShopId}&code=25&pin=${encodeURIComponent($.secretPin)}&activityId=${$.activityId}&pageUrl=${$.activityUrl}&subType=app&adSource=null`, 1);
             await task('activityContent', `activityId=${$.activityId}&pin=${encodeURIComponent($.secretPin)}&friendUuid=${encodeURIComponent($.authorCode)}`)
         } else {
