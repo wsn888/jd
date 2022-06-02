@@ -1,13 +1,11 @@
 /*
 种豆得豆 脚本更新地址：jd_plantBean.js
-更新时间：2021-08-20
 活动入口：京东APP我的-更多工具-种豆得豆
 已支持IOS京东多账号,云端多京东账号
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
 注：会自动关注任务中的店铺跟商品，介意者勿使用。
 互助码shareCode请先手动运行脚本查看打印可看到
 每个京东账号每天只能帮助3个人。多出的助力码将会助力失败。
-
 =====================================Quantumult X=================================
 [task_local]
 1 7-21/2 * * * jd_plantBean.js, tag=种豆得豆, enabled=true
@@ -22,8 +20,9 @@ cron "1 7-21/2 * * *" jd_plantBean.js,tag=京东种豆得豆
 ====================================小火箭=============================
 京东种豆得豆 = type=cron,jd_plantBean.js, cronexpr="1 7-21/2 * * *", timeout=3600, enable=true
 
+
 */
-const $ = new Env('种豆得豆');
+const $ = new Env('京东种豆得豆');
 //Node.js用户请在jdCookie.js处填写京东ck;
 //ios等软件用户直接用NobyDa的jd cookie
 let jdNotify = true;//是否开启静默运行。默认true开启
@@ -41,10 +40,21 @@ let roundList = [];
 let awardState = '';//上期活动的京豆是否收取
 let randomCount = $.isNode() ? 20 : 5;
 let num;
-let llerror=false;
 $.newShareCode = [];
+
 let NowHour = new Date().getHours();
-let lnrun = 0;
+let llhelp=true;
+if ($.isNode() && process.env.CC_NOHELPAFTER8) {
+	console.log(NowHour);
+	if (process.env.CC_NOHELPAFTER8=="true"){
+		if (NowHour>8){
+			llhelp=false;
+			console.log(`现在是9点后时段，不启用互助....`);
+		}			
+	}	
+}
+
+
 !(async () => {  
   await requireConfig();
   if (!cookiesArr[0]) {
@@ -71,16 +81,21 @@ let lnrun = 0;
       message = '';
       subTitle = '';
       option = {};
-	  lnrun++;	
       await jdPlantBean();
-	  if(lnrun == 3){
-		  console.log(`\n【访问接口次数达到3次，休息一分钟.....】\n`);
-		  await $.wait(60*1000);
-		  lnrun = 0;
-	  }
-      //await showMsg();
+      await showMsg();
     }
   }
+  if(llhelp){
+	  for (let j = 0; j < cookiesArr.length; j++) {
+		if (cookiesArr[j]) {
+		  cookie = cookiesArr[j];
+		  $.UserName = decodeURIComponent(cookie.match(/pt_pin=([^; ]+)(?=;?)/) && cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1])
+		  $.index = j + 1;
+		  //await shareCodesFormat();
+		  await doHelp()
+		}
+	  }
+	}
   if ($.isNode() && allMessage) {
     await notify.sendNotify(`${$.name}`, `${allMessage}`)
   }
@@ -94,8 +109,10 @@ async function jdPlantBean() {
   try {
     console.log(`获取任务及基本信息`)
     await plantBeanIndex();
-    if(llerror)
-		return;
+    if ($.plantBeanIndexResult.errorCode === 'PB101') {
+      console.log(`\n活动太火爆了，还是去买买买吧！\n`)
+      return
+    }
     for (let i = 0; i < $.plantBeanIndexResult.data.roundList.length; i++) {
       if ($.plantBeanIndexResult.data.roundList[i].roundState === "2") {
         num = i
@@ -117,22 +134,14 @@ async function jdPlantBean() {
       subTitle = `【京东昵称】${$.plantBeanIndexResult.data.plantUserInfo.plantNickName}`;
       message += `【上期时间】${roundList[num - 1].dateDesc.replace('上期 ', '')}\n`;
       message += `【上期成长值】${roundList[num - 1].growth}\n`;
-      await $.wait(1000);
-	  await receiveNutrients();//定时领取营养液
-	  await $.wait(2000);
+      await receiveNutrients();//定时领取营养液
       await doTask();//做日常任务
-	  await $.wait(5000);
       // await doEgg();
       await stealFriendWater();
-	  await $.wait(2000);
       await doCultureBean();
-	  await $.wait(1000);
       await doGetReward();
-	  await $.wait(1000);
       await showTaskProcess();
-	  await $.wait(1000);
       await plantShareSupportList();
-	  await $.wait(1000);
     } else {
       console.log(`种豆得豆-初始失败:  ${JSON.stringify($.plantBeanIndexResult)}`);
     }
@@ -175,8 +184,6 @@ async function doGetReward() {
 }
 async function doCultureBean() {
   await plantBeanIndex();
-	if(llerror)
-		return;
   if ($.plantBeanIndexResult && $.plantBeanIndexResult.code === '0') {
     const plantBeanRound = $.plantBeanIndexResult.data.roundList[num]
     if (plantBeanRound.roundState === '2') {
@@ -264,7 +271,6 @@ async function doTask() {
         console.log(`\n开始做 ${item.taskName}任务`);
         // $.receiveNutrientsTaskRes = await receiveNutrientsTask(item.taskType);
         await receiveNutrientsTask(item.taskType);
-	    	await $.wait(3000);
         console.log(`做 ${item.taskName}任务结果:${JSON.stringify($.receiveNutrientsTaskRes)}\n`);
       }
       if (item.taskType === 3) {
@@ -276,24 +282,23 @@ async function doTask() {
         }
         await shopTaskList();
         const { data } = $.shopTaskListRes;
-        let goodShopListARR = [], moreShopListARR = [], shopList = [];
-        if (!data.goodShopList) {
-          data.goodShopList = [];
-        }
-        if (!data.moreShopList) {
-          data.moreShopList = [];
-        }
+        let goodShopListARR = [],moreShopListARR = [], shopList = [];
         const { goodShopList, moreShopList } = data;
-        for (let i of goodShopList) {
-          if (i.taskState === '2') {
-            goodShopListARR.push(i);
-          }
-        }
-        for (let j of moreShopList) {
-          if (j.taskState === '2') {
-            moreShopListARR.push(j);
-          }
-        }
+		if (goodShopList) {
+		    for (let i of goodShopList) {
+		        if (i.taskState === '2') {
+		            goodShopListARR.push(i);
+		        }
+		    }
+		}
+		if (moreShopList) {
+		    for (let j of moreShopList) {
+		        if (j.taskState === '2') {
+		            moreShopListARR.push(j);
+		        }
+		    }
+		}
+        
         shopList = goodShopListARR.concat(moreShopListARR);
         for (let shop of shopList) {
           const { shopId, shopTaskId } = shop;
@@ -306,7 +311,7 @@ async function doTask() {
           console.log(`shopRes结果:${JSON.stringify(shopRes)}`);
           if (shopRes && shopRes.code === '0') {
             if (shopRes.data && shopRes.data.nutrState && shopRes.data.nutrState === '1') {
-              unFinishedShopNum --;
+              unFinishedShopNum--;
             }
           }
           if (unFinishedShopNum <= 0) {
@@ -407,8 +412,6 @@ async function doTask() {
 function showTaskProcess() {
   return new Promise(async resolve => {
     await plantBeanIndex();
-	if(llerror)
-		return;
     $.taskList = $.plantBeanIndexResult.data.taskList;
     if ($.taskList && $.taskList.length > 0) {
       console.log("     任务   进度");
@@ -418,6 +421,42 @@ function showTaskProcess() {
     }
     resolve()
   })
+}
+//助力好友
+async function doHelp() {
+
+  console.log(`开始账号内互助`);
+  $.newShareCode = [...(jdPlantBeanShareArr || [])]
+  
+  for (let plantUuid of $.newShareCode) {
+    console.log(`${$.UserName}开始助力: ${plantUuid}`);
+    if (!plantUuid) continue;
+    if (plantUuid === $.myPlantUuid) {
+      console.log(`\n跳过自己的plantUuid\n`)
+      continue
+    }
+    await helpShare(plantUuid);
+    if ($.helpResult && $.helpResult.code === '0') {
+      // console.log(`助力好友结果: ${JSON.stringify($.helpResult.data.helpShareRes)}`);
+      if ($.helpResult.data.helpShareRes) {
+        if ($.helpResult.data.helpShareRes.state === '1') {
+          console.log(`助力好友${plantUuid}成功`)
+          console.log(`${$.helpResult.data.helpShareRes.promptText}\n`);
+        } else if ($.helpResult.data.helpShareRes.state === '2') {
+          console.log('您今日助力的机会已耗尽，已不能再帮助好友助力了\n');
+          break;
+        } else if ($.helpResult.data.helpShareRes.state === '3') {
+          console.log('该好友今日已满9人助力/20瓶营养液,明天再来为Ta助力吧\n')
+        } else if ($.helpResult.data.helpShareRes.state === '4') {
+          console.log(`${$.helpResult.data.helpShareRes.promptText}\n`)
+        } else {
+          console.log(`助力其他情况：${JSON.stringify($.helpResult.data.helpShareRes)}`);
+        }
+      }
+    } else {
+      console.log(`助力好友失败: ${JSON.stringify($.helpResult)}`);
+    }
+  }
 }
 function showMsg() {
   $.log(`\n${message}\n`);
@@ -528,39 +567,47 @@ async function helpShare(plantUuid) {
   console.log(`助力结果的code:${$.helpResult && $.helpResult.code}`);
 }
 async function plantBeanIndex() {
-	llerror=false;
-    $.plantBeanIndexResult = await request('plantBeanIndex'); //plantBeanIndexBody
-    if ($.plantBeanIndexResult.errorCode === 'PB101') {
-        console.log(`\n活动太火爆了，还是去买买买吧！\n`)
-		llerror=true;
-        return
-    }
-    if ($.plantBeanIndexResult.errorCode) {
-        console.log(`获取任务及基本信息出错，10秒后重试\n`)
-        await $.wait(10000);
-        $.plantBeanIndexResult = await request('plantBeanIndex'); 
-        if ($.plantBeanIndexResult.errorCode === 'PB101') {
-            console.log(`\n活动太火爆了，还是去买买买吧！\n`)
-			llerror=true;
-            return
+  $.plantBeanIndexResult = await request('plantBeanIndex');//plantBeanIndexBody
+}
+function readShareCode() {
+  return new Promise(async resolve => {
+    $.get({url: `https://api.jdsharecode.xyz/api/bean/${randomCount}`, timeout: 10000}, (err, resp, data) => {
+      try {
+        if (err) {
+          console.log(`${JSON.stringify(err)}`)
+          console.log(`${$.name} API请求失败，请检查网路重试`)
+        } else {
+          if (data) {
+            console.log(`随机取${randomCount}个码放到您固定的互助码后面(不影响已有固定互助)`)
+            data = JSON.parse(data);
+          }
         }
+      } catch (e) {
+        $.logErr(e, resp)
+      } finally {
+        resolve(data);
+      }
+    })
+    await $.wait(15000);
+    resolve()
+  })
+}
+//格式化助力码
+function shareCodesFormat() {
+  return new Promise(async resolve => {
+    console.log(`第${$.index}个京东账号的助力码:${$.shareCodesArr[$.index - 1]}`)
+    newShareCodes = [];
+    if ($.shareCodesArr[$.index - 1]) {
+      newShareCodes = $.shareCodesArr[$.index - 1].split('@');
+    } else {
+      // console.log(`由于您第${$.index}个京东账号未提供shareCode,将采纳本脚本自带的助力码\n`)
+      const tempIndex = $.index > shareCodes.length ? (shareCodes.length - 1) : ($.index - 1);
+      newShareCodes = shareCodes[tempIndex].split('@');
     }
-    if ($.plantBeanIndexResult.errorCode) {
-        console.log(`获取任务及基本信息出错，30秒后重试\n`)
-        await $.wait(30000);
-        $.plantBeanIndexResult = await request('plantBeanIndex'); 
-        if ($.plantBeanIndexResult.errorCode === 'PB101') {
-            console.log(`\n活动太火爆了，还是去买买买吧！\n`)
-			llerror=true;
-            return
-        }
-    }
-    if ($.plantBeanIndexResult.errorCode) {
-        console.log(`获取任务及基本信息失败，活动异常，换个时间再试试吧....`)
-        console.log("错误代码;" + $.plantBeanIndexResult.errorCode)
-		llerror=true;
-        return
-    }
+    
+    console.log(`第${$.index}个京东账号将要助力的好友${JSON.stringify(newShareCodes)}`)
+    resolve();
+  })
 }
 function requireConfig() {
   return new Promise(resolve => {
@@ -590,7 +637,7 @@ function requireConfig() {
       })
     } else {
       if ($.getdata('jd_plantbean_inviter')) $.shareCodesArr = $.getdata('jd_plantbean_inviter').split('\n').filter(item => !!item);
-      //console.log(`\nBoxJs设置的${$.name}好友邀请码:${$.getdata('jd_plantbean_inviter') ? $.getdata('jd_plantbean_inviter') : '暂无'}\n`);
+      console.log(`\nBoxJs设置的${$.name}好友邀请码:${$.getdata('jd_plantbean_inviter') ? $.getdata('jd_plantbean_inviter') : '暂无'}\n`);
     }
     // console.log(`\n种豆得豆助力码::${JSON.stringify($.shareCodesArr)}`);
     //console.log(`您提供了${$.shareCodesArr.length}个账号的种豆得豆助力码\n`);
@@ -604,7 +651,7 @@ function requestGet(function_id, body = {}) {
   body["monitor_source"] = "plant_app_plant_index";
   body["monitor_refer"] = "";
   return new Promise(async resolve => {
-    await $.wait(5000);
+    await $.wait(2000);
     const option = {
       url: `${JD_API_HOST}?functionId=${function_id}&body=${escape(JSON.stringify(body))}&appid=ld`,
       headers: {
@@ -682,7 +729,7 @@ function TotalBean() {
 }
 function request(function_id, body = {}) {
   return new Promise(async resolve => {
-    await $.wait(5000);
+    await $.wait(2000);
     $.post(taskUrl(function_id, body), (err, resp, data) => {
       try {
         if (err) {
@@ -737,5 +784,3 @@ function jsonParse(str) {
     }
   }
 }
-// prettier-ignore
-function Env(t, e) { "undefined" != typeof process && JSON.stringify(process.env).indexOf("GITHUB") > -1 && process.exit(0); class s { constructor(t) { this.env = t } send(t, e = "GET") { t = "string" == typeof t ? { url: t } : t; let s = this.get; return "POST" === e && (s = this.post), new Promise((e, i) => { s.call(this, t, (t, s, r) => { t ? i(t) : e(s) }) }) } get(t) { return this.send.call(this.env, t) } post(t) { return this.send.call(this.env, t, "POST") } } return new class { constructor(t, e) { this.name = t, this.http = new s(this), this.data = null, this.dataFile = "box.dat", this.logs = [], this.isMute = !1, this.isNeedRewrite = !1, this.logSeparator = "\n", this.startTime = (new Date).getTime(), Object.assign(this, e), this.log("", `🔔${this.name}, 开始!`) } isNode() { return "undefined" != typeof module && !!module.exports } isQuanX() { return "undefined" != typeof $task } isSurge() { return "undefined" != typeof $httpClient && "undefined" == typeof $loon } isLoon() { return "undefined" != typeof $loon } toObj(t, e = null) { try { return JSON.parse(t) } catch { return e } } toStr(t, e = null) { try { return JSON.stringify(t) } catch { return e } } getjson(t, e) { let s = e; const i = this.getdata(t); if (i) try { s = JSON.parse(this.getdata(t)) } catch { } return s } setjson(t, e) { try { return this.setdata(JSON.stringify(t), e) } catch { return !1 } } getScript(t) { return new Promise(e => { this.get({ url: t }, (t, s, i) => e(i)) }) } runScript(t, e) { return new Promise(s => { let i = this.getdata("@chavy_boxjs_userCfgs.httpapi"); i = i ? i.replace(/\n/g, "").trim() : i; let r = this.getdata("@chavy_boxjs_userCfgs.httpapi_timeout"); r = r ? 1 * r : 20, r = e && e.timeout ? e.timeout : r; const [o, h] = i.split("@"), n = { url: `http://${h}/v1/scripting/evaluate`, body: { script_text: t, mock_type: "cron", timeout: r }, headers: { "X-Key": o, Accept: "*/*" } }; this.post(n, (t, e, i) => s(i)) }).catch(t => this.logErr(t)) } loaddata() { if (!this.isNode()) return {}; { this.fs = this.fs ? this.fs : require("fs"), this.path = this.path ? this.path : require("path"); const t = this.path.resolve(this.dataFile), e = this.path.resolve(process.cwd(), this.dataFile), s = this.fs.existsSync(t), i = !s && this.fs.existsSync(e); if (!s && !i) return {}; { const i = s ? t : e; try { return JSON.parse(this.fs.readFileSync(i)) } catch (t) { return {} } } } } writedata() { if (this.isNode()) { this.fs = this.fs ? this.fs : require("fs"), this.path = this.path ? this.path : require("path"); const t = this.path.resolve(this.dataFile), e = this.path.resolve(process.cwd(), this.dataFile), s = this.fs.existsSync(t), i = !s && this.fs.existsSync(e), r = JSON.stringify(this.data); s ? this.fs.writeFileSync(t, r) : i ? this.fs.writeFileSync(e, r) : this.fs.writeFileSync(t, r) } } lodash_get(t, e, s) { const i = e.replace(/\[(\d+)\]/g, ".$1").split("."); let r = t; for (const t of i) if (r = Object(r)[t], void 0 === r) return s; return r } lodash_set(t, e, s) { return Object(t) !== t ? t : (Array.isArray(e) || (e = e.toString().match(/[^.[\]]+/g) || []), e.slice(0, -1).reduce((t, s, i) => Object(t[s]) === t[s] ? t[s] : t[s] = Math.abs(e[i + 1]) >> 0 == +e[i + 1] ? [] : {}, t)[e[e.length - 1]] = s, t) } getdata(t) { let e = this.getval(t); if (/^@/.test(t)) { const [, s, i] = /^@(.*?)\.(.*?)$/.exec(t), r = s ? this.getval(s) : ""; if (r) try { const t = JSON.parse(r); e = t ? this.lodash_get(t, i, "") : e } catch (t) { e = "" } } return e } setdata(t, e) { let s = !1; if (/^@/.test(e)) { const [, i, r] = /^@(.*?)\.(.*?)$/.exec(e), o = this.getval(i), h = i ? "null" === o ? null : o || "{}" : "{}"; try { const e = JSON.parse(h); this.lodash_set(e, r, t), s = this.setval(JSON.stringify(e), i) } catch (e) { const o = {}; this.lodash_set(o, r, t), s = this.setval(JSON.stringify(o), i) } } else s = this.setval(t, e); return s } getval(t) { return this.isSurge() || this.isLoon() ? $persistentStore.read(t) : this.isQuanX() ? $prefs.valueForKey(t) : this.isNode() ? (this.data = this.loaddata(), this.data[t]) : this.data && this.data[t] || null } setval(t, e) { return this.isSurge() || this.isLoon() ? $persistentStore.write(t, e) : this.isQuanX() ? $prefs.setValueForKey(t, e) : this.isNode() ? (this.data = this.loaddata(), this.data[e] = t, this.writedata(), !0) : this.data && this.data[e] || null } initGotEnv(t) { this.got = this.got ? this.got : require("got"), this.cktough = this.cktough ? this.cktough : require("tough-cookie"), this.ckjar = this.ckjar ? this.ckjar : new this.cktough.CookieJar, t && (t.headers = t.headers ? t.headers : {}, void 0 === t.headers.Cookie && void 0 === t.cookieJar && (t.cookieJar = this.ckjar)) } get(t, e = (() => { })) { t.headers && (delete t.headers["Content-Type"], delete t.headers["Content-Length"]), this.isSurge() || this.isLoon() ? (this.isSurge() && this.isNeedRewrite && (t.headers = t.headers || {}, Object.assign(t.headers, { "X-Surge-Skip-Scripting": !1 })), $httpClient.get(t, (t, s, i) => { !t && s && (s.body = i, s.statusCode = s.status), e(t, s, i) })) : this.isQuanX() ? (this.isNeedRewrite && (t.opts = t.opts || {}, Object.assign(t.opts, { hints: !1 })), $task.fetch(t).then(t => { const { statusCode: s, statusCode: i, headers: r, body: o } = t; e(null, { status: s, statusCode: i, headers: r, body: o }, o) }, t => e(t))) : this.isNode() && (this.initGotEnv(t), this.got(t).on("redirect", (t, e) => { try { if (t.headers["set-cookie"]) { const s = t.headers["set-cookie"].map(this.cktough.Cookie.parse).toString(); s && this.ckjar.setCookieSync(s, null), e.cookieJar = this.ckjar } } catch (t) { this.logErr(t) } }).then(t => { const { statusCode: s, statusCode: i, headers: r, body: o } = t; e(null, { status: s, statusCode: i, headers: r, body: o }, o) }, t => { const { message: s, response: i } = t; e(s, i, i && i.body) })) } post(t, e = (() => { })) { if (t.body && t.headers && !t.headers["Content-Type"] && (t.headers["Content-Type"] = "application/x-www-form-urlencoded"), t.headers && delete t.headers["Content-Length"], this.isSurge() || this.isLoon()) this.isSurge() && this.isNeedRewrite && (t.headers = t.headers || {}, Object.assign(t.headers, { "X-Surge-Skip-Scripting": !1 })), $httpClient.post(t, (t, s, i) => { !t && s && (s.body = i, s.statusCode = s.status), e(t, s, i) }); else if (this.isQuanX()) t.method = "POST", this.isNeedRewrite && (t.opts = t.opts || {}, Object.assign(t.opts, { hints: !1 })), $task.fetch(t).then(t => { const { statusCode: s, statusCode: i, headers: r, body: o } = t; e(null, { status: s, statusCode: i, headers: r, body: o }, o) }, t => e(t)); else if (this.isNode()) { this.initGotEnv(t); const { url: s, ...i } = t; this.got.post(s, i).then(t => { const { statusCode: s, statusCode: i, headers: r, body: o } = t; e(null, { status: s, statusCode: i, headers: r, body: o }, o) }, t => { const { message: s, response: i } = t; e(s, i, i && i.body) }) } } time(t, e = null) { const s = e ? new Date(e) : new Date; let i = { "M+": s.getMonth() + 1, "d+": s.getDate(), "H+": s.getHours(), "m+": s.getMinutes(), "s+": s.getSeconds(), "q+": Math.floor((s.getMonth() + 3) / 3), S: s.getMilliseconds() }; /(y+)/.test(t) && (t = t.replace(RegExp.$1, (s.getFullYear() + "").substr(4 - RegExp.$1.length))); for (let e in i) new RegExp("(" + e + ")").test(t) && (t = t.replace(RegExp.$1, 1 == RegExp.$1.length ? i[e] : ("00" + i[e]).substr(("" + i[e]).length))); return t } msg(e = t, s = "", i = "", r) { const o = t => { if (!t) return t; if ("string" == typeof t) return this.isLoon() ? t : this.isQuanX() ? { "open-url": t } : this.isSurge() ? { url: t } : void 0; if ("object" == typeof t) { if (this.isLoon()) { let e = t.openUrl || t.url || t["open-url"], s = t.mediaUrl || t["media-url"]; return { openUrl: e, mediaUrl: s } } if (this.isQuanX()) { let e = t["open-url"] || t.url || t.openUrl, s = t["media-url"] || t.mediaUrl; return { "open-url": e, "media-url": s } } if (this.isSurge()) { let e = t.url || t.openUrl || t["open-url"]; return { url: e } } } }; if (this.isMute || (this.isSurge() || this.isLoon() ? $notification.post(e, s, i, o(r)) : this.isQuanX() && $notify(e, s, i, o(r))), !this.isMuteLog) { let t = ["", "==============📣系统通知📣=============="]; t.push(e), s && t.push(s), i && t.push(i), console.log(t.join("\n")), this.logs = this.logs.concat(t) } } log(...t) { t.length > 0 && (this.logs = [...this.logs, ...t]), console.log(t.join(this.logSeparator)) } logErr(t, e) { const s = !this.isSurge() && !this.isQuanX() && !this.isLoon(); s ? this.log("", `❗️${this.name}, 错误!`, t.stack) : this.log("", `❗️${this.name}, 错误!`, t) } wait(t) { return new Promise(e => setTimeout(e, t)) } done(t = {}) { const e = (new Date).getTime(), s = (e - this.startTime) / 1e3; this.log("", `🔔${this.name}, 结束! 🕛 ${s} 秒`), this.log(), (this.isSurge() || this.isQuanX() || this.isLoon()) && $done(t) } }(t, e) }

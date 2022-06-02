@@ -1,13 +1,14 @@
 /*
 特物Z
 抄自 @yangtingxiao 抽奖机脚本
-活动入口：jd_superBrand.js
+活动入口：
+更新地址：jd_superBrandSign.js
 已支持IOS双京东账号, Node.js支持N个京东账号
 脚本兼容: QuantumultX, Surge, Loon, 小火箭，JSBox, Node.js
 ============Quantumultx===============
 [task_local]
 #特物Z_签到
-30 6 1-19 6 * jd_superBrand.js, tag=特物Z, enabled=true
+55 6,23 1-19 6 * jd_superBrandSign.js, tag=特物Z, enabled=true
 
  */
 const $ = new Env('特物Z_签到');
