@@ -1,5 +1,5 @@
 /*
-种豆得豆 脚本更新地址：jd_plantBean_help.js
+种豆得豆 脚本更新 jd_plantBean_help.js
 更新时间：2021-08-20
 活动入口：京东APP我的-更多工具-种豆得豆
 已支持IOS京东多账号,云端多京东账号
@@ -17,7 +17,7 @@
 cron "40 4,17 * * *" jd_plantBean_help.js,tag=京东种豆得豆
 
 ======================================Surge==========================
-京东种豆得豆 = type=cron,cronexp="40 4,17 * * *",wake-system=1,timeout=3600,jd_plantBean_help.js
+京东种豆得豆 = type=cron,cronexp="40 4,17 * * *",jd_plantBean_help.js
 
 ====================================小火箭=============================
 京东种豆得豆 = type=cron,jd_plantBean_help.js, cronexpr="40 4,17 * * *", timeout=3600, enable=true
@@ -148,7 +148,7 @@ async function doHelp() {
 		  await $.wait(30 * 1000);
 		  lnruns = 0;
 	  }
-    if ($.helpResult && $.helpResult.code === '0') {
+        if ($.helpResult && $.helpResult.code === '0' && !$.helpResult.errorCode) {
       console.log(`助力好友结果: ${JSON.stringify($.helpResult.data.helpShareRes)}`);
       if ($.helpResult.data && $.helpResult.data.helpShareRes) {
         if ($.helpResult.data.helpShareRes.state === '1') {
