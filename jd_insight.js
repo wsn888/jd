@@ -1,6 +1,6 @@
 /**
 京洞察问卷通知
-cron 0 0 9 * * ? jd_insight.js
+35 9 * * * jd_insight.js
 */
 const $ = new Env('京洞察问卷通知');
 const notify = $.isNode() ? require('./sendNotify') : '';
