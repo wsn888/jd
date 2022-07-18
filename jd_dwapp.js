@@ -1,8 +1,8 @@
 /*
 积分换话费
-入口：首页-生活·缴费-积分换话费 
+入口：首页-生活·缴费-积分换话费
 update：20220530
-20 7,19 * * * jd_dwapp.js
+cron 33 7 * * * jd_dwapp.js
 */
 
 const $ = new Env('积分换话费');
@@ -31,7 +31,7 @@ if ($.isNode()) {
       $.isLogin = true;
       $.nickName = '';
       message = '';
-      await TotalBean();
+      //await TotalBean();
       console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
       if (!$.isLogin) {
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });

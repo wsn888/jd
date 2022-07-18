@@ -2,11 +2,13 @@
 #极速版赚金币
 ##入口为极速版 百元生活费 赚金币 邀请好友
 ##第一次运行可不填写邀请码 运行一次查看自己的邀请码
-export InviterPin="" ##你的邀请码
+export InviterPin="9vOskAagcMJ4EOWXPQSS9A%3D%3D" ##你的邀请码
 ##助力逻辑：填写你的邀请码变量之后会助力你填写的邀请码
+
+
 [task_local]
 #柠檬赚金币
-25 1,13 * * * jd_zjb.js
+20 0 * * * jd_zjb.js, tag=柠檬赚金币, enabled=true
 */
 const $ = new Env('极速版赚金币邀请');
 const notify = $.isNode() ? require('./sendNotify') : '';
@@ -21,8 +23,7 @@ if ($.isNode() && process.env.InviterPin) {
   InviterPin = process.env.InviterPin;
 }
 if (InviterPin.length == 0) {
-  console.log(`\n还未填写邀请码变量，请去环境变量中填写变量为自己的邀请码\n`);
-  console.log(`export InviterPin="你的邀请码"\n`);
+  console.log(`\n您未填写邀请码变量，请去环境变量中填写变量\n`);
 }
 if ($.isNode()) {
   Object.keys(jdCookieNode).forEach((item) => {
@@ -48,7 +49,7 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
       $.isLogin = true;
       $.nickName = '';
       message = '';
-      await TotalBean();
+      //await TotalBean();
       console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
       if (!$.isLogin) {
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
@@ -62,7 +63,7 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
       if (InviterPin.length != 0) {
         await help()
       } else {
-        await help2("zjb",Math.random() > 0.4 ? "ALa2aF5vyaTfbmUsue4fZzu%2BNdYeM3JXru1610IYEfs%3D" : "YbP15qKWN0qZ9J4B%2BWed0FcckmzL17oEBfa1V1E2IQA%3D")         
+        await help2("zjb",Math.random() > 0.5 ? "9vOskAagcMJ4EOWXPQSS9A%3D%3D" : "9irilvenEupYF488TUrl19DLuKQ9zWnXYHf9anC0ujw%3D")        
       }
     }
   }

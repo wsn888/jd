@@ -11,7 +11,7 @@
 =================================Quantumultx=========================
 [task_local]
 #东东萌宠
-15 6-18/6 * * * jd_pet.js, tag=东东萌宠, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jdmc.png, enabled=true
+15 6-18/6 * * * jd_pet.js, tag=东东萌宠, enabled=true
 
 =================================Loon===================================
 [Script]
@@ -63,7 +63,7 @@ console.log(`共${cookiesArr.length}个京东账号\n`);
             $.index = i + 1;
             $.isLogin = true;
             $.nickName = '';
-            await TotalBean();
+            //await TotalBean();
             console.log(`开始【京东账号${$.index}】${$.nickName || $.UserName}\n`);
             if (!$.isLogin) {
                 $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {

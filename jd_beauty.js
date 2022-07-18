@@ -4,11 +4,10 @@
 jd_beautyStudy.js
 更新时间:2021-12-03
 活动入口：京东app首页-美妆馆-底部中间按钮
-20 2,9,20 * * * jd_beauty.js, tag=美丽研究院, enabled=true
+20 7,12,19 * * * jd_beautyStudy.js, tag=美丽研究院, enabled=true
  */
 const $ = new Env('美丽研究院');
 const notify = $.isNode() ? require('./sendNotify') : '';
-console.log('连接服务器不稳定,能不能用随缘!!!')
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 const WebSocket = require('ws');
 const UA = process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)
@@ -50,7 +49,7 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
       $.nickName = '';
       message = '';
       $.token = '';
-      await TotalBean();
+      //await TotalBean();
       console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
       if (!$.isLogin) {
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/`, {"open-url": "https://bean.m.jd.com/"});
@@ -143,7 +142,6 @@ async function jdBeauty() {
 async function mr() {
   $.coins = 0
   let positionList = ['b1', 'h1', 's1', 'b2', 'h2', 's2']
-  let positionList2 = ['b2', 'h2', 's2']
   $.tokens = []
   $.pos = []
   $.helpInfo = []
@@ -295,6 +293,7 @@ async function mr() {
               await $.wait(2500)
             }
           }
+
           if ($.taskState.today_answered === 0) {
             console.log(`去做每日问答任务`)
             client.send(`{"msg":{"type":"action","args":{"source":1},"action":"get_question"}}`)
@@ -365,7 +364,7 @@ async function mr() {
                 client.send(`{"msg":{"type":"action","args":{"position":"${vo.data.position}","material_id":${ma.id}},"action":"material_produce_v2"}}`)
                 await $.wait(5000);
               } else {
-                ma = $.material.base[1]['items'][positionList2.indexOf(vo.data.position)]
+                ma = $.material.base[1]['items'][positionList.indexOf(vo.data.position)]
                 if (ma) {
                   console.log(`else去生产${ma.name}`)
                   client.send(`{"msg":{"type":"action","args":{"position":"${vo.data.position}","material_id":${ma.id}},"action":"material_produce_v2"}}`)
@@ -411,7 +410,7 @@ async function mr() {
         case "product_lists":
           let need_material = []
           if (vo.code === '200' || vo.code === 200) {
-            $.products = vo.data.filter(vo=>vo.level===$.level-1)
+            $.products = vo.data.filter(vo=>vo.level===$.level)
             console.log(`========可生产商品信息========`)
             for (let product of $.products) {
               let num = Infinity
@@ -504,9 +503,9 @@ async function mr() {
           for (let benefit of vo.data) {
             if (benefit.type === 1) { //type 1 是京豆
               //console.log(`benefit:${JSON.stringify(benefit)}`);
-              if(benefit.description === "1 京豆" && parseInt(benefit.day_exchange_count) < 5 && $.total > benefit.coins){
+              if(benefit.description === "1 京豆" && parseInt(benefit.day_exchange_count) < 10 && $.total > benefit.coins){
                 $timenum = parseInt($.total / benefit.coins);
-                if ($timenum > 5) $timenum = 5;
+                if ($timenum > 10) $timenum = 10;
                 console.log(`\n可兑换${$timenum}次京豆:`)
                 for (let i = 0; i < $timenum; i++){
                   client.send(`{"msg":{"type":"action","args":{"benefit_id":${benefit.id}},"action":"to_exchange"}}`);
@@ -528,7 +527,7 @@ async function mr() {
           break
         case "to_exchange":
           if(oc(() => vo.data.coins)){
-            console.log(`兑换${vo.data.coins/-10000}京豆成功`)
+            console.log(`兑换${vo.data.coins/-1000}京豆成功`)
           }else{
             console.log(`兑换京豆失败`)
           }

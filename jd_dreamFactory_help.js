@@ -2,7 +2,6 @@
 京喜工厂招工互助
 更新时间：2021-8-20
 修复做任务、收集电力出现火爆，不能完成任务，重新计算h5st验证
-参考自 ：https://www.orzlee.com/web-development/2021/03/03/lxk0301-jingdong-signin-scriptjingxi-factory-solves-the-problem-of-unable-to-signin.html
 活动入口：京东APP-游戏与互动-查看更多-京喜工厂
 或者: 京东APP首页搜索 "玩一玩" ,造物工厂即可
 
@@ -11,7 +10,7 @@
 ============Quantumultx===============
 [task_local]
 #京喜工厂招工互助
-5 6,18 * * * jd_dreamFactory_help.js, tag=京喜工厂招工互助, img-url=https://github.com/58xinian/icon/raw/master/jdgc.png, enabled=true
+5 6,18 * * * jd_dreamFactory_help.js, tag=京喜工厂招工互助, enabled=true
 
 ================Loon==============
 [Script]
@@ -43,7 +42,10 @@ let tuanActiveId = ``, hasSend = false;
 const jxOpenUrl = `openjd://virtual?params=%7B%20%22category%22:%20%22jump%22,%20%22des%22:%20%22m%22,%20%22url%22:%20%22https://wqsd.jd.com/pingou/dream_factory/index.html%22%20%7D`;
 let cookiesArr = [], cookie = '', message = '', allMessage = '', jdDreamFactoryShareArr = [];
 const newShareCodes = [
-  ''
+  'urGPT1c0ITHN7W2XFqSKTg==',
+  'XGv-W12NaJeargxyJ9M5Rg==',
+  'Q2qrDiqp70N5yic3BGvcOQ==',
+  'SgVsBMPJ0CDXKbbPSoF3xg=='
 ];
 const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
 $.tuanIds = [];
@@ -78,7 +80,7 @@ if ($.isNode()) {
       $.pickFriendEle = 0;
       $.friendList = [];
       $.canHelpFlag = true;//能否助力朋友(招工)
-      await TotalBean();
+      //await TotalBean();
       console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
       if (!$.isLogin) {
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });

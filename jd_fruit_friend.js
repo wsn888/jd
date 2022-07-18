@@ -10,7 +10,7 @@
 ==========================Quantumultx=========================
 [task_local]
 #jd免费水果
-10 2 * * * jd_fruit_friend.js, tag=东东农场好友删减奖励, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jdnc.png, enabled=true
+10 2 * * * jd_fruit_friend.js, tag=东东农场好友删减奖励, enabled=true
 =========================Loon=============================
 [Script]
 cron "10 2 * * *" script-path=jd_fruit_friend.js,tag=东东农场好友删减奖励
@@ -64,7 +64,7 @@ let llgetshare = false;
             $.index = i + 1;
             $.isLogin = true;
             $.nickName = '';
-            await TotalBean();
+            //await TotalBean();
             if (!$.isLogin) {
                 $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
 
