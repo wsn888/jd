@@ -2,6 +2,7 @@
 京东京喜工厂
 更新时间：2021-8-20
 修复做任务、收集电力出现火爆，不能完成任务，重新计算h5st验证
+参考自 ：https://www.orzlee.com/web-development/2021/03/03/lxk0301-jingdong-signin-scriptjingxi-factory-solves-the-problem-of-unable-to-signin.html
 活动入口：京东APP-游戏与互动-查看更多-京喜工厂
 或者: 京东APP首页搜索 "玩一玩" ,造物工厂即可
 
@@ -309,44 +310,47 @@ function taskList() {
 
 // 获得用户电力情况
 function getUserElectricity() {
-  return new Promise(async resolve => {
-    // const url = `/dreamfactory/generator/QueryCurrentElectricityQuantity?zone=dream_factory&factoryid=${$.factoryId}&sceneval=2&g_login_type=1`
-    $.get(taskurl(`generator/QueryCurrentElectricityQuantity`, `factoryid=${$.factoryId}`, `_time,factoryid,zone`), async (err, resp, data) => {
-      try {
-        if (err) {
-          console.log(`${JSON.stringify(err)}`)
-          console.log(`${$.name} API请求失败，请检查网路重试`)
-        } else {
-          if (safeGet(data)) {
-            data = JSON.parse(data);
-            if (data['ret'] === 0) {
-              console.log(`发电机：当前 ${data.data.currentElectricityQuantity} 电力，最大值 ${data.data.maxElectricityQuantity} 电力`)
-              if (data.data.currentElectricityQuantity < data.data.maxElectricityQuantity) {
-                $.log(`\n本次发电机电力集满分享后${data.data.nextCollectDoubleFlag === 1 ? '可' : '不可'}获得双倍电力，${data.data.nextCollectDoubleFlag === 1 ? '故目前不收取电力' : '故现在收取电力'}\n`)
-              }
-              if (data.data.nextCollectDoubleFlag === 1) {
-                if (data.data.currentElectricityQuantity === data.data.maxElectricityQuantity && data.data.doubleElectricityFlag) {
-                  console.log(`发电机：电力可翻倍并收获`)
-                  // await shareReport();
-                  await collectElectricity()
+    return new Promise(async resolve => {
+        // const url = `/dreamfactory/generator/QueryCurrentElectricityQuantity?zone=dream_factory&factoryid=${$.factoryId}&sceneval=2&g_login_type=1`
+        $.get(taskurl(`generator/QueryCurrentElectricityQuantity`, `factoryid=${$.factoryId}`, `_time,factoryid,zone`), async (err, resp, data) => {
+            try {
+                if (err) {
+                    console.log(`${JSON.stringify(err)}`)
+                    console.log(`${$.name} API请求失败，请检查网路重试`)
                 } else {
-                  message += `【发电机电力】当前 ${data.data.currentElectricityQuantity} 电力，未达到收获标准\n`
+                    if (safeGet(data)) {
+                        data = JSON.parse(data);
+                        if (data['ret'] === 0 && data.data) {
+                            console.log(`发电机：当前 ${data.data.currentElectricityQuantity} 电力，最大值 ${data.data.maxElectricityQuantity} 电力`)
+                            if (data.data.currentElectricityQuantity < data.data.maxElectricityQuantity) {
+                                $.log(`\n本次发电机电力集满分享后${data.data.nextCollectDoubleFlag === 1 ? '可' : '不可'}获得双倍电力，${data.data.nextCollectDoubleFlag === 1 ? '故目前不收取电力' : '故现在收取电力'}\n`)
+                            }
+                            if (data.data.nextCollectDoubleFlag === 1) {
+                                if (data.data.currentElectricityQuantity === data.data.maxElectricityQuantity && data.data.doubleElectricityFlag) {
+                                    console.log(`发电机：电力可翻倍并收获`)
+                                    // await shareReport();
+                                    await collectElectricity()
+                                } else {
+                                    message += `【发电机电力】当前 ${data.data.currentElectricityQuantity} 电力，未达到收获标准\n`
+                                }
+                            } else {
+                                //再收取双倍电力达到上限时，直接收取，不再等到满级
+                                await collectElectricity()
+                            }
+                        }else {
+                            console.log(`QueryCurrentElectricityQuantity异常:${JSON.stringify(data)}`);
+                        }
+                    }
                 }
-              } else {
-                //再收取双倍电力达到上限时，直接收取，不再等到满级
-                await collectElectricity()
-              }
+            } catch (e) {
+                $.logErr(e, resp)
+            } finally {
+                resolve();
             }
-          }
-        }
-      } catch (e) {
-        $.logErr(e, resp)
-      } finally {
-        resolve();
-      }
+        })
     })
-  })
 }
+
 
 //查询有多少的招工电力可收取
 function QueryHireReward() {
@@ -419,7 +423,7 @@ function QueryFriendList() {
         } else {
           if (safeGet(data)) {
             data = JSON.parse(data);
-            if (data['ret'] === 0) {
+            if (data['ret'] === 0 && data.data) {
               data = data['data'];
               const { assistListToday = [], assistNumMax, hireListToday = [], hireNumMax } = data;
               console.log(`\n\n你今日还能帮好友打工（${assistNumMax - assistListToday.length || 0}/${assistNumMax}）次\n\n`);
