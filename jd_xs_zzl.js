@@ -1,6 +1,6 @@
 /*
 京享周周乐
-活动入口：京东APP---京享会员
+活动入口：京东APP --京享会员
 更新时间：2022-04-03
 by:小手冰凉 tg:@chianPLA
 已支持IOS双京东账号,Node.js支持N个京东账号
@@ -38,7 +38,7 @@ let allMessage = '';
       $.isLogin = true;
       $.nickName = '';
       message = '';
-      await TotalBean();
+      //await TotalBean();
       console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
       if (!$.isLogin) {
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });

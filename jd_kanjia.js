@@ -6,7 +6,7 @@ export packetId="" ##你要参加砍价的邀请码
 活动地址：https://mfn.jd.com/ 京东极速版
 [task_local]
 #砍价免费拿
- 0 0 * * * jd_kanjia.js, tag=砍价免费拿, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
+ 0 0 * * * jd_kanjia.js, tag=砍价免费拿, enabled=true
 */
 
 
@@ -55,7 +55,7 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
       $.isLogin = true;
       $.nickName = '';
       message = '';
-      await TotalBean();
+      //await TotalBean();
       console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
       if (!$.isLogin) {
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});

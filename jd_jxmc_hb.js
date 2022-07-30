@@ -1,6 +1,6 @@
 /**
  惊喜牧场
- cron 23 0-23/3 * * * https://raw.githubusercontent.com/star261/jd/main/scripts/jd_jxmc.js
+ cron 23 0-23/3 * * * jd_jxmc.js
  */
 // prettier-ignore
 !function (t, r) { "object" == typeof exports ? module.exports = exports = r() : "function" == typeof define && define.amd ? define([], r) : t.CryptoJS = r() }(this, function () {
@@ -46,7 +46,7 @@ let token ='';
     $.isLogin = true;
     $.nickName = '';
     $.UserName = decodeURIComponent($.cookie.match(/pt_pin=([^; ]+)(?=;?)/) && $.cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
-    await TotalBean();
+    //await TotalBean();
     console.log(`\n*****开始【京东账号${$.index}】${$.nickName || $.UserName}*****\n`);
     if (!$.isLogin) {
       $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});

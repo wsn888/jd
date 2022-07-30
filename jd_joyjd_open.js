@@ -2,7 +2,7 @@
 JoyJd任务脚本
 已支持IOS双京东账号,Node.js支持N个京东账号
 脚本兼容: QuantumultX, Surge, Loon, JSBox, Node.js
-jd_joyjd_open通用ID任务，多个活动用@连接，任务连接 https://jdjoy.jd.com/module/task/v2/doTask
+jd_joyjd_open通用ID任务，多个活动用@连接，任务连接https://jdjoy.jd.com/module/task/v2/doTask
 export comm_activityIDList="af2b3d56e22d43afa0c50622c45ca2a3"  
 export comm_endTimeList="1639756800000"
 export comm_tasknameList="京东工业品抽奖"
@@ -76,7 +76,7 @@ if ($.isNode()) {
         $.oldcookie = cookiesArr[i];
         $.isLogin = true;
         $.nickName = '';
-        await TotalBean();
+        //await TotalBean();
         $.UserName = decodeURIComponent($.cookie.match(/pt_pin=([^; ]+)(?=;?)/) && $.cookie.match(/pt_pin=([^; ]+)(?=;?)/)[1]);
         console.log(`\n*****开始【京东账号${$.index}】${$.nickName || $.UserName}*****\n`);
         if (!$.isLogin) {

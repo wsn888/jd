@@ -12,17 +12,17 @@
 ============Quantumultx===============
 [task_local]
 #东东工厂
-50 4,17 * * * https://raw.githubusercontent.com/KingRan/JDJB/main/jd_jdfactory_help_help.js, tag=东东工厂, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jd_factory.png, enabled=true
+50 4,17 * * * jd_jdfactory_help_help.js, tag=东东工厂, enabled=true
 
 ================Loon==============
 [Script]
-cron "50 4,17 * * *" script-path=https://raw.githubusercontent.com/KingRan/JDJB/main/jd_jdfactory_help.js,tag=东东工厂
+cron "50 4,17 * * *" jd_jdfactory_help.js,tag=东东工厂
 
 ===============Surge=================
-东东工厂 = type=cron,cronexp="50 4,17 * * *",wake-system=1,timeout=3600,script-path=https://raw.githubusercontent.com/KingRan/JDJB/main/jd_jdfactory_help.js
+东东工厂 = type=cron,cronexp="50 4,17 * * *",wake-system=1,timeout=3600,jd_jdfactory_help.js
 
 ============小火箭=========
-东东工厂 = type=cron,script-path=https://raw.githubusercontent.com/KingRan/JDJB/main/jd_jdfactory_help.js, cronexpr="50 4,17 * * *", timeout=3600, enable=true
+东东工厂 = type=cron,jd_jdfactory_help.js, cronexpr="50 4,17 * * *", timeout=3600, enable=true
  */
 const $ = new Env('东东工厂内部互助');
 const notify = $.isNode() ? require('./sendNotify') : '';
@@ -59,7 +59,7 @@ let lnrun = 0;
       $.isLogin = true;
       $.nickName = '';
       message = '';
-      await TotalBean();
+      //await TotalBean();
       console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
       if (!$.isLogin) {
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, {"open-url": "https://bean.m.jd.com/bean/signIndex.action"});
