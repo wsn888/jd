@@ -1,6 +1,6 @@
 /**
 汪汪乐园-跑步+组队
-默认翻倍到0.04红包结束,修改请设置变量
+默认翻倍到0.01红包结束,修改请设置变量
 export JD_JOY_PARK_RUN_ASSETS="0.04"
 cron:30 0 * * * *
 30 0 * * * * jd_joy_park_run.ts
@@ -28,25 +28,13 @@ let assets: number = 0, captainId: string = '', h5stTool: H5ST = null
 
   
 
-    assets = parseFloat(process.env.JD_JOY_PARK_RUN_ASSETS || '0.04')
+    assets = parseFloat(process.env.JD_JOY_PARK_RUN_ASSETS || '0.01')
     let rewardAmount: number = 0
     try {
       h5stTool = new H5ST('448de', 'jdltapp;', fp_448de)
       await h5stTool.__genAlgo()
       res = await team('runningMyPrize', {"linkId": "L-sOanK_5RJCz7I314FpnQ", "pageSize": 20, "time": null, "ids": null})
       let sum: number = 0, success: number = 0
-      rewardAmount = res.data.rewardAmount
-      if (res.data.runningCashStatus.currentEndTime && res.data.runningCashStatus.status === 0) {
-        console.log('可提现', rewardAmount)
-        res = await api('runningPrizeDraw', {"linkId": "L-sOanK_5RJCz7I314FpnQ", "type": 2})
-        await wait(2000)
-        if (res.success){
-               console.log(res.data.message)
-           } else {
-                console.log('提现失败：', res.errMsg)
-             }
-      }
-
       for (let t of res?.data?.detailVos || []) {
         if (t.amount > 0 && getDate(new Date(t.createTime)) === new Date().getDate()) {
           sum = add(sum, t.amount)
@@ -56,7 +44,7 @@ let assets: number = 0, captainId: string = '', h5stTool: H5ST = null
         }
       }
       console.log('今日成功', success, '次')
-      console.log('今日收益', sum, '元')
+      console.log('今日收益', sum.toFixed(2), '元')
 
       res = await team('runningTeamInfo', {"linkId": "L-sOanK_5RJCz7I314FpnQ"})
       if (!captainId) {
