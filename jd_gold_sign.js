@@ -1,7 +1,7 @@
 /*
 京东金榜
 活动入口：https://h5.m.jd.com/babelDiy/Zeus/2H5Ng86mUJLXToEo57qWkJkjFPxw/index.html
-
+FROM KR
 定时随机~~~~
  */
 const $ = new Env('京东金榜');
