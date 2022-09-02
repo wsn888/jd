@@ -1,13 +1,4 @@
 /*
-================================================================================
-魔改自 https://github.com/shufflewzc/faker2/blob/main/jdCookie.js
-修改内容：与task_before.sh配合，由task_before.sh设置要设置要做互助的活动的 ShareCodeConfigName 和 ShareCodeEnvName 环境变量，
-        然后在这里实际解析/ql/log/.ShareCode中该活动对应的配置信息（由code.sh生成和维护），注入到nodejs的环境变量中
-修改原因：原先的task_before.sh直接将互助信息注入到shell的env中，在ck超过45以上时，互助码环境变量过大会导致调用一些系统命令
-        （如date/cat）时报 Argument list too long，而在node中修改环境变量不会受这个限制，也不会影响外部shell环境，确保脚本可以正常运行
-魔改作者：风之凌殇
-================================================================================
-
 此文件为Node.js专用。其他用户请忽略
  */
 //此处填写京东账号cookie。
@@ -40,61 +31,5 @@ for (let i = 0; i < CookieJDs.length; i++) {
   exports['CookieJD' + index] = CookieJDs[i].trim();
 }
 
-// 以下为注入互助码环境变量（仅nodejs内起效）的代码
-function SetShareCodesEnv(nameChinese = "", nameConfig = "", envName = "") {
-  let rawCodeConfig = {}
-
-  // 读取互助码
-  shareCodeLogPath = `${process.env.QL_DIR}/log/.ShareCode/${nameConfig}.log`
-  let fs = require('fs')
-  if (fs.existsSync(shareCodeLogPath)) {
-    // 因为faker2目前没有自带ini，改用已有的dotenv来解析
-    // // 利用ini模块读取原始互助码和互助组信息
-    // let ini = require('ini')
-    // rawCodeConfig = ini.parse(fs.readFileSync(shareCodeLogPath, 'utf-8'))
-
-    // 使用env模块
-    require('dotenv').config({path: shareCodeLogPath})
-    rawCodeConfig = process.env
-  }
-
-  // 解析每个用户的互助码
-  codes = {}
-  Object.keys(rawCodeConfig).forEach(function (key) {
-    if (key.startsWith(`My${nameConfig}`)) {
-      codes[key] = rawCodeConfig[key]
-    }
-  });
-
-  // 解析每个用户要帮助的互助码组，将用户实际的互助码填充进去
-  let helpOtherCodes = {}
-  Object.keys(rawCodeConfig).forEach(function (key) {
-    if (key.startsWith(`ForOther${nameConfig}`)) {
-      helpCode = rawCodeConfig[key]
-      for (const [codeEnv, codeVal] of Object.entries(codes)) {
-        helpCode = helpCode.replace("${" + codeEnv + "}", codeVal)
-      }
-
-      helpOtherCodes[key] = helpCode
-    }
-  });
-
-  // 按顺序用&拼凑到一起，并放入环境变量，供目标脚本使用
-  let shareCodes = []
-  let totalCodeCount = Object.keys(helpOtherCodes).length
-  for (let idx = 1; idx <= totalCodeCount; idx++) {
-    shareCodes.push(helpOtherCodes[`ForOther${nameConfig}${idx}`])
-  }
-  let shareCodesStr = shareCodes.join('&')
-  process.env[envName] = shareCodesStr
-
-  console.info(`${nameChinese} 的 互助码环境变量 ${envName}，共计 ${totalCodeCount} 组互助码，总大小为 ${shareCodesStr.length} 字节`)
-}
-
-// 若在task_before.sh 中设置了要设置互助码环境变量的活动名称和环境变量名称信息，则在nodejs中处理，供活动使用
-let nameChinese = process.env.ShareCodeConfigChineseName
-let nameConfig = process.env.ShareCodeConfigName
-let envName = process.env.ShareCodeEnvName
-if (nameChinese && nameConfig && envName) {
-  SetShareCodesEnv(nameChinese, nameConfig, envName)
-}
+// 获取到cookie后屏蔽 使其他脚本引用时 获取不到环境变量[JD_COOKIE]
+process.env.JD_COOKIE = ''
