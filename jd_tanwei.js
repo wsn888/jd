@@ -1,11 +1,8 @@
 
 /*
 探味奇遇记
-活动入口：美食馆-右侧悬浮
-活动时间：8月20之前
-宝箱陆续开放
-来自：6dylan6/jdpro
-31 0,13 * * * jd_tanwei.js
+活动时间：9月17结束
+35 1,7 * * * https://raw.githubusercontent.com/6dylan6/jdpro/main/jd_tanwei.js
  */
 
 const $ = new Env('探味奇遇记');
@@ -36,7 +33,7 @@ const JD_API_HOST = 'https://api.m.jd.com/client.action';
       $.index = i + 1;
       $.isLogin = true;
       $.nickName = '';
-      //await TotalBean();
+      await TotalBean();
       console.log(`\n******开始【京东账号${$.index}】${$.nickName || $.UserName}*********\n`);
       if (!$.isLogin) {
         $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });

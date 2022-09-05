@@ -10,7 +10,7 @@
 ==========================Quantumultx=========================
 [task_local]
 #jd免费水果
-20 4,16 * * * jd_fruit_help.js, tag=东东农场内部互助, enabled=true
+20 4,16 * * * jd_fruit_help.js, tag=东东农场内部互助, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jdnc.png, enabled=true
 =========================Loon=============================
 [Script]
 cron "20 4,16 * * *" script-path=jd_fruit_help.js,tag=东东农场内部互助
@@ -218,6 +218,7 @@ async function turntableFarm() {
         continue
       }
       await lotteryMasterHelp(code);
+		if ($.lotteryMasterHelpRes.helpResult) {
       if ($.lotteryMasterHelpRes.helpResult.code === '0') {
         console.log(`天天抽奖-助力${$.lotteryMasterHelpRes.helpResult.masterUserInfo.nickName}成功\n`)
       } else if ($.lotteryMasterHelpRes.helpResult.code === '11') {
@@ -227,6 +228,7 @@ async function turntableFarm() {
         break;
       }
     }
+		}
     console.log(`天天抽奖次数共-${remainLotteryTimes}次`)
     //抽奖
     if (remainLotteryTimes > 0) {
