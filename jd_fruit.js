@@ -10,7 +10,7 @@
 ==========================Quantumultx=========================
 [task_local]
 #jd免费水果
-5 6-18/6 * * * jd_fruit.js, tag=东东农场, enabled=true
+5 6-18/6 * * * jd_fruit.js, tag=东东农场, img-url=https://raw.githubusercontent.com/58xinian/icon/master/jdnc.png, enabled=true
 =========================Loon=============================
 [Script]
 cron "5 6-18/6 * * *" script-path=jd_fruit.js,tag=东东农场
@@ -18,7 +18,7 @@ cron "5 6-18/6 * * *" script-path=jd_fruit.js,tag=东东农场
 东东农场 = type=cron,cronexp="5 6-18/6 * * *",wake-system=1,timeout=3600,script-path=jd_fruit.js
 =========================小火箭===========================
 东东农场 = type=cron,script-path=jd_fruit.js, cronexpr="5 6-18/6 * * *", timeout=3600, enable=true
-
+jd免费水果 搬的https://github.com/liuxiaoyucc/jd-helper/blob/a6f275d9785748014fc6cca821e58427162e9336/fruit/fruit.js
 export DO_TEN_WATER_AGAIN="" 默认再次浇水
 */
 const $ = new Env('东东农场');
@@ -126,26 +126,26 @@ async function jdFruit() {
     console.log(`任务执行异常，请检查执行日志 ‼️‼️`);
     $.logErr(e);
     const errMsg = `京东账号${$.index} ${$.nickName || $.UserName}\n任务执行异常，请检查执行日志 ‼️‼️`;
-    if ($.isNode()) await notify.sendNotify(`${$.name}`, errMsg);
-    $.msg($.name, '', `${errMsg}`)
+    //if ($.isNode()) await notify.sendNotify(`${$.name}`, errMsg);
+    //$.msg($.name, '', `${errMsg}`)
   }
   await showMsg();
 }
 async function doDailyTask() {
   await taskInitForFarm();
-  console.log(`开始签到`);
-  if (!$.farmTask.signInit.todaySigned) {
-    await signForFarm(); //签到
-    if ($.signResult.code === "0") {
-      console.log(`【签到成功】获得${$.signResult.amount}g💧\\n`)
-      //message += `【签到成功】获得${$.signResult.amount}g💧\n`//连续签到${signResult.signDay}天
-    } else {
-      // message += `签到失败,详询日志\n`;
-      console.log(`签到结果:  ${JSON.stringify($.signResult)}`);
-    }
-  } else {
-    console.log(`今天已签到,连续签到${$.farmTask.signInit.totalSigned},下次签到可得${$.farmTask.signInit.signEnergyEachAmount}g\n`);
-  }
+// console.log(`开始签到`);
+// if (!$.farmTask.signInit.todaySigned) {
+//   await signForFarm(); //签到
+//   if ($.signResult.code === "0") {
+//     console.log(`【签到成功】获得${$.signResult.amount}g💧\\n`)
+//     //message += `【签到成功】获得${$.signResult.amount}g💧\n`//连续签到${signResult.signDay}天
+//   } else {
+//     // message += `签到失败,详询日志\n`;
+//     console.log(`签到结果:  ${JSON.stringify($.signResult)}`);
+//   }
+// } else {
+//   console.log(`今天已签到,连续签到${$.farmTask.signInit.totalSigned},下次签到可得${$.farmTask.signInit.signEnergyEachAmount}g\n`);
+// }
   // 被水滴砸中
   console.log(`被水滴砸中： ${$.farmInfo.todayGotWaterGoalTask.canPop ? '是' : '否'}`);
   if ($.farmInfo.todayGotWaterGoalTask.canPop) {
@@ -533,6 +533,7 @@ async function turntableFarm() {
       await lotteryMasterHelp(code);
       await $.wait(1000)
       // console.log('天天抽奖助力结果',lotteryMasterHelpRes.helpResult)
+	  if ($.lotteryMasterHelpRes.helpResult === undefined) break;
       if ($.lotteryMasterHelpRes.helpResult.code === '0') {
         console.log(`天天抽奖-助力${$.lotteryMasterHelpRes.helpResult.masterUserInfo.nickName}成功\n`)
       } else if ($.lotteryMasterHelpRes.helpResult.code === '11') {
@@ -664,7 +665,7 @@ async function masterHelpShare() {
   let salveHelpAddWater = 0;
   let remainTimes = 3;//今日剩余助力次数,默认3次（京东农场每人每天3次助力机会）。
   let helpSuccessPeoples = '';//成功助力好友
-  console.log(`格式化后的助力码::${JSON.stringify(newShareCodes)}\n`);
+  //console.log(`格式化后的助力码::${JSON.stringify(newShareCodes)}\n`);
 
   for (let code of newShareCodes) {
     console.log(`开始助力京东账号${$.index} - ${$.nickName || $.UserName}的好友: ${code}`);
@@ -687,7 +688,7 @@ async function masterHelpShare() {
       } else if ($.helpResult.helpResult.code === '9') {
         console.log(`【助力好友结果】: 之前给【${$.helpResult.helpResult.masterUserInfo.nickName}】助力过了`);
       } else if ($.helpResult.helpResult.code === '10') {
-        console.log(`【助力好友结果】: 好友【${$.helpResult.helpResult.masterUserInfo.nickName}】已满五人助力`);
+        console.log(`【助力好友结果】: 好友【${$.helpResult.helpResult.masterUserInfo.nickName}】已满八人助力`);
       } else {
         console.log(`助力其他情况：${JSON.stringify($.helpResult.helpResult)}`);
       }
@@ -695,10 +696,11 @@ async function masterHelpShare() {
       remainTimes = $.helpResult.helpResult.remainTimes;
       if ($.helpResult.helpResult.remainTimes === 0) {
         console.log(`您当前助力次数已耗尽，跳出助力`);
-        break
+        break;
       }
     } else {
       console.log(`助力失败::${JSON.stringify($.helpResult)}`);
+	  break;
     }
   }
   if ($.isLoon() || $.isQuanX() || $.isSurge()) {
