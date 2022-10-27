@@ -1,7 +1,7 @@
 
 /*
 入口：领券中心
-15 8,12,21 * * * https://raw.githubusercontent.com/6dylan6/jdpro/main/jd_couponspace.js
+35 8,12,22 * * * https://raw.githubusercontent.com/6dylan6/jdpro/main/jd_couponspace.js
 updatetime: 2022/10/27 
  */
 
