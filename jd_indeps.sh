@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #依赖安装，运行一次就好
-#0 8 5 5 * jd_indeps.sh
-#new Env('依赖安装');
+#1 1 1 1 1 jd_indeps.sh
+#new Env('依赖安装-手动运行');
 #
 
 npm_ver=`pnpm -v|awk -F. '{print $1}'`
