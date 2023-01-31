@@ -122,13 +122,12 @@ let llPetError=false;
 let strGuoqi="";
 let RemainMessage = '\n';
 RemainMessage += "⭕活动攻略:⭕" + '\n';
+RemainMessage += '【京东秒杀】京东->中间频道往右划找到京东秒杀->中间点立即签到->兑换无门槛红包(京东使用)\n';
+RemainMessage += '【点点券】京东->首页领券->中间位置瓜分点点券的签到->再领价值XXX的红包\n';
 RemainMessage += '【极速金币】京东极速版->我的->金币(极速版使用)\n';
 RemainMessage += '【京东赚赚】微信->京东赚赚小程序->底部赚好礼->提现无门槛红包(京东使用)\n';
-RemainMessage += '【京东秒杀】京东->中间频道往右划找到京东秒杀->中间点立即签到->兑换无门槛红包(京东使用)\n';
-RemainMessage += '【东东萌宠】京东->我的->东东萌宠,完成是京东红包,可以用于京东app的任意商品\n';
-RemainMessage += '【领现金】京东->我的->东东萌宠->领现金(微信提现+京东红包)\n';
+RemainMessage += '【领现金】京东->搜索领现金(微信提现+京东红包)\n';
 RemainMessage += '【东东农场】京东->我的->东东农场,完成是京东红包,可以用于京东app的任意商品\n';
-RemainMessage += '【京喜工厂】京喜->我的->京喜工厂,完成是商品红包,用于购买指定商品(不兑换会过期)\n';
 RemainMessage += '【京东金融】京东金融app->我的->养猪猪,完成是白条支付券,支付方式选白条支付时立减.\n';
 RemainMessage += '【其他】京喜红包只能在京喜使用,其他同理';
 
@@ -282,13 +281,6 @@ if(DisableIndex!=-1){
 	console.log("检测到设定关闭京喜牧场查询");
 	EnableJxMC=false;	
 }
-//京喜工厂
-let EnableJxGC=true;
-DisableIndex=strDisableList.findIndex((item) => item === "京喜工厂");
-if(DisableIndex!=-1){
-	console.log("检测到设定关闭京喜工厂查询");
-	EnableJxGC=false;	
-}
 
 // 京东工厂
 let EnableJDGC=true;
@@ -311,13 +303,6 @@ DisableIndex=strDisableList.findIndex((item) => item === "金融养猪");
 if(DisableIndex!=-1){
 	console.log("检测到设定关闭金融养猪查询");
 	EnablePigPet=false;	
-}
-//东东萌宠
-let EnableJDPet=true;
-DisableIndex=strDisableList.findIndex((item) => item === "东东萌宠");
-if(DisableIndex!=-1){
-	console.log("检测到设定关闭东东萌宠查询");
-	EnableJDPet=false
 }
 
 //7天过期京豆
@@ -513,7 +498,6 @@ if(DisableIndex!=-1){
 			        cash(), //极速金币
 			        jdJxMCinfo(), //京喜牧场
 			        bean(), //京豆查询
-			        getJxFactory(), //京喜工厂
 			        getDdFactoryInfo(), // 京东工厂
 			        jdCash(), //领现金
 			        GetJxBeaninfo(), //喜豆查询
@@ -759,9 +743,16 @@ async function showMsg() {
 		
 	if ($.JingXiang) {
 		if ($.isRealNameAuth)
-			ReturnMessageTitle += `(已实名)\n`;
+			if (cookie.includes("app_open"))
+				ReturnMessageTitle += `(wskey已实名)\n`;
+			else
+				ReturnMessageTitle += `(已实名)\n`;
 		else
-			ReturnMessageTitle += `(未实名)\n`;
+			if (cookie.includes("app_open"))
+				ReturnMessageTitle += `(wskey未实名)\n`;
+			else
+				ReturnMessageTitle += `(未实名)\n`;
+			
 	    ReturnMessage += `【账号信息】`;
 	    if ($.isPlusVip) {
 	        ReturnMessage += `Plus会员`;
@@ -1017,77 +1008,7 @@ async function showMsg() {
 
 		TempBaipiao += `【金融养猪】${$.PigPet} 可以兑换了!\n`;
 
-	}
-	if(EnableJDPet){
-		llPetError=false;
-		var response ="";
-		response = await PetRequest('energyCollect');
-		if(llPetError)
-			response = await PetRequest('energyCollect');
-		
-		llPetError=false;
-		var initPetTownRes = "";
-		initPetTownRes = await PetRequest('initPetTown');
-		if(llPetError)
-			initPetTownRes = await PetRequest('initPetTown');
-		
-		if(!llPetError && initPetTownRes){
-			if (initPetTownRes.code === '0' && initPetTownRes.resultCode === '0' && initPetTownRes.message === 'success') {
-				$.petInfo = initPetTownRes.result;
-				if ($.petInfo.userStatus === 0) {
-					ReturnMessage += `【东东萌宠】活动未开启!\n`;
-				} else if ($.petInfo.petStatus === 5) {
-					ReturnMessage += `【东东萌宠】${$.petInfo.goodsInfo.goodsName}已可领取!\n`;
-					TempBaipiao += `【东东萌宠】${$.petInfo.goodsInfo.goodsName}已可领取!\n`;
-					if (userIndex2 != -1) {
-						ReceiveMessageGp2 += `【账号${IndexGp2} ${$.nickName || $.UserName}】${$.petInfo.goodsInfo.goodsName}可以兑换了! (东东萌宠)\n`;
-					}
-					if (userIndex3 != -1) {
-						ReceiveMessageGp3 += `【账号${IndexGp3} ${$.nickName || $.UserName}】${$.petInfo.goodsInfo.goodsName}可以兑换了! (东东萌宠)\n`;
-					}
-					if (userIndex4 != -1) {
-						ReceiveMessageGp4 += `【账号${IndexGp4} ${$.nickName || $.UserName}】${$.petInfo.goodsInfo.goodsName}可以兑换了! (东东萌宠)\n`;
-					}
-					if (userIndex2 == -1 && userIndex3 == -1 && userIndex4 == -1) {
-						allReceiveMessage += `【账号${IndexAll} ${$.nickName || $.UserName}】${$.petInfo.goodsInfo.goodsName}可以兑换了! (东东萌宠)\n`;
-					}
-				} else if ($.petInfo.petStatus === 6) {
-					TempBaipiao += `【东东萌宠】未选择物品! \n`;
-					if (userIndex2 != -1) {
-						WarnMessageGp2 += `【账号${IndexGp2} ${$.nickName || $.UserName}】未选择物品! (东东萌宠)\n`;
-					}
-					if (userIndex3 != -1) {
-						WarnMessageGp3 += `【账号${IndexGp3} ${$.nickName || $.UserName}】未选择物品! (东东萌宠)\n`;
-					}
-					if (userIndex4 != -1) {
-						WarnMessageGp4 += `【账号${IndexGp4} ${$.nickName || $.UserName}】未选择物品! (东东萌宠)\n`;
-					}
-					if (userIndex2 == -1 && userIndex3 == -1 && userIndex4 == -1) {
-						allWarnMessage += `【账号${IndexAll} ${$.nickName || $.UserName}】未选择物品! (东东萌宠)\n`;
-					}
-				} else if (response.resultCode === '0') {
-					ReturnMessage += `【东东萌宠】${$.petInfo.goodsInfo.goodsName}`;
-					ReturnMessage += `(${(response.result.medalPercent).toFixed(0)}%,${response.result.medalNum}/${response.result.medalNum+response.result.needCollectMedalNum}块)\n`;
-				} else if (!$.petInfo.goodsInfo) {
-					ReturnMessage += `【东东萌宠】暂未选购新的商品!\n`;
-					TempBaipiao += `【东东萌宠】暂未选购新的商品! \n`;
-					if (userIndex2 != -1) {
-						WarnMessageGp2 += `【账号${IndexGp2} ${$.nickName || $.UserName}】暂未选购新的商品! (东东萌宠)\n`;
-					}
-					if (userIndex3 != -1) {
-						WarnMessageGp3 += `【账号${IndexGp3} ${$.nickName || $.UserName}】暂未选购新的商品! (东东萌宠)\n`;
-					}
-					if (userIndex4 != -1) {
-						WarnMessageGp4 += `【账号${IndexGp4} ${$.nickName || $.UserName}】暂未选购新的商品! (东东萌宠)\n`;
-					}
-					if (userIndex2 == -1 && userIndex3 == -1 && userIndex4 == -1) {
-						allWarnMessage += `【账号${IndexAll} ${$.nickName || $.UserName}】暂未选购新的商品! (东东萌宠)\n`;
-					}
-
-				}
-			}
-		}
-	}
+	}	
 	
 	if(strGuoqi){		
 		ReturnMessage += `💸💸💸临期京豆明细💸💸💸\n`;
@@ -1133,9 +1054,16 @@ async function showMsg() {
 		var strTitle="京东资产变动";
 		if($.JingXiang){
 			if ($.isRealNameAuth)
-				ReturnMessage=`【账号名称】${$.nickName || $.UserName}(已实名)\n`+ReturnMessage;				
+				if (cookie.includes("app_open"))
+					ReturnMessage=`【账号名称】${$.nickName || $.UserName}(wskey已实名)\n`+ReturnMessage;
+				else
+					ReturnMessage=`【账号名称】${$.nickName || $.UserName}(已实名)\n`+ReturnMessage;
 			else
-				ReturnMessage=`【账号名称】${$.nickName || $.UserName}(未实名)\n`+ReturnMessage;				
+				if (cookie.includes("app_open"))
+					ReturnMessage=`【账号名称】${$.nickName || $.UserName}(wskey未实名)\n`+ReturnMessage;
+				else
+					ReturnMessage=`【账号名称】${$.nickName || $.UserName}(未实名)\n`+ReturnMessage;
+			
 		}else{
 			ReturnMessage=`【账号名称】${$.nickName || $.UserName}\n`+ReturnMessage;
 		}
@@ -2171,44 +2099,6 @@ async function getjdfruit() {
 	})
 }
 
-async function PetRequest(function_id, body = {}) {
-	await $.wait(3000);
-	return new Promise((resolve, reject) => {
-		$.post(taskPetUrl(function_id, body), (err, resp, data) => {
-			try {
-				if (err) {
-					llPetError=true;
-					console.log('\n东东萌宠: API查询请求失败 ‼️‼️');
-					console.log(JSON.stringify(err));
-					$.logErr(err);
-				} else {
-					data = JSON.parse(data);
-				}
-			} catch (e) {
-				$.logErr(e, resp);
-			}
-			finally {
-				resolve(data)
-			}
-		})
-	})
-}
-function taskPetUrl(function_id, body = {}) {
-	body["version"] = 2;
-	body["channel"] = 'app';
-	return {
-		url: `${JD_API_HOST}?functionId=${function_id}`,
-		body: `body=${escape(JSON.stringify(body))}&appid=wh5&loginWQBiz=pet-town&clientVersion=9.0.4`,
-		headers: {
-			'Cookie': cookie,
-			'User-Agent': $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1"),
-			'Host': 'api.m.jd.com',
-			'Content-Type': 'application/x-www-form-urlencoded',
-		},
-		timeout: 10000
-	};
-}
-
 function taskfruitUrl(function_id, body = {}) {
   return {
     url: `${JD_API_HOST}?functionId=${function_id}&body=${encodeURIComponent(JSON.stringify(body))}&appid=wh5`,
@@ -2342,132 +2232,6 @@ async function JxmcGetRequest() {
 				}
 			} catch (e) {
 				console.log(data);
-				$.logErr(e, resp)
-			}
-			finally {
-				resolve();
-			}
-		})
-	})
-}
-
-// 惊喜工厂信息查询
-async function getJxFactory() {
-	if (!EnableJxGC)
-		return;
-	return new Promise(async resolve => {
-		let infoMsg = "";
-		let strTemp = "";
-		await $.get(jxTaskurl('userinfo/GetUserInfo', `pin=&sharePin=&shareType=&materialTuanPin=&materialTuanId=&source=`, '_time,materialTuanId,materialTuanPin,pin,sharePin,shareType,source,zone'), async(err, resp, data) => {
-			try {
-				if (err) {
-					$.jxFactoryInfo = "";
-					//console.log("jx工厂查询失败"  + err)
-				} else {
-					if (safeGet(data)) {
-						data = JSON.parse(data);
-						if (data['ret'] === 0) {
-							data = data['data'];
-							$.unActive = true; //标记是否开启了京喜活动或者选购了商品进行生产
-							if (data.factoryList && data.productionList) {
-								const production = data.productionList[0];
-								const factory = data.factoryList[0];
-								//const productionStage = data.productionStage;
-								$.commodityDimId = production.commodityDimId;
-								// subTitle = data.user.pin;
-								await GetCommodityDetails(); //获取已选购的商品信息
-								infoMsg = `${$.jxProductName}(${((production.investedElectric / production.needElectric) * 100).toFixed(0)}%`;
-								if (production.investedElectric >= production.needElectric) {
-									if (production['exchangeStatus'] === 1) {
-										infoMsg = `${$.jxProductName}已可兑换`;
-										$.jxFactoryReceive = `${$.jxProductName}`;
-									}
-									if (production['exchangeStatus'] === 3) {
-										if (new Date().getHours() === 9) {
-											infoMsg = `兑换超时，请重选商品!`;
-										}
-									}
-									// await exchangeProNotify()
-								} else {
-									strTemp = `,${((production.needElectric - production.investedElectric) / (2 * 60 * 60 * 24)).toFixed(0)}天)`;
-									if (strTemp == ",0天)")
-										infoMsg += ",今天)";
-									else
-										infoMsg += strTemp;
-								}
-								if (production.status === 3) {
-									infoMsg = "商品已失效，请重选商品!";
-								}
-							} else {
-								$.unActive = false; //标记是否开启了京喜活动或者选购了商品进行生产
-								if (!data.factoryList) {
-									infoMsg = ""
-										// $.msg($.name, '【提示】', `京东账号${$.index}[${$.nickName}]京喜工厂活动未开始\n请手动去京东APP->游戏与互动->查看更多->京喜工厂 开启活动`);
-								} else if (data.factoryList && !data.productionList) {
-									infoMsg = ""
-								}
-							}
-						}
-					} else {
-						console.log(`GetUserInfo异常：${JSON.stringify(data)}`)
-					}
-				}
-				$.jxFactoryInfo = infoMsg;
-				// console.log(infoMsg);
-			} catch (e) {
-				$.logErr(e, resp)
-			}
-			finally {
-				resolve();
-			}
-		})
-	})
-}
-
-// 惊喜的Taskurl
-function jxTaskurl(functionId, body = '', stk) {
-	let url = `https://m.jingxi.com/dreamfactory/${functionId}?zone=dream_factory&${body}&sceneval=2&g_login_type=1&_time=${Date.now()}&_=${Date.now() + 2}&_ste=1`
-		url += `&h5st=${decrypt(Date.now(), stk, '', url)}`
-		if (stk) {
-			url += `&_stk=${encodeURIComponent(stk)}`;
-		}
-		return {
-		url,
-		headers: {
-			'Cookie': cookie,
-			'Host': 'm.jingxi.com',
-			'Accept': '*/*',
-			'Connection': 'keep-alive',
-			'User-Agent': functionId === 'AssistFriend' ? "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.66 Safari/537.36" : 'jdpingou',
-			'Accept-Language': 'zh-cn',
-			'Referer': 'https://wqsd.jd.com/pingou/dream_factory/index.html',
-			'Accept-Encoding': 'gzip, deflate, br',
-		},
-		timeout: 10000
-	}
-}
-
-//惊喜查询当前生产的商品名称
-function GetCommodityDetails() {
-	return new Promise(async resolve => {
-		// const url = `/dreamfactory/diminfo/GetCommodityDetails?zone=dream_factory&sceneval=2&g_login_type=1&commodityId=${$.commodityDimId}`;
-		$.get(jxTaskurl('diminfo/GetCommodityDetails', `commodityId=${$.commodityDimId}`, `_time,commodityId,zone`), (err, resp, data) => {
-			try {
-				if (err) {
-					console.log(`${JSON.stringify(err)}`)
-					console.log(`GetCommodityDetails API请求失败，请检查网路重试`)
-				} else {
-					if (safeGet(data)) {
-						data = JSON.parse(data);
-						if (data['ret'] === 0) {
-							data = data['data'];
-							$.jxProductName = data['commodityList'][0].name;
-						} else {
-							console.log(`GetCommodityDetails异常：${JSON.stringify(data)}`)
-						}
-					}
-				}
-			} catch (e) {
 				$.logErr(e, resp)
 			}
 			finally {
