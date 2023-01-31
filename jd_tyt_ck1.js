@@ -1,6 +1,6 @@
 /*
 #快速推一推
-13 1 * * * jd_tyt_ck1.js, tag=推一推, enabled=true
+13 1 * * * jd_tyt_ck1.js, tag=推一推, img-url=https://raw.githubusercontent.com/Orz-3/mini/master/Color/jd.png, enabled=true
 注意：助力码每天会变，旧的不可用。
 助力逻辑：默认助力第一个ck
 入口-极速版-推推赚大钱  1元无门槛卷
@@ -17,7 +17,7 @@ let tytpacketId = '';
 // if (process.env.tytpacketId) {
 //   tytpacketId = process.env.tytpacketId;
 // }
-let acid=''
+let acid='ccd0447255384f06ae26690993be27f1'
 //兼容elecV2P
 tytpacketId = $.getdata('TYT_PACKETID') ? $.getdata('TYT_PACKETID') : '';
 if ($.isNode() && process.env.TYT_PACKETID) {

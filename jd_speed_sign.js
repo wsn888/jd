@@ -10,7 +10,7 @@
 ============Quantumultx===============
 [task_local]
 #京东极速版
-21 3,8 * * * jd_speed_sign.js, tag=京东极速版, enabled=true
+21 3,8 * * * jd_speed_sign.js, tag=京东极速版, img-url=https://raw.githubusercontent.com/Orz-3/task/master/jd.png, enabled=true
 
 ================Loon==============
 [Script]
@@ -809,7 +809,7 @@ function invite2() {
   let inviterId = inviterIdArr[Math.floor((Math.random() * inviterIdArr.length))]
   let options = {
     url: "https://api.m.jd.com/",
-    body: `functionId=TaskInviteService&body=${JSON.stringify({"method":"participateInviteTask","data":{"channel":"1","encryptionInviterPin":encodeURIComponent(inviterId),"type":1}})}&appid=market-task-h5&uuid=&_t=${Date.now()}`,
+    body: `functionId=TaskInviteServiceNew&body=${JSON.stringify({"method":"participateInviteTask","data":{"channel":"1","encryptionInviterPin":encodeURIComponent(inviterId),"type":1}})}&appid=jx_h5&uuid=&_t=${Date.now()}`,
     headers: {
       "Host": "api.m.jd.com",
       "Accept": "application/json, text/plain, */*",
