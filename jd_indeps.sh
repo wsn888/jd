@@ -17,6 +17,7 @@ echo -e "开始安装............\n"
 apk add g++ make --no-cache
 pnpm config set registry https://registry.npm.taobao.org
 pnpm install -g
+pnpm install -g ds
 pnpm install -g png-js
 pnpm install -g date-fns
 pnpm install -g axios@0.27.2
@@ -28,6 +29,7 @@ pnpm install -g request
 pnpm install -g jsdom
 pnpm install -g moment
 pnpm install -g tough-cookie
+pnpm install -g https-proxy-agent
 pip3 install -i https://pypi.tuna.tsinghua.edu.cn/simple/ jieba
 pip3 install -i https://pypi.tuna.tsinghua.edu.cn/simple/ requests
 rm -rf /usr/local/pnpm-global/5/node_modules/.pnpm/canvas*

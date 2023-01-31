@@ -1,12 +1,10 @@
 /*
-东东农场助力
-20 2,5 * * * jd_farm_help.js
+东东农场邀请好友奖励
+8 1 * * * jd_farm_del.js
 updatetime:2022/12/22
 dlan
-变量
-epxort FRUIT_DELAY = '1000',设置等待时间(毫秒)，默认请求5次接口等待60秒（60000）
 */
-const $ = new Env('东东农场-助力');
+const $ = new Env('东东农场-删好友奖励');
 let cookiesArr = [], cookie = '', jdFruitShareArr = [], isBox = false, notify, newShareCodes, allMessage = '';
 //助力好友分享码(最多3个,否则后面的助力失败),原因:京东农场每人每天只有3次助力机会
 //此此内容是IOS用户下载脚本到本地使用，填写互助码的地方，同一京东账号的好友互助码请使用@符号隔开。
@@ -15,15 +13,13 @@ let shareCodes = [ // 这个列表填入你要助力的好友的shareCode
     ''
 ]
 
-let message = '', subTitle = '', fulled=[], option = {}, isFruitFinished = false;
+let message = '', subTitle = '', option = {}, isFruitFinished = false;
 const retainWater = 100;//保留水滴大于多少g,默认100g;
 let jdNotify = false;//是否关闭通知，false打开通知推送，true关闭通知推送
 let jdFruitBeanCard = false;//农场使用水滴换豆卡(如果出现限时活动时100g水换20豆,此时比浇水划算,推荐换豆),true表示换豆(不浇水),false表示不换豆(继续浇水),脚本默认是浇水
 let randomCount = $.isNode() ? 20 : 5;
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
-const delay = process.env.FRUIT_DELAY||60000;
 const urlSchema = `openjd://virtual?params=%7B%20%22category%22:%20%22jump%22,%20%22des%22:%20%22m%22,%20%22url%22:%20%22https://h5.m.jd.com/babelDiy/Zeus/3KSjXqQabiTuD1cJ28QskrpWoBKT/index.html%22%20%7D`;
-$.reqnum=1;
 !(async () => {
     await requireConfig();
     if (!cookiesArr[0]) {
@@ -37,8 +33,8 @@ $.reqnum=1;
             $.index = i + 1;
             $.isLogin = true;
             $.nickName = '';
-            await TotalBean();
-            console.log(`开始【京东账号${$.index}】${$.nickName || $.UserName}\n`);
+            //await TotalBean();
+            console.log(`\n开始【京东账号${$.index}】${$.nickName || $.UserName}\n`);
             if (!$.isLogin) {
                 $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
 
@@ -67,7 +63,7 @@ async function jdFruit() {
     try {
         await initForFarm();
         if ($.farmInfo.farmUserPro) {
-            await masterHelpShare();//助力好友
+            //await masterHelpShare();//助力好友
             await doDailyTask();
         } else {
             console.log(`初始化农场数据异常, 请登录京东 app查看农场0元水果功能是否正常,农场初始化数据: ${JSON.stringify($.farmInfo)}`);
@@ -85,7 +81,7 @@ async function doDailyTask() {
 
     await getAwardInviteFriend();
 
-    await turntableFarm()//天天抽奖得好礼
+    //await turntableFarm()//天天抽奖得好礼
 }
 async function predictionFruit() {
     console.log('开始预测水果成熟时间\n');
@@ -481,7 +477,6 @@ async function masterHelpShare() {
                 console.log(`【助力结果】: 已经助力过TA了`);
             } else if ($.helpResult.helpResult.code === '10') {
                 console.log(`【助力结果】: 对方已满助力`);
-                fulled.push(code);
             } else {
                 console.log(`助力其他情况：${JSON.stringify($.helpResult.helpResult)}`);
             }
@@ -624,26 +619,26 @@ async function getAwardInviteFriend() {
     // console.log(`查询好友列表数据：${JSON.stringify($.friendList)}\n`)
     if ($.friendList) {
         console.log(`\n今日已邀请好友${$.friendList.inviteFriendCount}个 / 每日邀请上限${$.friendList.inviteFriendMax}个`);
-        // console.log(`开始删除${$.friendList.friends && $.friendList.friends.length}个好友,可拿每天的邀请奖励`);
-        // if ($.friendList.friends && $.friendList.friends.length > 0) {
-        //     for (let friend of $.friendList.friends) {
-        //         console.log(`开始删除好友 [${friend.shareCode}]`);
-        //         const deleteFriendForFarm = await request('deleteFriendForFarm', { "shareCode": `${friend.shareCode}`, "version": 8, "channel": 1 });
-        //         if (deleteFriendForFarm && deleteFriendForFarm.code === '0') {
-        //             console.log(`删除成功！\n`);
-        //         }
-        //     }
-        // }
-        await receiveFriendInvite();//为他人助力,接受邀请成为别人的好友
-        if ($.friendList.inviteFriendCount > 0) {
-            if ($.friendList.inviteFriendCount > $.friendList.inviteFriendGotAwardCount) {
-                console.log('开始领取邀请好友的奖励');
-                await awardInviteFriendForFarm();
-                console.log(`领取邀请好友的奖励结果：：${JSON.stringify($.awardInviteFriendRes)}`);
+        console.log(`开始删除${$.friendList.friends && $.friendList.friends.length}个好友,可拿每天的邀请奖励`);
+        if ($.friendList.friends && $.friendList.friends.length > 0) {
+            for (let friend of $.friendList.friends) {
+                console.log(`开始删除好友 [${friend.shareCode}]`);
+                const deleteFriendForFarm = await request('deleteFriendForFarm', { "shareCode": `${friend.shareCode}`, "version": 8, "channel": 1 });
+                if (deleteFriendForFarm && deleteFriendForFarm.code === '0') {
+                    console.log(`删除成功！\n`);
+                }
             }
-        } else {
-            console.log('今日未邀请过好友')
         }
+        //await receiveFriendInvite();//为他人助力,接受邀请成为别人的好友
+        //if ($.friendList.inviteFriendCount > 0) {
+        //    if ($.friendList.inviteFriendCount > $.friendList.inviteFriendGotAwardCount) {
+        //        console.log('开始领取邀请好友的奖励');
+        //        await awardInviteFriendForFarm();
+        //        console.log(`领取邀请好友的奖励结果：：${JSON.stringify($.awardInviteFriendRes)}`);
+        //    }
+        //} else {
+        //    console.log('今日未邀请过好友')
+        //}
     } else {
         console.log(`查询好友列表失败\n`);
     }
@@ -732,7 +727,6 @@ async function receiveFriendInvite() {
             console.log('自己不能邀请自己成为好友噢\n')
             continue
         }
-		if (newShareCodes.findIndex(a=>a===code) >= 5) break;
         await inviteFriend(code);
         // console.log(`接收邀请成为好友结果:${JSON.stringify($.inviteFriendRes)}`)
         if ($.inviteFriendRes && $.inviteFriendRes.helpResult && $.inviteFriendRes.helpResult.code === '0') {
@@ -1138,14 +1132,13 @@ function shareCodesFormat() {
             //newShareCodes = newShareCodes.concat(readShareCodeRes.data || []);
             newShareCodes = [...new Set([...newShareCodes, ...(readShareCodeRes.data || [])])];
         }
-        newShareCodes = newShareCodes.filter(item => { return fulled.indexOf(item) == -1 });
-        console.log(`第${$.index}个京东账号将要助力的好友${JSON.stringify(newShareCodes)}`)
+        //console.log(`第${$.index}个京东账号将要助力的好友${JSON.stringify(newShareCodes)}`)
         resolve();
     })
 }
 function requireConfig() {
     return new Promise(resolve => {
-        console.log('开始获取配置文件\n')
+        //console.log('开始获取配置文件\n')
         notify = $.isNode() ? require('./sendNotify') : '';
         //Node.js用户请在jdCookie.js处填写京东ck;
         const jdCookieNode = $.isNode() ? require('./jdCookie.js') : '';
@@ -1184,7 +1177,7 @@ function requireConfig() {
         }
         // console.log(`$.shareCodesArr::${JSON.stringify($.shareCodesArr)}`)
         // console.log(`jdFruitShareArr账号长度::${$.shareCodesArr.length}`)
-        console.log(`您提供了${$.shareCodesArr.length}个账号的农场助力码\n`);
+        //console.log(`您提供了${$.shareCodesArr.length}个账号的农场助力码\n`);
         resolve()
     })
 }
@@ -1218,8 +1211,6 @@ function TotalBean() {
     });
 }
 function request(function_id, body = {}, timeout = 1000) {
-    if(process.env.FRUIT_DELAY && $.reqnum % 5 == 0 ) {console.log(`\n等待${delay/1000}秒......\n`);timeout=delay};
-    $.reqnum++;      
     return new Promise(resolve => {
         setTimeout(() => {
             $.get(taskUrl(function_id, body), (err, resp, data) => {

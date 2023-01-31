@@ -9,7 +9,7 @@
 ============Quantumultx===============
 [task_local]
 #JOY庄园每日任务
-11 1,15 * * * jd_joymanor_task.js, tag=JOY庄园每日任务, enabled=true
+11 1,15 * * * jd_joymanor_task.js, tag=JOY庄园每日任务, img-url=https://raw.githubusercontent.com/tsukasa007/icon/master/jd_joymanor_task.png, enabled=true
 
 ================Loon==============
 [Script]
@@ -352,7 +352,7 @@ function apTaskDrawAward(taskId, taskType) {
 
 function taskPostClientActionUrl(body, functionId) {
   return {
-    url: `https://api.m.jd.com/client.action?${functionId ? `functionId=${functionId}` : ``}`,
+    url: `https://api.m.jd.com/client.action${functionId ? `?functionId=${functionId}` : ''}`,
     body: body,
     headers: {
       'User-Agent': $.UA,

@@ -20,6 +20,7 @@ jd免费水果 搬的https://github.com/liuxiaoyucc/jd-helper/blob/a6f275d978574
 变量：
 export DO_TEN_WATER_AGAIN='true' 攒水滴只交10次水，默认不攒水滴
 export FRUIT_FAST_CARD='true' 使用快速浇水卡，水多可开启
+epxort FRUIT_DELAY = '1000',设置等待时间(毫秒)，默认请求5次接口等待60秒（60000）
 */
 const $ = new Env('东东农场-任务');
 let cookiesArr = [], cookie = '', jdFruitShareArr = [], isBox = false, notify, newShareCodes, allMessage = '';
@@ -37,6 +38,8 @@ let jdFruitBeanCard = false;//农场使用水滴换豆卡(如果出现限时活�
 let randomCount = $.isNode() ? 20 : 5;
 const JD_API_HOST = 'https://api.m.jd.com/client.action';
 const urlSchema = `openjd://virtual?params=%7B%20%22category%22:%20%22jump%22,%20%22des%22:%20%22m%22,%20%22url%22:%20%22https://h5.m.jd.com/babelDiy/Zeus/3KSjXqQabiTuD1cJ28QskrpWoBKT/index.html%22%20%7D`;
+const delay = process.env.FRUIT_DELAY||60000;
+$.reqnum = 1;
 !(async () => {
     await requireConfig();
     if (!cookiesArr[0]) {
@@ -51,6 +54,7 @@ const urlSchema = `openjd://virtual?params=%7B%20%22category%22:%20%22jump%22,%2
             $.isLogin = true;
             $.nickName = '';
             await TotalBean();
+
             console.log(`开始【京东账号${$.index}】${$.nickName || $.UserName}\n`);
             if (!$.isLogin) {
                 $.msg($.name, `【提示】cookie已失效`, `京东账号${$.index} ${$.nickName || $.UserName}\n请重新登录获取\nhttps://bean.m.jd.com/bean/signIndex.action`, { "open-url": "https://bean.m.jd.com/bean/signIndex.action" });
@@ -395,9 +399,10 @@ async function doTenWaterAgain() {
                   if ($.userMyCardRes.treeFinished){
                        break;
                   }
-                  await $.wait(500);
+                  await $.wait(1000);
                   await initForFarm();
                   totalEnergy  = $.farmInfo.farmUserPro.totalEnergy;
+				  if (totalEnergy < 100) break;
         }
     }
     // 所有的浇水(10次浇水)任务，获取水滴任务完成后，如果剩余水滴大于等于60g,则继续浇水(保留部分水滴是用于完成第二天的浇水10次的任务)
@@ -1435,6 +1440,8 @@ function TotalBean() {
     });
 }
 function request(function_id, body = {}, timeout = 1000) {
+    if(process.env.FRUIT_DELAY && $.reqnum % 5 == 0 ) {console.log(`\n等待${delay/1000}秒......\n`);timeout=delay};
+    $.reqnum++;        
     return new Promise(resolve => {
         setTimeout(() => {
             $.get(taskUrl(function_id, body), (err, resp, data) => {
@@ -1446,6 +1453,7 @@ function request(function_id, body = {}, timeout = 1000) {
                         $.logErr(err);
                     } else {
                         if (safeGet(data)) {
+
                             data = JSON.parse(data);
                         }
                     }
