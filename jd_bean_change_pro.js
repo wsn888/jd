@@ -122,9 +122,8 @@ let llPetError=false;
 let strGuoqi="";
 let RemainMessage = '\n';
 RemainMessage += "⭕活动攻略:⭕" + '\n';
-RemainMessage += '【京东秒杀】京东->中间频道往右划找到京东秒杀->中间点立即签到->兑换无门槛红包(京东使用)\n';
 RemainMessage += '【点点券】京东->首页领券->中间位置瓜分点点券的签到->再领价值XXX的红包\n';
-RemainMessage += '【极速金币】京东极速版->我的->金币(极速版使用)\n';
+RemainMessage += '【特价金币】京东特价版->我的->金币(特价版使用)\n';
 RemainMessage += '【京东赚赚】微信->京东赚赚小程序->底部赚好礼->提现无门槛红包(京东使用)\n';
 RemainMessage += '【领现金】京东->搜索领现金(微信提现+京东红包)\n';
 RemainMessage += '【东东农场】京东->我的->东东农场,完成是京东红包,可以用于京东app的任意商品\n';
@@ -250,14 +249,6 @@ if(DisableIndex!=-1){
 	EnableJdZZ=false;
 }
 
-//京东秒杀
-let EnableJdMs=true;
-DisableIndex = strDisableList.findIndex((item) => item === "京东秒杀");
-if(DisableIndex!=-1){
-	console.log("检测到设定关闭京东秒杀查询");
-	EnableJdMs=false;	
-}
-	
 //东东农场
 let EnableJdFruit=true;
 DisableIndex = strDisableList.findIndex((item) => item === "东东农场");
@@ -266,29 +257,15 @@ if(DisableIndex!=-1){
 	EnableJdFruit=false;	
 }
 
-//极速金币
+//特价金币
 let EnableJdSpeed=true;
 DisableIndex = strDisableList.findIndex((item) => item === "极速金币");
 if(DisableIndex!=-1){
-	console.log("检测到设定关闭极速金币查询");
+	console.log("检测到设定关闭特价金币查询");
 	EnableJdSpeed=false;	
 }
 
-//京喜牧场
-let EnableJxMC=false;
-DisableIndex= strDisableList.findIndex((item) => item === "京喜牧场");
-if(DisableIndex!=-1){
-	console.log("检测到设定关闭京喜牧场查询");
-	EnableJxMC=false;	
-}
 
-// 京东工厂
-let EnableJDGC=true;
-DisableIndex=strDisableList.findIndex((item) => item === "京东工厂");
-if(DisableIndex!=-1){
-	console.log("检测到设定关闭京东工厂查询");
-	EnableJDGC=false;	
-}
 //领现金
 let EnableCash=true;
 DisableIndex=strDisableList.findIndex((item) => item === "领现金");
@@ -343,6 +320,15 @@ if(DisableIndex!=-1){
 	EnableCheckBean=false
 }
 
+//点点券
+let EnableCoupon=true;
+DisableIndex=strDisableList.findIndex((item) => item === "点点券");
+if(DisableIndex!=-1){
+	console.log("检测到设定关闭点点券查询");
+	EnableCoupon=false
+}
+
+
 !(async() => {
 	if (!cookiesArr[0]) {
 		$.msg($.name, '【提示】请先获取京东账号一cookie\n直接使用NobyDa的京东签到获取', 'https://bean.m.jd.com/bean/signIndex.action', {
@@ -369,8 +355,7 @@ if(DisableIndex!=-1){
 			$.message = '';
 			$.balance = 0;
 			$.expiredBalance = 0;
-			$.JdzzNum = 0;
-			$.JdMsScore = 0;
+			$.JdzzNum = 0;			
 			$.JdFarmProdName = '';
 			$.JdtreeEnergy = 0;
 			$.JdtreeTotalEnergy = 0;
@@ -408,10 +393,11 @@ if(DisableIndex!=-1){
 			$.ECardinfo = "";
 			$.PlustotalScore=0;
 			$.CheckTime="";
-			$.beanCache=0;
-			
+			$.beanCache=0;			
 			TempBaipiao = "";
 			strGuoqi="";
+			$.CoupontotalAmount=0;
+			
 			console.log(`******开始查询【京东账号${$.index}】${$.nickName || $.UserName}*********`);
 			await TotalBean();			
 		    //await TotalBean2();
@@ -493,16 +479,14 @@ if(DisableIndex!=-1){
 			
 			await Promise.all([
 			        getJoyBaseInfo(), //汪汪乐园
-			        getJdZZ(), //京东赚赚
-			        getMs(), //京东秒杀			        
-			        cash(), //极速金币
-			        jdJxMCinfo(), //京喜牧场
+			        getJdZZ(), //京东赚赚		        
+			        cash(), //特价金币
 			        bean(), //京豆查询
-			        getDdFactoryInfo(), // 京东工厂
 			        jdCash(), //领现金
 			        GetJxBeaninfo(), //喜豆查询
 			        GetPigPetInfo(), //金融养猪
 			        GetJoyRuninginfo(), //汪汪赛跑
+					getCouponConfig(), //点点券
 			        queryScores()
 			    ])
 				
@@ -858,38 +842,17 @@ async function showMsg() {
 		ReturnMessage += `【京喜牧场】${$.JDEggcnt}枚鸡蛋\n`;
 	}
 	if ($.JDtotalcash) {
-		ReturnMessage += `【极速金币】${$.JDtotalcash}币(≈${($.JDtotalcash / 10000).toFixed(2)}元)\n`;
+		ReturnMessage += `【特价金币】${$.JDtotalcash}币(≈${($.JDtotalcash / 10000).toFixed(2)}元)\n`;
 	}
 	if ($.JdzzNum) {
 		ReturnMessage += `【京东赚赚】${$.JdzzNum}币(≈${($.JdzzNum / 10000).toFixed(2)}元)\n`;
 	}
-	if ($.JdMsScore != 0) {
-		ReturnMessage += `【京东秒杀】${$.JdMsScore}币(≈${($.JdMsScore / 1000).toFixed(2)}元)\n`;
-	}
+	
 	if($.ECardinfo)
 		ReturnMessage += `【礼卡余额】${$.ECardinfo}\n`;
-
-	if ($.joylevel || $.jdCash || $.JoyRunningAmount) {
-		ReturnMessage += `【其他信息】`;
-		if ($.joylevel) {
-			ReturnMessage += `汪汪:${$.joylevel}级`;			
-		}
-		if ($.jdCash) {
-			if ($.joylevel) {
-				ReturnMessage += ",";
-			}			
-			ReturnMessage += `领现金:${$.jdCash}元`;
-		}
-		if ($.JoyRunningAmount) {
-			if ($.joylevel || $.jdCash) {
-				ReturnMessage += ",";
-			}			
-			ReturnMessage += `汪汪赛跑:${$.JoyRunningAmount}元`;
-		}
-		
-		ReturnMessage += `\n`;
-
-	}
+	
+	if ($.JoyRunningAmount) 
+		ReturnMessage += `【汪汪赛跑】${$.JoyRunningAmount}元\n`;
 
 	if ($.JdFarmProdName != "") {
 		if ($.JdtreeEnergy != 0) {
@@ -1009,6 +972,28 @@ async function showMsg() {
 		TempBaipiao += `【金融养猪】${$.PigPet} 可以兑换了!\n`;
 
 	}	
+	
+	if ($.joylevel || $.jdCash || $.CoupontotalAmount) {
+		ReturnMessage += `【其他信息】`;
+		if ($.joylevel) {
+			ReturnMessage += `汪汪:${$.joylevel}级`;			
+		}
+		if ($.jdCash) {
+			if ($.joylevel) {
+				ReturnMessage += ",";
+			}			
+			ReturnMessage += `领现金:${$.jdCash}元`;
+		}
+		
+		if ($.CoupontotalAmount) {	
+			if ($.joylevel || $.jdCash) {
+				ReturnMessage += ",";
+			}
+			ReturnMessage += `点点券:${$.CoupontotalAmount}元`;
+		}
+		ReturnMessage += `\n`;
+
+	}
 	
 	if(strGuoqi){		
 		ReturnMessage += `💸💸💸临期京豆明细💸💸💸\n`;
@@ -1240,20 +1225,6 @@ async function Monthbean() {
 
 }
 
-async function jdJxMCinfo(){
-    if (EnableJxMC) {
-        llgeterror = false;
-        await requestAlgo();
-        if (llgeterror) {
-            console.log(`等待10秒后再次尝试...`)
-            await $.wait(10 * 1000);
-            await requestAlgo();
-        }
-        await JxmcGetRequest();
-    }
-	return;
-}
-
 async function jdCash() {
 	if (!EnableCash)
 		return;
@@ -1301,41 +1272,102 @@ function apptaskUrl(functionId = "", body = "") {
     timeout: 10000
   }
 }
-function getSign(functionId, body) {
-  return new Promise(async resolve => {
-    let data = {
-      functionId,
-      body: JSON.stringify(body),
-      "client":"apple",
-      "clientVersion":"10.3.0"
-    }
-    let HostArr = ['jdsign.cf', 'signer.nz.lu']
-    let Host = HostArr[Math.floor((Math.random() * HostArr.length))]
-    let options = {
-      url: `https://cdn.nz.lu/ddo`,
-      body: JSON.stringify(data),
-      headers: {
-        Host,
-        "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1 Edg/87.0.4280.88"
-      },
-      timeout: 30 * 1000
-    }
-    $.post(options, (err, resp, data) => {
-      try {
-        if (err) {
-          console.log(JSON.stringify(err))
-          console.log(`${$.name} getSign API请求失败，请检查网路重试`)
-        } else {
 
-        }
-      } catch (e) {
-        $.logErr(e, resp)
-      } finally {
-        resolve(data);
-      }
+async function getCouponConfig() {
+    if (!EnableCoupon)
+        return;
+    let functionId = `getCouponConfig`;
+    let body = {
+        "childActivityUrl": "openapp.jdmobile://virtual?params={\"category\":\"jump\",\"des\":\"couponCenter\"}",
+        "incentiveShowTimes": 0,
+        "monitorRefer": "",
+        "monitorSource": "ccresource_android_index_config",
+        "pageClickKey": "Coupons_GetCenter",
+        "rewardShowTimes": 0,
+        "sourceFrom": "1"
+    }
+    let sign = await getSign(functionId, body);
+    return new Promise(async resolve => {
+        $.post(CoupontaskUrl(functionId, sign), async(err, resp, data) => {
+            try {
+                if (err) {
+                    console.log(`${JSON.stringify(err)}`);
+                    console.log(`${$.name} getCouponConfig API请求失败，请检查网路重试`);
+                } else {
+                    if (data) {
+                        data = JSON.parse(data);
+                        if (data?.result?.couponConfig?.signNecklaceDomain?.roundData?.totalScore)
+                            $.CoupontotalAmount = data.result.couponConfig.signNecklaceDomain.roundData.totalScore;						
+							$.CoupontotalAmount=($.CoupontotalAmount/1000).toFixed(2)
+                    }
+                }
+            } catch (e) {
+                $.logErr(e, resp)
+            } finally {
+                resolve();
+            }
+        })
     })
-  })
 }
+
+function getSign(functionId, body) {	
+    var strsign = '';
+	let data = {
+      "fn":functionId,
+      "body": body
+    }
+    return new Promise((resolve) => {
+        let url = {
+            url: 'https://api.nolanstore.top/sign',
+            body: JSON.stringify(data),
+		    followRedirect: false,
+		    headers: {
+		        'Accept': '*/*',
+		        "accept-encoding": "gzip, deflate, br",
+		        'Content-Type': 'application/json'
+		    },
+		    timeout: 30000
+        }
+        $.post(url, async(err, resp, data) => {
+            try {				
+                data = JSON.parse(data);
+                if (data && data.body) {                    
+                    if (data.body)
+                        strsign = data.body || '';
+                    if (strsign != '')
+                        resolve(strsign);
+                    else
+                        console.log("签名获取失败.");
+                } else {
+                    console.log("签名获取失败.");
+                }				
+            }catch (e) {
+                $.logErr(e, resp);
+            }finally {
+				resolve(strsign);
+			}
+        })
+    })
+}
+
+function CoupontaskUrl(functionId, body) {
+  return {
+    url: `${JD_API_HOST}?functionId=${functionId}`,
+    body,
+    headers: {
+      "Host": "api.m.jd.com",
+      "Connection": "keep-alive",
+      "User-Agent": "okhttp/3.12.1;jdmall;android;version/10.1.2;build/89743;screen/1080x2030;os/9;network/wifi;",
+      "Accept": "*/*",
+      "Referer": "https://h5.m.jd.com/rn/42yjy8na6pFsq1cx9MJQ5aTgu3kX/index.html",
+      "Accept-Encoding": "gzip, deflate",
+      "Accept-Language": "zh-CN,zh;q=0.9,en-US;q=0.8,en;q=0.7",
+      "Cookie": cookie,
+      "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+    }
+  }
+}
+
 /* function TotalBean() {
 	return new Promise(async resolve => {
 		const options = {
@@ -1686,37 +1718,43 @@ function redPacket() {
 						t = parseInt((t - 1) / 1000);
 						//console.log(JSON.stringify(data.useRedInfo.redList))
 						for (let vo of data.useRedInfo.redList || []) {
-							if (vo.limitStr && vo.limitStr.includes("京喜")) {
-								$.jxRed += parseFloat(vo.balance)
-								if (vo['endTime'] === t) {
-									$.jxRedExpire += parseFloat(vo.balance)
-								}
-							} else if (vo.limitStr.includes("购物小程序")) {
-								$.jdwxRed += parseFloat(vo.balance)
-								if (vo['endTime'] === t) {
-									$.jdwxRedExpire += parseFloat(vo.balance)
-								}
-							} else if (vo.limitStr.includes("京东商城")) {
-								$.jdRed += parseFloat(vo.balance)
-								if (vo['endTime'] === t) {
-									$.jdRedExpire += parseFloat(vo.balance)
-								}
-							} else if (vo.limitStr.includes("极速版") || vo.limitStr.includes("京东特价")) {
-								$.jsRed += parseFloat(vo.balance)
-								if (vo['endTime'] === t) {
-									$.jsRedExpire += parseFloat(vo.balance)
-								}
-							} else if (vo.limitStr && vo.limitStr.includes("京东健康")) {
-								$.jdhRed += parseFloat(vo.balance)
-								if (vo['endTime'] === t) {
-									$.jdhRedExpire += parseFloat(vo.balance)
-								}
-							} else {
-								$.jdGeneralRed += parseFloat(vo.balance)
-								if (vo['endTime'] === t) {
-									$.jdGeneralRedExpire += parseFloat(vo.balance)
-								}
-							}
+						    if (vo.limitStr) {								
+						        if (vo.limitStr.includes("京喜") && !vo.limitStr.includes("特价")) {
+						            $.jxRed += parseFloat(vo.balance)
+						            if (vo['endTime'] === t) {
+						                $.jxRedExpire += parseFloat(vo.balance)									
+						            }
+									continue;	
+						        } else if (vo.limitStr.includes("购物小程序")) {
+						            $.jdwxRed += parseFloat(vo.balance)
+						            if (vo['endTime'] === t) {
+						                $.jdwxRedExpire += parseFloat(vo.balance)
+						            }
+									continue;	
+						        } else if (vo.limitStr.includes("京东商城")) {
+						            $.jdRed += parseFloat(vo.balance)
+						            if (vo['endTime'] === t) {
+						                $.jdRedExpire += parseFloat(vo.balance)
+						            }
+									continue;	
+						        } else if (vo.limitStr.includes("极速") || vo.limitStr.includes("京东特价") || vo.limitStr.includes("京喜特价")) {
+						            $.jsRed += parseFloat(vo.balance)
+						            if (vo['endTime'] === t) {
+						                $.jsRedExpire += parseFloat(vo.balance)
+						            }
+									continue;	
+						        } else if (vo.limitStr && vo.limitStr.includes("京东健康")) {
+						            $.jdhRed += parseFloat(vo.balance)
+						            if (vo['endTime'] === t) {
+						                $.jdhRedExpire += parseFloat(vo.balance)
+						            }
+									continue;	
+						        }
+						    }
+						    $.jdGeneralRed += parseFloat(vo.balance)
+						    if (vo['endTime'] === t) {
+						        $.jdGeneralRedExpire += parseFloat(vo.balance)
+						    }
 						}
 				
 						$.jxRed = $.jxRed.toFixed(2);
@@ -1726,12 +1764,12 @@ function redPacket() {
 						$.jdwxRed = $.jdwxRed.toFixed(2);
 						$.jdGeneralRed = $.jdGeneralRed.toFixed(2);
 						$.balance = data.balance;
-						$.expiredBalance = ($.jxRedExpire + $.jsRedExpire + $.jdRedExpire).toFixed(2);
+						$.expiredBalance = ($.jxRedExpire + $.jsRedExpire + $.jdRedExpire+$.jdhRedExpire+$.jdwxRedExpire+$.jdGeneralRedExpire).toFixed(2);
 						$.message += `【红包总额】${$.balance}(总过期${$.expiredBalance})元 \n`;
 						if ($.jxRed > 0)
 							$.message += `【京喜红包】${$.jxRed}(将过期${$.jxRedExpire.toFixed(2)})元 \n`;
 						if ($.jsRed > 0)
-							$.message += `【极速红包】${$.jsRed}(将过期${$.jsRedExpire.toFixed(2)})元 \n`;
+							$.message += `【京喜特价】${$.jsRed}(将过期${$.jsRedExpire.toFixed(2)})元(原极速版) \n`;
 						if ($.jdRed > 0)
 							$.message += `【京东红包】${$.jdRed}(将过期${$.jdRedExpire.toFixed(2)})元 \n`;
 						if ($.jdhRed > 0)
@@ -1924,53 +1962,6 @@ function taskJDZZUrl(functionId, body = {}) {
 			'User-Agent': $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1"),
 			'Accept-Language': 'zh-cn',
 			'Accept-Encoding': 'gzip, deflate, br',
-		},
-		timeout: 10000
-	}
-}
-
-function getMs() {
-	if (!EnableJdMs)
-		return;
-	return new Promise(resolve => {
-		$.post(taskMsPostUrl('homePageV2', {}, 'appid=SecKill2020'), (err, resp, data) => {
-			try {
-				if (err) {
-					console.log(`${err},${jsonParse(resp.body)['message']}`)
-					console.log(`getMs API请求失败，请检查网路重试`)
-				} else {
-					if (safeGet(data)) {
-						//console.log("Debug :" + JSON.stringify(data));
-						data = JSON.parse(data);						
-						if (data.result.assignment.assignmentPoints) {
-							$.JdMsScore = data.result.assignment.assignmentPoints || 0
-						}
-					}
-				}
-			} catch (e) {
-				$.logErr(e, resp)
-			}
-			finally {
-				resolve(data);
-			}
-		})
-	})
-}
-
-function taskMsPostUrl(function_id, body = {}, extra = '', function_id2) {
-	let url = `${JD_API_HOST}`;
-	if (function_id2) {
-		url += `?functionId=${function_id2}`;
-	}
-	return {
-		url,
-		body: `functionId=${function_id}&body=${escape(JSON.stringify(body))}&client=wh5&clientVersion=1.0.0&${extra}`,
-		headers: {
-			"Cookie": cookie,
-			"origin": "https://h5.m.jd.com",
-			"referer": "https://h5.m.jd.com/babelDiy/Zeus/2NUvze9e1uWf4amBhe1AV6ynmSuH/index.html",
-			'Content-Type': 'application/x-www-form-urlencoded',
-			"User-Agent": $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1"),
 		},
 		timeout: 10000
 	}
@@ -2209,121 +2200,6 @@ function taskcashUrl(_0x7683x2, _0x7683x3 = {}) {
 	}
 })({})
 
-async function JxmcGetRequest() {
-	let url = ``;
-	let myRequest = ``;
-	url = `https://m.jingxi.com/jxmc/queryservice/GetHomePageInfo?channel=7&sceneid=1001&activeid=null&activekey=null&isgift=1&isquerypicksite=1&_stk=channel%2Csceneid&_ste=1`;
-	url += `&h5st=${decrypt(Date.now(), '', '', url)}&_=${Date.now() + 2}&sceneval=2&g_login_type=1&callback=jsonpCBK${String.fromCharCode(Math.floor(Math.random() * 26) + "A".charCodeAt(0))}&g_ty=ls`;
-	myRequest = getGetRequest(`GetHomePageInfo`, url);
-
-	return new Promise(async resolve => {
-		$.get(myRequest, (err, resp, data) => {
-			try {
-				if (err) {
-					console.log(`${JSON.stringify(err)}`)
-					console.log(`JxmcGetRequest API请求失败，请检查网路重试`)
-					$.runFlag = false;
-					console.log(`请求失败`)
-				} else {
-					data = JSON.parse(data.match(new RegExp(/jsonpCBK.?\((.*);*/))[1]);
-					if (data.ret === 0) {
-						$.JDEggcnt = data.data.eggcnt;
-					}
-				}
-			} catch (e) {
-				console.log(data);
-				$.logErr(e, resp)
-			}
-			finally {
-				resolve();
-			}
-		})
-	})
-}
-
-// 东东工厂信息查询
-async function getDdFactoryInfo() {
-	if (!EnableJDGC)
-		return;
-	// 当心仪的商品存在，并且收集起来的电量满足当前商品所需，就投入
-	let infoMsg = "";
-	return new Promise(resolve => {
-		$.post(ddFactoryTaskUrl('jdfactory_getHomeData'), async(err, resp, data) => {
-			try {
-				if (err) {
-					$.ddFactoryInfo = "获取失败!"
-						/*console.log(`${JSON.stringify(err)}`)
-						console.log(`${$.name} API请求失败，请检查网路重试`)*/
-				} else {
-					if (safeGet(data)) {
-						data = JSON.parse(data);
-						if (data.data.bizCode === 0) {
-							// $.newUser = data.data.result.newUser;
-							//let wantProduct = $.isNode() ? (process.env.FACTORAY_WANTPRODUCT_NAME ? process.env.FACTORAY_WANTPRODUCT_NAME : wantProduct) : ($.getdata('FACTORAY_WANTPRODUCT_NAME') ? $.getdata('FACTORAY_WANTPRODUCT_NAME') : wantProduct);
-							if (data.data.result.factoryInfo) {
-								let {
-									totalScore,
-									useScore,
-									produceScore,
-									remainScore,
-									couponCount,
-									name
-								} = data.data.result.factoryInfo;
-								if (couponCount == 0) {
-									infoMsg = `${name} 没货了,死了这条心吧!`
-								} else {
-									infoMsg = `${name}(${((remainScore * 1 + useScore * 1) / (totalScore * 1)* 100).toFixed(0)}%,剩${couponCount})`
-								}
-								if (((remainScore * 1 + useScore * 1) >= totalScore * 1 + 100000) && (couponCount * 1 > 0)) {
-									// await jdfactory_addEnergy();
-									infoMsg = `${name} 可以兑换了!`
-										$.DdFactoryReceive = `${name}`;
-
-								}
-
-							} else {
-								infoMsg = ``
-							}
-						} else {
-							$.ddFactoryInfo = ""
-						}
-					}
-				}
-				$.ddFactoryInfo = infoMsg;
-			} catch (e) {
-				$.logErr(e, resp)
-			}
-			finally {
-				resolve();
-			}
-		})
-	})
-}
-
-function ddFactoryTaskUrl(function_id, body = {}, function_id2) {
-	let url = `${JD_API_HOST}`;
-	if (function_id2) {
-		url += `?functionId=${function_id2}`;
-	}
-	return {
-		url,
-		body: `functionId=${function_id}&body=${escape(JSON.stringify(body))}&client=wh5&clientVersion=1.1.0`,
-		headers: {
-			"Accept": "application/json, text/plain, */*",
-			"Accept-Encoding": "gzip, deflate, br",
-			"Accept-Language": "zh-cn",
-			"Connection": "keep-alive",
-			"Content-Type": "application/x-www-form-urlencoded",
-			"Cookie": cookie,
-			"Host": "api.m.jd.com",
-			"Origin": "https://h5.m.jd.com",
-			"Referer": "https://h5.m.jd.com/babelDiy/Zeus/2uSsV2wHEkySvompfjB43nuKkcHp/index.html",
-			"User-Agent": "jdapp;iPhone;9.3.4;14.3;88732f840b77821b345bf07fd71f609e6ff12f43;network/4g;ADID/1C141FDD-C62F-425B-8033-9AAB7E4AE6A3;supportApplePay/0;hasUPPay/0;hasOCPay/0;model/iPhone11,8;addressid/2005183373;supportBestPay/0;appBuild/167502;jdSupportDarkMode/0;pv/414.19;apprpd/Babel_Native;ref/TTTChannelViewContoller;psq/5;ads/;psn/88732f840b77821b345bf07fd71f609e6ff12f43|1701;jdv/0|iosapp|t_335139774|appshare|CopyURL|1610885480412|1610885486;adk/;app_device/IOS;pap/JA2015_311210|9.3.4|IOS 14.3;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1",
-		},
-		timeout: 10000
-	}
-}
-
 async function getJoyBaseInfo(taskId = '', inviteType = '', inviterPin = '') {
 	if (!EnableJoyPark)
 		return;
@@ -2549,29 +2425,6 @@ function randomString(e) {
 	return n
 }
 
-function getGetRequest(type, url) {
-	UA = `jdpingou;iPhone;4.13.0;14.4.2;${randomString(40)};network/wifi;model/iPhone10,2;appBuild/100609;ADID/00000000-0000-0000-0000-000000000000;supportApplePay/1;hasUPPay/0;pushNoticeIsOpen/1;hasOCPay/0;supportBestPay/0;session/${Math.random * 98 + 1};pap/JA2019_3111789;brand/apple;supportJDSHWK/1;Mozilla/5.0 (iPhone; CPU iPhone OS 14_6 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148`
-
-		const method = `GET`;
-	let headers = {
-		'Origin': `https://st.jingxi.com`,
-		'Cookie': cookie,
-		'Connection': `keep-alive`,
-		'Accept': `application/json`,
-		'Referer': `https://st.jingxi.com/pingou/jxmc/index.html`,
-		'Host': `m.jingxi.com`,
-		'User-Agent': UA,
-		'Accept-Encoding': `gzip, deflate, br`,
-		'Accept-Language': `zh-cn`
-	};
-	return {
-		url: url,
-		method: method,
-		headers: headers,
-		timeout: 10000
-	};
-}
-
 Date.prototype.Format = function (fmt) {
 	var e,
 	n = this,
@@ -2623,69 +2476,6 @@ function decrypt(time, stk, type, url) {
 		} else {
 			return '20210318144213808;8277529360925161;10001;tk01w952a1b73a8nU0luMGtBanZTHCgj0KFVwDa4n5pJ95T/5bxO/m54p4MtgVEwKNev1u/BUjrpWAUMZPW0Kz2RWP8v;86054c036fe3bf0991bd9a9da1a8d44dd130c6508602215e50bb1e385326779d'
 		}
-}
-
-async function requestAlgo() {
-	$.fingerprint = await generateFp();
-	$.appId = 10028;
-	const options = {
-		"url": `https://cactus.jd.com/request_algo?g_ty=ajax`,
-		"headers": {
-			'Authority': 'cactus.jd.com',
-			'Pragma': 'no-cache',
-			'Cache-Control': 'no-cache',
-			'Accept': 'application/json',
-			'User-Agent': $.isNode() ? (process.env.JD_USER_AGENT ? process.env.JD_USER_AGENT : (require('./USER_AGENTS').USER_AGENT)) : ($.getdata('JDUA') ? $.getdata('JDUA') : "jdapp;iPhone;9.4.4;14.3;network/4g;Mozilla/5.0 (iPhone; CPU iPhone OS 14_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148;supportJDSHWK/1"),
-			//'User-Agent': 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_2_3 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.0.3 Mobile/15E148 Safari/604.1',
-			'Content-Type': 'application/json',
-			'Origin': 'https://st.jingxi.com',
-			'Sec-Fetch-Site': 'cross-site',
-			'Sec-Fetch-Mode': 'cors',
-			'Sec-Fetch-Dest': 'empty',
-			'Referer': 'https://st.jingxi.com/',
-			'Accept-Language': 'zh-CN,zh;q=0.9,zh-TW;q=0.8,en;q=0.7'
-		},
-		'body': JSON.stringify({
-			"version": "1.0",
-			"fp": $.fingerprint,
-			"appId": $.appId.toString(),
-			"timestamp": Date.now(),
-			"platform": "web",
-			"expandParams": ""
-		})
-	}
-	new Promise(async resolve => {
-		$.post(options, (err, resp, data) => {
-			try {
-				if (err) {
-					console.log(`${JSON.stringify(err)}`)
-					console.log(`request_algo 签名参数API请求失败，请检查网路重试`)
-					llgeterror = true;
-				} else {
-					if (data) {
-						data = JSON.parse(data);
-						if (data['status'] === 200) {
-							$.Jxmctoken = data.data.result.tk;
-							let enCryptMethodJDString = data.data.result.algo;
-							if (enCryptMethodJDString)
-								$.enCryptMethodJD = new Function(`return ${enCryptMethodJDString}`)();
-						} else {
-							console.log('request_algo 签名参数API请求失败:')
-						}
-					} else {
-						llgeterror = true;
-						console.log(`京东服务器返回空数据`)
-					}
-				}
-			} catch (e) {
-				llgeterror = true;
-				$.logErr(e, resp)
-			}
-			finally {
-				resolve();
-			}
-		})
-	})
 }
 
 function generateFp() {
