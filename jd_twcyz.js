@@ -180,7 +180,7 @@ async function takeRequest(type) {
             url = `https://api.m.jd.com/?uuid=&client=wh5&appid=ProductZ4Brand&functionId=showSecondFloorRunInfo&t=1680485439158&body=%7B%22source%22:%22run%22%7D`;
             break;
         case 'superBrandTaskList':
-            url = `https://api.m.jd.com/?uuid=&client=wh5&appid=ProductZ4Brand&functionId=superBrandTaskList&t=1680485439481&body=%7B%22source%22:%22run%22,%22activityId%22:1013398,%22assistInfoFlag%22:1%7D`;
+            url = `https://api.m.jd.com/?uuid=&client=wh5&appid=ProductZ4Brand&functionId=superBrandTaskList&t=1680485439481&body=%7B%22source%22:%22run%22,%22activityId%22:1013466,%22assistInfoFlag%22:1%7D`;
             break;
         case 'superBrandDoTask':
             if ($.runInfo.itemId === null) {
