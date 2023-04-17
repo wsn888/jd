@@ -96,8 +96,8 @@ async function main() {
     console.log(`获取活动详情成功`);
     $.activityId = $.activityInfo.activityBaseInfo.activityId;
     $.activityName = $.activityInfo.activityBaseInfo.activityName;
-    $.callNumber = $.activityInfo.activityUserInfo.userStarNum;
-    console.log(`当前活动:${$.activityName},ID：${$.activityId},可抽奖次数:${Math.floor($.callNumber / 200)}`);
+    $.drawstartnum = $.activityInfo.activityBaseInfo.drawStarNum;
+    console.log(`当前活动:${$.activityName},ID：${$.activityId},抽奖限制${$.activityInfo.activityBaseInfo.drawLimit}次`);
     $.encryptProjectId = $.activityInfo.activityBaseInfo.encryptProjectId;
     useInfo[$.UserName] = $.encryptProjectId;
     await $.wait(1000);
@@ -105,14 +105,15 @@ async function main() {
     await takeRequest('superBrandTaskList');
     await $.wait(1000);
     await doTask();
-    if ($.runFlag) {
-        await takeRequest('superBrandSecondFloorMainPage');
-        $.callNumber = $.activityInfo.activityUserInfo.userStarNum;
-        console.log(`可抽奖次数:${Math.floor($.callNumber / 200)}`);
-    }
-    console.log(`\n开始抽奖：`);
-    for (let i = 0; i < 13; i++) {
-        //console.log(`进行第${i + 1}抽奖：`);;
+    //if ($.runFlag) {
+    await $.wait(200);
+    await takeRequest('superBrandSecondFloorMainPage');
+    $.callNumber = $.activityInfo.activityUserInfo.userStarNum;
+    $.drawtimes = Math.floor($.callNumber / $.drawstartnum);
+    //}
+    console.log(`\n可抽奖${$.drawtimes}次，开始...`);
+    for (let i = 0; i < $.drawtimes; i++) {
+        console.log(`进行${i + 1}次抽奖：`);;
         await takeRequest('superBrandTaskLottery');//抽奖
         await $.wait(1000);
         if (!$.runFlag) break;
@@ -180,7 +181,7 @@ async function takeRequest(type) {
             url = `https://api.m.jd.com/?uuid=&client=wh5&appid=ProductZ4Brand&functionId=showSecondFloorRunInfo&t=1680485439158&body=%7B%22source%22:%22run%22%7D`;
             break;
         case 'superBrandTaskList':
-            url = `https://api.m.jd.com/?uuid=&client=wh5&appid=ProductZ4Brand&functionId=superBrandTaskList&t=1680485439481&body=%7B%22source%22:%22run%22,%22activityId%22:1013466,%22assistInfoFlag%22:1%7D`;
+            url = `https://api.m.jd.com/?uuid=&client=wh5&appid=ProductZ4Brand&functionId=superBrandTaskList&t=1680485439481&body=%7B%22source%22:%22run%22,%22activityId%22:${$.activityId},%22assistInfoFlag%22:1%7D`;
             break;
         case 'superBrandDoTask':
             if ($.runInfo.itemId === null) {
@@ -241,16 +242,23 @@ function dealReturn(type, data) {
             } else {
                 console.log(JSON.stringify(data));
             }
+
             break;
         case 'superBrandTaskLottery':
             if (data.code === '0' && data.data.bizCode !== 'TK000') {
                 $.runFlag = false;
-                console.log(`抽奖次数已用完`);
+                console.log(`抽奖打到上限！`);
             } else if (data.code === '0' && data.data.bizCode == 'TK000') {
-                if (data.data && data.data.result && data.data.result.rewardComponent && data.data.result.rewardComponent.beanList) {
+                if (data?.data?.result?.rewardComponent?.beanList) {
                     if (data.data.result.rewardComponent.beanList.length > 0) {
                         console.log(`获得豆子：${data.data.result.rewardComponent.beanList[0].quantity}`)
                     }
+                } else if (data?.data?.result?.rewardComponent?.couponList) {
+                    $.log('获得优惠券');
+                } else if (data?.data?.result?.rewardComponent?.realList) {
+                    $.log('可能抽中实物，到APP查看！');
+                } else {
+                    $.log('空气');
                 }
             } else {
                 $.runFlag = false;
