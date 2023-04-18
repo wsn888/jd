@@ -122,10 +122,10 @@ let args_xh = {
                 // console.log(`$.shopIdList: ${$.shopIdList}`)
                 // console.log(`$.failTimes: ${$.failTimes}`)
                 // console.log(`================`)
-                await favCommQueryFilter(); //获取商品并过滤
-                await $.wait(args_xh.unSubscribeInterval)
-                if(!$.endGoods && parseInt($.goodsTotalNum) !== parseInt($.goodsKeyWordsNum)) await favCommBatchDel();//取关商品
-                else console.log("不执行取消收藏商品\n")
+                // await favCommQueryFilter(); //获取商品并过滤
+                // await $.wait(args_xh.unSubscribeInterval)
+                // if(!$.endGoods && parseInt($.goodsTotalNum) !== parseInt($.goodsKeyWordsNum)) await favCommBatchDel();//取关商品
+                // else console.log("不执行取消收藏商品\n")
                 await $.wait(args_xh.unSubscribeInterval)
                 await queryShopFavList();   //获取店铺并过滤
                 await $.wait(args_xh.unSubscribeInterval)
